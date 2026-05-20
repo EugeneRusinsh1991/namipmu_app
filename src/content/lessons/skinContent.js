@@ -3,8 +3,8 @@ export const skinContent = [
   {
     "type": "heroImage",
     "image": {
-      "ua": require('../../../assets/images\\skin\\heroImage.jpg'),
-      "ru": require('../../../assets/images\\skin\\heroImage.jpg')
+      "ua": require('../../../assets/images/skin/heroImage.jpg'),
+      "ru": require('../../../assets/images/skin/heroImage.jpg')
     }
   },
   {
@@ -30,8 +30,8 @@ export const skinContent = [
     "height": 600,
     "aspectRatio": 1,
     "src": {
-      "ua": require('../../../assets/images\\skin\\image1_rus.png'),
-      "ru": require('../../../assets/images\\skin\\image1_rus.png')
+      "ua": require('../../../assets/images/skin/image1_rus.png'),
+      "ru": require('../../../assets/images/skin/image1_rus.png')
     }
   },
   {

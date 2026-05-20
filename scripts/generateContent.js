@@ -70,7 +70,7 @@ function findImageWithAnyExtension(fileName, folderPath) {
   if (hasExtension) {
     const fullPath = path.join(fullFolderPath, fileName);
     if (fs.existsSync(fullPath)) {
-      return path.join(folderPath, fileName);
+      return path.posix.join(folderPath, fileName);
     }
     return null;
   }
@@ -81,7 +81,7 @@ function findImageWithAnyExtension(fileName, folderPath) {
     for (const ext of supportedExtensions) {
       const targetFile = fileName + ext;
       if (files.some(f => f.toLowerCase() === targetFile.toLowerCase())) {
-        return path.join(folderPath, targetFile);
+        return path.posix.join(folderPath, targetFile);
       }
     }
   } catch (e) {

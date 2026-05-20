@@ -6,8 +6,8 @@ export const indexContent = [
     "height": 0,
     "aspectRatio": 0,
     "image": {
-      "ua": require('../../../assets/images/error.jpg'),
-      "ru": require('../../../assets/images/error.jpg')
+      "ua": require('../../../assets/images/index/card1.jpg'),
+      "ru": require('../../../assets/images/index/card1.jpg')
     }
   },
   {
@@ -34,8 +34,8 @@ export const indexContent = [
   {
     "type": "card",
     "image": {
-      "ua": require('../../../assets/images/error.jpg'),
-      "ru": require('../../../assets/images/error.jpg')
+      "ua": require('../../../assets/images/index/card1.jpg'),
+      "ru": require('../../../assets/images/index/card1.jpg')
     },
     "title": {
       "ua": "Шкіра",
@@ -50,8 +50,8 @@ export const indexContent = [
   {
     "type": "card",
     "image": {
-      "ua": require('../../../assets/images/error.jpg'),
-      "ru": require('../../../assets/images/error.jpg')
+      "ua": require('../../../assets/images/index/card1.jpg'),
+      "ru": require('../../../assets/images/index/card1.jpg')
     },
     "title": {
       "ua": "Заживление пигмента в коже ",
