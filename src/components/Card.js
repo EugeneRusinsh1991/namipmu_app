@@ -1,0 +1,125 @@
+import { useRouter } from 'expo-router';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useLanguage } from '../context/LanguageContext';
+import ImageWithFallback from './ImageWithFallback';
+
+export default function Card({ image, title, description, href, size = 'big' }) {
+  const router = useRouter();
+  const { lang } = useLanguage();
+
+  // Конфигурация для разных размеров
+  const sizeConfig = {
+    big: {
+      cardWidth: 280,
+      imageHeight: 100,
+      contentHeight: 150,
+      contentPadding: 16,
+      titleFontSize: 18,
+      titleMarginBottom: 8,
+      descriptionFontSize: 14,
+      descriptionLineHeight: 20,
+    },
+    small: {
+      cardWidth: 160,
+      imageHeight: 80,
+      contentHeight: 100,
+      contentPadding: 12,
+      titleFontSize: 14,
+      titleMarginBottom: 6,
+      descriptionFontSize: 12,
+      descriptionLineHeight: 16,
+    },
+  };
+
+  const config = sizeConfig[size] || sizeConfig.big;
+
+  // Получаем картинку в зависимости от языка
+  const getImage = () => {
+    if (!image) return null;
+    
+    // Если это объект с ua/ru
+    if (typeof image === 'object' && image !== null) {
+      return image[lang] || image.ru || image.ua;
+    }
+    
+    // Если это просто require() из старого формата
+    return image;
+  };
+
+  const imageSource = getImage();
+
+  // Динамические стили в зависимости от размера
+  const dynamicCardStyle = {
+    ...styles.card,
+    width: config.cardWidth,
+  };
+
+  const dynamicImageStyle = {
+    ...styles.image,
+    width: config.cardWidth,
+    height: config.imageHeight,
+  };
+
+  const dynamicContentStyle = {
+    ...styles.content,
+    padding: config.contentPadding,
+    height: config.contentHeight,
+  };
+
+  const dynamicTitleStyle = {
+    ...styles.title,
+    fontSize: config.titleFontSize,
+    marginBottom: config.titleMarginBottom,
+  };
+
+  const dynamicDescriptionStyle = {
+    ...styles.description,
+    fontSize: config.descriptionFontSize,
+    lineHeight: config.descriptionLineHeight,
+  };
+
+  return (
+    <TouchableOpacity 
+      onPress={() => router.push(href)}
+      style={dynamicCardStyle}
+    >
+      {imageSource && <ImageWithFallback source={imageSource} style={dynamicImageStyle} />}
+      
+      <View style={dynamicContentStyle}>
+        <Text style={dynamicTitleStyle}>{title}</Text>
+        {description && <Text style={dynamicDescriptionStyle}>{description}</Text>}
+      </View>
+    </TouchableOpacity>
+  );
+}
+
+const styles = StyleSheet.create({
+  card: {
+    borderRadius: 12,
+    overflow: 'hidden',
+    marginBottom: 20,
+    backgroundColor: '#fce8da',
+    elevation: 5,
+    alignSelf: 'center',
+    borderWidth: 1,
+    borderColor: '#fce8da',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+  },
+
+  image: {
+    resizeMode: 'cover',
+  },
+
+  content: {
+    overflow: 'hidden',
+  },
+
+  title: {
+    fontWeight: 'bold',
+  },
+
+  description: {},
+});
