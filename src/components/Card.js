@@ -1,10 +1,9 @@
-import { useRouter } from 'expo-router';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Link } from 'expo-router';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useLanguage } from '../context/LanguageContext';
 import ImageWithFallback from './ImageWithFallback';
 
 export default function Card({ image, title, description, href, size = 'big' }) {
-  const router = useRouter();
   const { lang } = useLanguage();
 
   // Конфигурация для разных размеров
@@ -78,19 +77,45 @@ export default function Card({ image, title, description, href, size = 'big' }) 
     lineHeight: config.descriptionLineHeight,
   };
 
-  return (
-    <TouchableOpacity 
-      onPress={() => router.push(href)}
+  const normalizedHref = typeof href === 'string' ? (href.startsWith('/') ? href : `/${href}`) : undefined;
+
+  const safeText = value => {
+    if (value == null) return '';
+    if (typeof value === 'string' || typeof value === 'number') return String(value);
+    if (typeof value === 'object' && value !== null) {
+      if (typeof value[lang] === 'string') return value[lang];
+      if (typeof value.ru === 'string') return value.ru;
+      if (typeof value.ua === 'string') return value.ua;
+    }
+    return '';
+  };
+
+  const safeTitle = safeText(title);
+  const safeDescription = safeText(description);
+
+  const cardInner = (
+    <Pressable
       style={dynamicCardStyle}
+      accessibilityRole={normalizedHref ? 'link' : 'button'}
     >
       {imageSource && <ImageWithFallback source={imageSource} style={dynamicImageStyle} />}
-      
+
       <View style={dynamicContentStyle}>
-        <Text style={dynamicTitleStyle}>{title}</Text>
-        {description && <Text style={dynamicDescriptionStyle}>{description}</Text>}
+        <Text style={dynamicTitleStyle}>{safeTitle}</Text>
+        {safeDescription !== '' && <Text style={dynamicDescriptionStyle}>{safeDescription}</Text>}
       </View>
-    </TouchableOpacity>
+    </Pressable>
   );
+
+  if (normalizedHref) {
+    return (
+      <Link href={normalizedHref} asChild>
+        {cardInner}
+      </Link>
+    );
+  }
+
+  return cardInner;
 }
 
 const styles = StyleSheet.create({

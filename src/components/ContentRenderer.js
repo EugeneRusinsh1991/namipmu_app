@@ -177,9 +177,11 @@ export default function ContentRenderer({ content, lang = 'ru' }) {
         }
 
         if (item.type === 'link' && item.href) {
+          const normalizedHref = typeof item.href === 'string' ? (item.href.startsWith('/') ? item.href : `/${item.href}`) : item.href;
+
           return (
-            <Link key={index} href={item.href} style={[globalStyles.textLink, heroOverlapStyle]}>
-              {text}
+            <Link key={index} href={normalizedHref} style={heroOverlapStyle}>
+              <Text style={globalStyles.textLink}>{text}</Text>
             </Link>
           );
         }
