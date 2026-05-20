@@ -17,7 +17,8 @@ function parseSize(value) {
   if (value == null || String(value).trim() === '') return null;
   const trimmed = String(value).trim();
   if (/^\d+(?:\.\d+)?$/.test(trimmed)) {
-    return Number(trimmed);
+    const num = Number(trimmed);
+    return num > 0 ? num : null;
   }
   return trimmed;
 }
@@ -29,12 +30,12 @@ function parseAspectRatio(value) {
   if (ratioMatch) {
     const width = Number(ratioMatch[1]);
     const height = Number(ratioMatch[2]);
-    if (height > 0) {
+    if (width > 0 && height > 0) {
       return width / height;
     }
   }
   const num = Number(trimmed);
-  return Number.isFinite(num) ? num : null;
+  return Number.isFinite(num) && num > 0 ? num : null;
 }
 
 function normalizeFieldName(name) {

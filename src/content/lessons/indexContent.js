@@ -1,33 +1,26 @@
 // GENERATED FILE: this content is recreated by scripts/generateContent.js
 export const indexContent = [
   {
-    "type": "heroImage",
-    "width": 0,
-    "height": 0,
-    "aspectRatio": 0,
-    "image": {
-      "ua": require('../../../assets/images/index/card1.jpg'),
-      "ru": require('../../../assets/images/index/card1.jpg')
-    }
+    "type": "heroImage"
   },
   {
     "type": "title",
     "text": {
-      "ua": "",
+      "ua": "НАЗВАНИЕ КУРСА",
       "ru": ""
     }
   },
   {
     "type": "subtitle",
     "text": {
-      "ua": "",
+      "ua": "ПОДЗАГОЛОВОК",
       "ru": ""
     }
   },
   {
     "type": "text",
     "text": {
-      "ua": "",
+      "ua": "текст",
       "ru": ""
     }
   },
@@ -78,5 +71,21 @@ export const indexContent = [
       "ru": "Оборудование для ПМ"
     },
     "href": "/equipment"
+  },
+  {
+    "type": "card",
+    "image": {
+      "ua": require('../../../assets/images/index/card1.jpg'),
+      "ru": require('../../../assets/images/index/card1.jpg')
+    },
+    "title": {
+      "ua": "Картриджи ",
+      "ru": "Картриджи "
+    },
+    "description": {
+      "ua": "Картриджи ",
+      "ru": "Картриджи "
+    },
+    "href": "/cartriges"
   }
 ];

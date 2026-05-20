@@ -37,12 +37,14 @@ const ImageWithFallback = ({
     setValidSource(errorImage);
   };
 
-  // Строим стиль из параметров
+  const isPositiveNumber = value => typeof value === 'number' && value > 0;
+
+  // Строим стиль из параметров, игнорируя нулевые размеры и неверный aspectRatio
   const computedStyle = {
     ...style,
-    ...(width != null && { width }),
-    ...(height != null && { height }),
-    ...(aspectRatio != null && { aspectRatio }),
+    ...(isPositiveNumber(width) && { width }),
+    ...(isPositiveNumber(height) && { height }),
+    ...(isPositiveNumber(aspectRatio) && { aspectRatio }),
     ...(resizeMode && { resizeMode }),
     ...fallbackStyle,
   };

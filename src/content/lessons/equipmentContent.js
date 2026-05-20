@@ -2,9 +2,6 @@
 export const equipmentContent = [
   {
     "type": "heroImage",
-    "width": 0,
-    "height": 0,
-    "aspectRatio": 0,
     "image": {
       "ua": require('../../../assets/images/error.jpg'),
       "ru": require('../../../assets/images/error.jpg')
@@ -16,6 +13,9 @@ export const equipmentContent = [
       "ua": "Оборудование для ПМ",
       "ru": "Оборудование для ПМ"
     }
+  },
+  {
+    "type": "languageSwitcher"
   },
   {
     "type": "text",
@@ -94,5 +94,23 @@ export const equipmentContent = [
         }
       }
     ]
+  },
+  {
+    "type": "image",
+    "width": 300,
+    "height": 300,
+    "aspectRatio": 1,
+    "resizeMode": "contain",
+    "src": {
+      "ua": require('../../../assets/images/error.jpg'),
+      "ru": require('../../../assets/images/error.jpg')
+    }
+  },
+  {
+    "type": "text",
+    "text": {
+      "ua": "Помимо того что роторные аппараты делятся по типам питания, так же их разделяют по на три вида в зависимости от хода иглы.",
+      "ru": "Помимо того что роторные аппараты делятся по типам питания, так же их разделяют по на три вида в зависимости от хода иглы."
+    }
   }
 ];

@@ -305,8 +305,24 @@ export const skinContent = [
       "ru": require('../../../assets/images/error.jpg')
     },
     "title": {
-      "ua": "Заживление пигмента в коже ",
-      "ru": "Заживление пигмента в коже "
+      "ua": "вернуться назад",
+      "ru": "вернуться назад"
+    },
+    "description": {
+      "ua": "",
+      "ru": ""
+    },
+    "href": "/"
+  },
+  {
+    "type": "card",
+    "image": {
+      "ua": require('../../../assets/images/error.jpg'),
+      "ru": require('../../../assets/images/error.jpg')
+    },
+    "title": {
+      "ua": "следующий урок",
+      "ru": "следующий урок"
     },
     "description": {
       "ua": "Заживление пигмента в коже ",
