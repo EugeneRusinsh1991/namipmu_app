@@ -3,8 +3,8 @@ export const equipmentContent = [
   {
     "type": "heroImage",
     "image": {
-      "ua": require('../../../assets/images/error.jpg'),
-      "ru": require('../../../assets/images/error.jpg')
+      "ua": require('../../../assets/images/equipment/heroImage.jpg'),
+      "ru": require('../../../assets/images/equipment/heroImage.jpg')
     }
   },
   {
@@ -40,6 +40,17 @@ export const equipmentContent = [
         }
       }
     ]
+  },
+  {
+    "type": "image",
+    "width": 300,
+    "height": 300,
+    "aspectRatio": 1,
+    "resizeMode": "contain",
+    "src": {
+      "ua": require('../../../assets/images/equipment/equipment1_rus.png'),
+      "ru": require('../../../assets/images/equipment/equipment1_rus.png')
+    }
   },
   {
     "type": "text",
@@ -102,8 +113,8 @@ export const equipmentContent = [
     "aspectRatio": 1,
     "resizeMode": "contain",
     "src": {
-      "ua": require('../../../assets/images/error.jpg'),
-      "ru": require('../../../assets/images/error.jpg')
+      "ua": require('../../../assets/images/equipment/equipment1_rus.png'),
+      "ru": require('../../../assets/images/equipment/equipment1_rus.png')
     }
   },
   {

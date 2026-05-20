@@ -34,6 +34,7 @@ const ResponsiveImage = ({
 }) => {
   const windowDimensions = useWindowDimensions();
   const [imageDimensions, setImageDimensions] = useState(null);
+  const [assetAspectRatio, setAssetAspectRatio] = useState(null);
   const [hasError, setHasError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -43,12 +44,20 @@ const ResponsiveImage = ({
 
     setIsLoading(true);
     setHasError(false);
+    setAssetAspectRatio(null);
 
     // Определяем URI в зависимости от типа source
     let imageUri = null;
     if (typeof source === 'number') {
-      // require() возвращает число — используем стандартный путь
-      imageUri = null; // Image.getSize не работает с require(), поэтому нужен fallback
+      try {
+        const resolved = Image.resolveAssetSource(source);
+        if (resolved && resolved.width && resolved.height) {
+          setAssetAspectRatio(resolved.width / resolved.height);
+        }
+      } catch (error) {
+        console.warn('Failed to resolve asset source:', error);
+      }
+      imageUri = null;
     } else if (typeof source === 'object' && source.uri) {
       imageUri = source.uri;
     } else if (typeof source === 'string') {
@@ -64,15 +73,9 @@ const ResponsiveImage = ({
         },
         (error) => {
           console.warn('Failed to get image size:', error);
-          // Продолжаем без размеров — будем использовать aspectRatio если задан
           setIsLoading(false);
         }
       );
-    } else if (typeof source === 'number') {
-      // Для require() картинок нужно получить размеры иначе
-      // Используем Image.getSize с требуемым изображением
-      setIsLoading(false);
-      // Если аспект рацио не задан, Image компонент поможет
     } else {
       setIsLoading(false);
     }
@@ -107,12 +110,16 @@ const ResponsiveImage = ({
   let finalHeight = finalWidth;
   let computedAspectRatio = aspectRatio;
 
-  if (imageDimensions && !aspectRatio) {
-    // Вычисляем aspect ratio из реальных размеров изображения
-    computedAspectRatio = imageDimensions.width / imageDimensions.height;
-    finalHeight = finalWidth / computedAspectRatio;
-  } else if (computedAspectRatio) {
-    // Используем переданный aspect ratio
+  const actualAspectRatio = assetAspectRatio || (imageDimensions ? imageDimensions.width / imageDimensions.height : null);
+
+  if (actualAspectRatio) {
+    const diff = aspectRatio ? Math.abs(actualAspectRatio - aspectRatio) / aspectRatio : 1;
+    if (!aspectRatio || diff > 0.15) {
+      computedAspectRatio = actualAspectRatio;
+    }
+  }
+
+  if (computedAspectRatio) {
     finalHeight = finalWidth / computedAspectRatio;
   } else {
     // Fallback: квадрат, если ничего не известно

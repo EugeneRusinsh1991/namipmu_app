@@ -134,6 +134,9 @@ export default function ContentRenderer({ content, lang = 'ru' }) {
           const imageSrc = typeof item.src === 'object' && item.src !== null
             ? item.src[lang] || item.src.ru || item.src.ua
             : item.src;
+
+          const isSquareImage = item.aspectRatio === 1 && item.width === item.height;
+          const imageMaxWidth = isSquareImage ? null : item.width || null;
           
           return (
             <View key={index} style={heroOverlapStyle}>
@@ -141,7 +144,7 @@ export default function ContentRenderer({ content, lang = 'ru' }) {
                 source={imageSrc}
                 aspectRatio={item.aspectRatio}
                 minWidth={100}
-                maxWidth={item.width || null}
+                maxWidth={imageMaxWidth}
                 padding={16}
                 resizeMode={item.resizeMode || 'contain'}
               />
@@ -153,6 +156,9 @@ export default function ContentRenderer({ content, lang = 'ru' }) {
           const gifSrc = typeof item.src === 'object' && item.src !== null
             ? item.src[lang] || item.src.ru || item.src.ua
             : item.src;
+
+          const isSquareImage = item.aspectRatio === 1 && item.width === item.height;
+          const gifMaxWidth = isSquareImage ? null : item.width || null;
           
           return (
             <View key={index} style={heroOverlapStyle}>
@@ -160,7 +166,7 @@ export default function ContentRenderer({ content, lang = 'ru' }) {
                 source={gifSrc}
                 aspectRatio={item.aspectRatio}
                 minWidth={100}
-                maxWidth={item.width || null}
+                maxWidth={gifMaxWidth}
                 padding={16}
                 resizeMode={item.resizeMode || 'contain'}
               />

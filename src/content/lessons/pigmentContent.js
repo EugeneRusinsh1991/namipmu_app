@@ -3,8 +3,8 @@ export const pigmentContent = [
   {
     "type": "heroImage",
     "image": {
-      "ua": require('../../../assets/images/error.jpg'),
-      "ru": require('../../../assets/images/error.jpg')
+      "ua": require('../../../assets/images/pigment/heroImage.jpg'),
+      "ru": require('../../../assets/images/pigment/heroImage.jpg')
     }
   },
   {
