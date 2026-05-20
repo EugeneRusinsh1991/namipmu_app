@@ -290,5 +290,28 @@ export const skinContent = [
         }
       }
     ]
+  },
+  {
+    "type": "text",
+    "text": {
+      "ua": "следующий урок",
+      "ru": "следующий урок"
+    }
+  },
+  {
+    "type": "card",
+    "image": {
+      "ua": require('../../../assets/images/error.jpg'),
+      "ru": require('../../../assets/images/error.jpg')
+    },
+    "title": {
+      "ua": "Заживление пигмента в коже ",
+      "ru": "Заживление пигмента в коже "
+    },
+    "description": {
+      "ua": "Заживление пигмента в коже ",
+      "ru": "Заживление пигмента в коже "
+    },
+    "href": "/pigment"
   }
 ];

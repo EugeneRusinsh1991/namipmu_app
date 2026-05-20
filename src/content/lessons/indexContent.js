@@ -13,22 +13,22 @@ export const indexContent = [
   {
     "type": "title",
     "text": {
-      "ua": "Оволодій мистецтвом краси",
-      "ru": "Master the Art of Beauty"
+      "ua": "",
+      "ru": ""
     }
   },
   {
     "type": "subtitle",
     "text": {
-      "ua": "Основні напрями навчання",
-      "ru": "Основные направления обучения"
+      "ua": "",
+      "ru": ""
     }
   },
   {
     "type": "text",
     "text": {
-      "ua": "Ласкаво просимо на наш інтерактивний курс",
-      "ru": "Добро пожаловать на наш интерактивный курс"
+      "ua": "",
+      "ru": ""
     }
   },
   {
@@ -62,5 +62,21 @@ export const indexContent = [
       "ru": "Заживление пигмента в коже "
     },
     "href": "/pigment"
+  },
+  {
+    "type": "card",
+    "image": {
+      "ua": require('../../../assets/images/index/card1.jpg'),
+      "ru": require('../../../assets/images/index/card1.jpg')
+    },
+    "title": {
+      "ua": "Оборудование для ПМ",
+      "ru": "Оборудование для ПМ"
+    },
+    "description": {
+      "ua": "Оборудование для ПМ",
+      "ru": "Оборудование для ПМ"
+    },
+    "href": "/equipment"
   }
 ];
