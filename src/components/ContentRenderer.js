@@ -6,6 +6,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { globalStyles } from '../styles/globalStyles';
 import Card from './Card';
 import ImageWithFallback from './ImageWithFallback';
+import ResponsiveImage from './ResponsiveImage';
 
 export function HeroImageRenderer({ content, lang = 'ru' }) {
   const heroItem = content.find(item => item.type === 'heroImage');
@@ -135,15 +136,16 @@ export default function ContentRenderer({ content, lang = 'ru' }) {
             : item.src;
           
           return (
-            <ImageWithFallback
-              key={index}
-              source={imageSrc}
-              style={[globalStyles.squareCenteredImage, heroOverlapStyle]}
-              width={item.width}
-              height={item.height}
-              aspectRatio={item.aspectRatio}
-              resizeMode={item.resizeMode}
-            />
+            <View key={index} style={heroOverlapStyle}>
+              <ResponsiveImage
+                source={imageSrc}
+                aspectRatio={item.aspectRatio}
+                minWidth={100}
+                maxWidth={item.width || null}
+                padding={16}
+                resizeMode={item.resizeMode || 'contain'}
+              />
+            </View>
           );
         }
 
@@ -153,15 +155,16 @@ export default function ContentRenderer({ content, lang = 'ru' }) {
             : item.src;
           
           return (
-            <ImageWithFallback
-              key={index}
-              source={gifSrc}
-              style={[globalStyles.squareCenteredImage, heroOverlapStyle]}
-              width={item.width}
-              height={item.height}
-              aspectRatio={item.aspectRatio}
-              resizeMode={item.resizeMode}
-            />
+            <View key={index} style={heroOverlapStyle}>
+              <ResponsiveImage
+                source={gifSrc}
+                aspectRatio={item.aspectRatio}
+                minWidth={100}
+                maxWidth={item.width || null}
+                padding={16}
+                resizeMode={item.resizeMode || 'contain'}
+              />
+            </View>
           );
         }
 
