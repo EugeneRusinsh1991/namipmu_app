@@ -292,10 +292,14 @@ export const skinContent = [
     ]
   },
   {
-    "type": "text",
-    "text": {
-      "ua": "следующий урок",
-      "ru": "следующий урок"
+    "type": "gif",
+    "width": 400,
+    "height": 225,
+    "aspectRatio": 1.7777777777777777,
+    "resizeMode": "contain",
+    "src": {
+      "ua": require('../../../assets/images/skin/skin_types_rus.gif'),
+      "ru": require('../../../assets/images/skin/skin_types_rus.gif')
     }
   },
   {

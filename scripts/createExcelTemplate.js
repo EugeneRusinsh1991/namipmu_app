@@ -57,6 +57,14 @@ const heroImageInfo = [
     'ГРАДИЕНТ': 'Нет',
     'ИСПОЛЬЗОВАНИЕ': 'Для сетки или списков компактных элементов',
     'ВЫСОТА ГРАДИЕНТА': '-',
+  },
+  {
+    'ТИП': 'gif',
+    'ЧТО ЭТО?': 'Анимированное GIF-изображение',
+    'РАЗМЕР': 'Рекомендуется 300–600px ширина',
+    'ГРАДИЕНТ': 'Нет',
+    'ИСПОЛЬЗОВАНИЕ': 'Визуальный акцент, демонстрация движения',
+    'ПРИМЕР': 'Укажите путь в gifRU / gifUA, например images/animation_ru.gif',
   }
 ];
 
@@ -64,12 +72,14 @@ const heroImageInfo = [
 // ЛИСТ 2: ШАБЛОН ЗАПОЛНЕНИЯ - ВСЕ ТИПЫ ЭЛЕМЕНТОВ
 // ==========================================
 // Вспомогательная функция для создания объектов с гарантированным порядком колонок:
-// id → type → [для каждого поля: RU, затем UA] → imageRU → imageUA → titleRU → titleUA → descriptionRU → descriptionUA → href → imageWidth → imageHeight → imageAspectRatio → imageResizeMode
+// id → type → [для каждого поля: RU, затем UA] → gifRU → gifUA → imageRU → imageUA → titleRU → titleUA → descriptionRU → descriptionUA → href → imageWidth → imageHeight → imageAspectRatio → imageResizeMode
 function createTemplateRow(
   id,
   type,
   ru = '',
   ua = '',
+  gifRU = '',
+  gifUA = '',
   imageRU = '',
   imageUA = '',
   titleRU = '',
@@ -87,6 +97,8 @@ function createTemplateRow(
     type,
     ru,
     ua,
+    gifRU,
+    gifUA,
     imageRU,
     imageUA,
     titleRU,
@@ -120,6 +132,7 @@ const indexData = [
   createTemplateRow(16, 'text', 'Вы получите практический опыт и сертификат после прохождения курса.', 'Ви отримаєте практичний досвід та сертифікат після проходження курсу.', '', '', '', '', '', '', ''),
   createTemplateRow(17, 'textLink', 'Узнать больше о программе обучения →', 'Дізнатися більше про програму навчання →', '', '', '', '', '', '', '/learn-more'),
   createTemplateRow(18, 'videoContainer', '', '', 'https://www.youtube.com/embed/dQw4w9WgXcQ', 'https://www.youtube.com/embed/dQw4w9WgXcQ', '', '', '↑ Видеоэлемент (указать URL видео на YouTube)', '↑ Відеоелемент (вказати URL відео на YouTube)', ''),
+  createTemplateRow(19, 'gif', '', '', 'images/animation_ru.gif', 'images/animation_ua.gif', '', '', '', '', '', 400, 225, '16:9', 'contain'),
 ];
 
 // Создаём листы
@@ -140,6 +153,8 @@ indexSheet['!cols'] = [
   { wch: 20 },  // type
   { wch: 35 },  // ru (text RU)
   { wch: 35 },  // ua (text UA)
+  { wch: 30 },  // gifRU
+  { wch: 30 },  // gifUA
   { wch: 30 },  // imageRU
   { wch: 30 },  // imageUA
   { wch: 35 },  // titleRU
