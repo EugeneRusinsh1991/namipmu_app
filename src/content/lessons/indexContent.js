@@ -4,25 +4,28 @@ export const indexContent = [
     "type": "heroImage"
   },
   {
+    "type": "eyebrow",
+    "text": {
+      "ua": "Наталія Міроненко",
+      "ru": "Наталия Мироненко"
+    }
+  },
+  {
     "type": "title",
     "text": {
-      "ua": "НАЗВАНИЕ КУРСА",
-      "ru": ""
+      "ua": "НАЗВА КУРСУ",
+      "ru": "НАЗВАНИЕ КУРСА"
     }
   },
   {
     "type": "subtitle",
     "text": {
-      "ua": "ПОДЗАГОЛОВОК",
-      "ru": ""
+      "ua": "ПІДЗАГОЛОВОК",
+      "ru": "ПОДЗАГОЛОВОК"
     }
   },
   {
-    "type": "text",
-    "text": {
-      "ua": "текст",
-      "ru": ""
-    }
+    "type": "languageSwitcher"
   },
   {
     "type": "card",

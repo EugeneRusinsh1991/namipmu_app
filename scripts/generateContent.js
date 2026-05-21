@@ -261,6 +261,19 @@ function parseContent(sheetName) {
     else if (row.type === 'languageSwitcher') {
       // languageSwitcher - это просто элемент без параметров
     }
+    else if (row.type === 'navigationButtons') {
+      item.type = 'navigationButtons';
+      item.backText = {
+        ru: 'Назад',
+        ua: 'Назад',
+      };
+      item.backHref = '/';
+      item.nextText = {
+        ru: row.ru || 'Следующий урок',
+        ua: row.ua || 'Наступний урок',
+      };
+      if (row.href) item.href = row.href;
+    }
     else if (row.type === 'text') {
       item.text = {
         ua: row.ua || '',

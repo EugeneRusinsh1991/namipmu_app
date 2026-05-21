@@ -293,44 +293,21 @@ export const skinContent = [
   },
   {
     "type": "gif",
-    "width": 400,
-    "height": 225,
-    "aspectRatio": 1.7777777777777777,
-    "resizeMode": "contain",
     "src": {
       "ua": require('../../../assets/images/skin/skin_types_rus.gif'),
       "ru": require('../../../assets/images/skin/skin_types_rus.gif')
     }
   },
   {
-    "type": "card",
-    "image": {
-      "ua": require('../../../assets/images/error.jpg'),
-      "ru": require('../../../assets/images/error.jpg')
+    "type": "navigationButtons",
+    "backText": {
+      "ru": "Назад",
+      "ua": "Назад"
     },
-    "title": {
-      "ua": "вернуться назад",
-      "ru": "вернуться назад"
-    },
-    "description": {
-      "ua": "",
-      "ru": ""
-    },
-    "href": "/"
-  },
-  {
-    "type": "card",
-    "image": {
-      "ua": require('../../../assets/images/error.jpg'),
-      "ru": require('../../../assets/images/error.jpg')
-    },
-    "title": {
-      "ua": "следующий урок",
-      "ru": "следующий урок"
-    },
-    "description": {
-      "ua": "Заживление пигмента в коже ",
-      "ru": "Заживление пигмента в коже "
+    "backHref": "/",
+    "nextText": {
+      "ru": "Следующий урок",
+      "ua": "Наступний урок"
     },
     "href": "/pigment"
   }

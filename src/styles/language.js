@@ -18,6 +18,11 @@ export const languageStyles = StyleSheet.create({
     backgroundColor: '#fff3eb',
   },
 
+  navBtn: {
+    flex: 1,
+    alignItems: 'center',
+  },
+
   langBtnActive: {
     backgroundColor: '#fce8da',
     borderColor: '#fce8da',

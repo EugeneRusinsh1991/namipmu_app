@@ -102,6 +102,29 @@ export default function ContentRenderer({ content, lang = 'ru' }) {
           );
         }
 
+        if (item.type === 'navigationButtons') {
+          const backText =
+            typeof item.backText === 'object' && item.backText !== null
+              ? item.backText[lang] || item.backText.ru || item.backText.ua || 'Назад'
+              : item.backText || 'Назад';
+          const nextText =
+            typeof item.nextText === 'object' && item.nextText !== null
+              ? item.nextText[lang] || item.nextText.ru || item.nextText.ua || ''
+              : item.nextText || '';
+          const nextHref = item.href || '/';
+
+          return (
+            <View key={index} style={[globalStyles.langWrap, heroOverlapStyle]}>
+              <Link href={item.backHref || '/'} style={[globalStyles.langBtn, globalStyles.navBtn]}>
+                <Text style={globalStyles.langText}>{backText}</Text>
+              </Link>
+              <Link href={nextHref} style={[globalStyles.langBtn, globalStyles.navBtn]}>
+                <Text style={globalStyles.langText}>{nextText}</Text>
+              </Link>
+            </View>
+          );
+        }
+
         if (item.type === 'list') {
           return (
             <View key={index} style={[globalStyles.listContainer, heroOverlapStyle]}>
