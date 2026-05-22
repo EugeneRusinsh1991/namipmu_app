@@ -1,4 +1,5 @@
 export { CardBlock } from './CardBlock';
+export { HeroBlock } from './HeroBlock';
 export { GifBlock, ImageBlock } from './ImageBlock';
 export { LanguageSwitcherBlock } from './LanguageSwitcherBlock';
 export { LinkBlock } from './LinkBlock';
