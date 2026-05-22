@@ -152,5 +152,11 @@ export const skinContent = [
       "ger": "Nächste Lektion"
     },
     "href": "/skin"
+  },
+  {
+    "type": "gif",
+    "width": 400,
+    "height": 225,
+    "resizeMode": "contain"
   }
 ];

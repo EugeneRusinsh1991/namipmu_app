@@ -44,11 +44,13 @@ const ImageWithFallback = ({
   fallbackStyle = {},
 }) => {
   const [failedUri, setFailedUri] = useState('');
+  const [useFallback, setUseFallback] = useState(false);
 
   // Обработчик ошибки загрузки
   const handleError = (e) => {
     const uri = getUriString(source);
     setFailedUri(uri);
+    setUseFallback(true);
     console.warn('ImageWithFallback failed to load:', uri, e?.nativeEvent || e);
   };
 
@@ -64,12 +66,35 @@ const ImageWithFallback = ({
   };
 
   const uri = getUriString(source);
-  const shouldUseFallback = !source || (typeof uri === 'string' && !isValidUriString(uri)) || uri === failedUri;
+  const invalidUri = !source || (typeof uri === 'string' && !isValidUriString(uri));
+  const shouldUseFallback = useFallback || invalidUri || uri === failedUri;
+
+  // choose final source: either original or local error image
+  const finalSource = shouldUseFallback ? errorImage : source;
+
+  // If finalSource is a local asset, try to derive aspect ratio to avoid zero-height blanks
+  let assetAspect = null;
+  try {
+    if (typeof finalSource === 'number') {
+      const resolved = Image.resolveAssetSource(finalSource);
+      if (resolved && resolved.width && resolved.height) {
+        assetAspect = resolved.width / resolved.height;
+      }
+    }
+  } catch (e) {
+    // ignore
+  }
+
+  // If no explicit size provided and we have asset aspect, apply it
+  const finalComputedStyle = { ...computedStyle };
+  if (!finalComputedStyle.width && !finalComputedStyle.height && assetAspect) {
+    finalComputedStyle.aspectRatio = assetAspect;
+  }
 
   return (
     <Image
-      source={shouldUseFallback ? errorImage : source}
-      style={computedStyle}
+      source={finalSource}
+      style={finalComputedStyle}
       onError={handleError}
       resizeMode={resizeMode}
     />

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Image, Platform, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { layout as layoutTokens, spacing } from '../styles/theme';
+const errorImage = require('../..//assets/images/error.jpg');
 
 function getUriFromSource(src) {
   if (!src) return '';
@@ -60,6 +61,7 @@ const ResponsiveImage = ({
   const windowDimensions = useWindowDimensions();
   const [imageDimensions, setImageDimensions] = useState(null);
   const [failedUri, setFailedUri] = useState('');
+  const [useFallback, setUseFallback] = useState(false);
 
   // Получаем нативные размеры изображения из URI или require
   useEffect(() => {
@@ -150,6 +152,7 @@ const ResponsiveImage = ({
     try {
       const uri = typeof source === 'object' && source?.uri ? source.uri : (typeof source === 'string' ? source : '');
       setFailedUri(uri);
+      setUseFallback(true);
     } catch (e) {
       setFailedUri('');
     }
@@ -159,7 +162,11 @@ const ResponsiveImage = ({
   return (
     <View style={[styles.container, { paddingHorizontal: padding, overflow: 'hidden' }]}> 
       <Image
-        source={!source || (!isLikelyValidUri(getUriFromSource(source)) && !fallbackSource) || (getUriFromSource(source) === failedUri && fallbackSource) ? fallbackSource || undefined : source}
+        source={
+          useFallback || !source || (!isLikelyValidUri(getUriFromSource(source)) && !fallbackSource) || (getUriFromSource(source) === failedUri && fallbackSource)
+            ? (fallbackSource || errorImage)
+            : source
+        }
         style={[
           styles.image,
           {
