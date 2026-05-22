@@ -50,7 +50,7 @@ export const indexContent = [
       "eng": "Card description in English",
       "ger": "Kartenbeschreibung auf Deutsch"
     },
-    "href": "/lesson-example"
+    "href": "/skin"
   },
   {
     "type": "card",
@@ -66,7 +66,7 @@ export const indexContent = [
       "eng": "Card description in English",
       "ger": "Kartenbeschreibung auf Deutsch"
     },
-    "href": "/lesson-example"
+    "href": "/skin"
   },
   {
     "type": "card",
@@ -82,7 +82,7 @@ export const indexContent = [
       "eng": "Card description in English",
       "ger": "Kartenbeschreibung auf Deutsch"
     },
-    "href": "/lesson-example"
+    "href": "/skin"
   },
   {
     "type": "card",
@@ -98,7 +98,7 @@ export const indexContent = [
       "eng": "Card description in English",
       "ger": "Kartenbeschreibung auf Deutsch"
     },
-    "href": "/lesson-example"
+    "href": "/skin"
   },
   {
     "type": "languageSwitcher"
