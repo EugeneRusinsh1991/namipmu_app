@@ -1,6 +1,7 @@
 import React from 'react';
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useAuth } from '../context/AuthContext';
+import { colors, layout as layoutTokens, radius, spacing, typography } from '../styles/theme';
 
 export default function ProfileScreen() {
   const { user, logout } = useAuth();
@@ -64,14 +65,14 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    padding: layoutTokens.containerPadding,
     backgroundColor: '#f5f5f5',
     justifyContent: 'center',
   },
   card: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 24,
+    backgroundColor: colors.white,
+    borderRadius: radius.lg,
+    padding: spacing.xl,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -81,34 +82,34 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: '700',
-    marginBottom: 20,
+    marginBottom: spacing.lg,
   },
   infoRow: {
-    marginBottom: 16,
-    paddingBottom: 12,
+    marginBottom: spacing.md,
+    paddingBottom: spacing.sm,
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
   },
   label: {
-    fontSize: 14,
+    fontSize: typography.fontSizeSm,
     color: '#666',
-    fontWeight: '600',
+    fontWeight: typography.fontWeight600 as any,
   },
   value: {
-    fontSize: 16,
+    fontSize: typography.fontSizeMd,
     color: '#333',
-    marginTop: 4,
+    marginTop: spacing.xs,
   },
   logoutButton: {
-    backgroundColor: '#ff3b30',
-    padding: 16,
-    borderRadius: 8,
+    backgroundColor: colors.danger,
+    padding: spacing.md,
+    borderRadius: radius.sm,
     alignItems: 'center',
-    marginTop: 24,
+    marginTop: spacing.lg,
   },
   logoutText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
+    color: colors.white,
+    fontSize: typography.fontSizeMd,
+    fontWeight: typography.fontWeight600 as any,
   },
 });

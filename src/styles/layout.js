@@ -1,15 +1,16 @@
 import { StyleSheet } from 'react-native';
+import { colors, layout as layoutTokens } from './theme';
 
 export const layoutStyles = StyleSheet.create({
   appBackground: {
     flex: 1,
-    backgroundColor: '#fff3eb',
+    backgroundColor: colors.backgroundLight,
   },
 
   container: {
     flex: 1,
-    padding: 20,
-    maxWidth: 800,
+    padding: layoutTokens.containerPadding,
+    maxWidth: layoutTokens.maxWidth,
     alignSelf: 'center',
     width: '100%',
     position: 'relative',

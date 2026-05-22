@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ActivityIndicator, Alert, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useAuth } from '../context/AuthContext';
+import { colors, layout as layoutTokens, radius, spacing, typography } from '../styles/theme';
 
 export default function LoginScreen() {
   const { signin, signup, signinWithGoogle, signinWithApple, loading, error } = useAuth();
@@ -137,13 +138,13 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     justifyContent: 'center',
-    padding: 20,
+    padding: layoutTokens.containerPadding,
     backgroundColor: '#f5f5f5',
   },
   content: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 24,
+    backgroundColor: colors.white,
+    borderRadius: radius.lg,
+    padding: spacing.xl,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -159,24 +160,24 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    padding: 12,
-    marginBottom: 16,
-    fontSize: 16,
+    borderColor: colors.border,
+    borderRadius: radius.sm,
+    padding: spacing.sm,
+    marginBottom: spacing.md,
+    fontSize: typography.fontSizeMd,
     backgroundColor: '#fafafa',
   },
   button: {
-    padding: 16,
-    borderRadius: 8,
+    padding: spacing.md,
+    borderRadius: radius.sm,
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: spacing.sm,
   },
   primaryButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: colors.primary,
   },
   googleButton: {
-    backgroundColor: '#4285F4',
+    backgroundColor: colors.google,
   },
   appleButton: {
     backgroundColor: '#000',
@@ -185,35 +186,35 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
+    color: colors.white,
+    fontSize: typography.fontSizeMd,
+    fontWeight: typography.fontWeight600 as any,
   },
   toggleText: {
-    color: '#007AFF',
+    color: colors.primary,
     textAlign: 'center',
-    marginBottom: 20,
-    fontSize: 14,
+    marginBottom: spacing.md,
+    fontSize: typography.fontSizeSm,
   },
   divider: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 20,
+    marginVertical: spacing.md,
   },
   dividerLine: {
     flex: 1,
     height: 1,
-    backgroundColor: '#ddd',
+    backgroundColor: colors.border,
   },
   dividerText: {
-    marginHorizontal: 10,
-    color: '#999',
-    fontSize: 14,
+    marginHorizontal: spacing.sm,
+    color: colors.muted,
+    fontSize: typography.fontSizeSm,
   },
   errorText: {
-    color: '#ff3b30',
-    marginBottom: 12,
+    color: colors.danger,
+    marginBottom: spacing.sm,
     textAlign: 'center',
-    fontSize: 14,
+    fontSize: typography.fontSizeSm,
   },
 });

@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { colors, radius, spacing } from './theme';
 
 export const languageStyles = StyleSheet.create({
   langWrap: {
@@ -10,12 +11,12 @@ export const languageStyles = StyleSheet.create({
   },
 
   langBtn: {
-    paddingVertical: 10,
+    paddingVertical: spacing.sm,
     paddingHorizontal: 18,
-    borderRadius: 25,
+    borderRadius: radius.round,
     borderWidth: 2,
-    borderColor: '#fff3eb',
-    backgroundColor: '#fff3eb',
+    borderColor: colors.backgroundLight,
+    backgroundColor: colors.backgroundLight,
   },
 
   navBtn: {
@@ -24,8 +25,8 @@ export const languageStyles = StyleSheet.create({
   },
 
   langBtnActive: {
-    backgroundColor: '#fce8da',
-    borderColor: '#fce8da',
+    backgroundColor: colors.cardBackground,
+    borderColor: colors.cardBackground,
   },
 
   langText: {

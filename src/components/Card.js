@@ -1,6 +1,7 @@
 import { Link } from 'expo-router';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useLanguage } from '../context/LanguageContext';
+import { colors, radius, spacing, typography } from '../styles/theme';
 import { getLocalized, getLocalizedAsset } from '../utils/i18n';
 import ImageWithFallback from './ImageWithFallback';
 
@@ -13,20 +14,20 @@ export default function Card({ image, title, description, href, size = 'big' }) 
       cardWidth: 280,
       imageHeight: 100,
       contentHeight: 150,
-      contentPadding: 16,
+      contentPadding: spacing.md,
       titleFontSize: 18,
       titleMarginBottom: 8,
-      descriptionFontSize: 14,
+      descriptionFontSize: typography.fontSizeSm,
       descriptionLineHeight: 20,
     },
     small: {
       cardWidth: 160,
       imageHeight: 80,
       contentHeight: 100,
-      contentPadding: 12,
+      contentPadding: spacing.sm,
       titleFontSize: 14,
       titleMarginBottom: 6,
-      descriptionFontSize: 12,
+      descriptionFontSize: typography.fontSizeSm,
       descriptionLineHeight: 16,
     },
   };
@@ -98,14 +99,14 @@ export default function Card({ image, title, description, href, size = 'big' }) 
 
 const styles = StyleSheet.create({
   card: {
-    borderRadius: 12,
+    borderRadius: radius.lg,
     overflow: 'hidden',
     marginBottom: 20,
-    backgroundColor: '#fce8da',
+    backgroundColor: colors.cardBackground,
     elevation: 5,
     alignSelf: 'center',
     borderWidth: 1,
-    borderColor: '#fce8da',
+    borderColor: colors.cardBackground,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,

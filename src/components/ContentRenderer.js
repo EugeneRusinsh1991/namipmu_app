@@ -4,6 +4,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { useLanguage } from '../context/LanguageContext';
 import { globalStyles } from '../styles/globalStyles';
+import { colors, spacing } from '../styles/theme';
 import { getLocalized, getLocalizedAsset } from '../utils/i18n';
 import AppButton from './AppButton';
 import Card from './Card';
@@ -28,10 +29,10 @@ export function HeroImageRenderer({ content, lang = 'ru' }) {
         aspectRatio={heroItem.aspectRatio}
         resizeMode={heroItem.resizeMode}
       />
-      <LinearGradient
-        colors={['transparent', '#fff3eb']}
-        style={globalStyles.heroGradient}
-      />
+          <LinearGradient
+            colors={['transparent', colors.backgroundLight]}
+            style={globalStyles.heroGradient}
+          />
     </View>
   );
 }
@@ -50,7 +51,7 @@ export default function ContentRenderer({ content, lang = 'ru' }) {
 
         // Если это первый элемент и была heroImage, применяем наложение
         const isFirstAfterHero = index === 0 && hadHeroImage;
-        const heroOverlapStyle = isFirstAfterHero ? { marginTop: -50 } : {};
+        const heroOverlapStyle = isFirstAfterHero ? { marginTop: -spacing.xxl } : {};
 
         if (item.type === 'title') {
           return (

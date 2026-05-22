@@ -165,6 +165,80 @@ function processImageField(imageInput, sheetName) {
   return null;
 }
 
+// Парсер локализованного текста из строки.
+// Если указан base (например 'title' → titleUA/titleRU), он приоритетно ищет эти поля.
+function parseLocalizedText(row, base, fallback = '') {
+  if (base) {
+    const uaKey = `${base}UA`;
+    const ruKey = `${base}RU`;
+    const uaVal = row[uaKey] || row[`${base}Ua`] || row[uaKey.toLowerCase()];
+    const ruVal = row[ruKey] || row[`${base}Ru`] || row[ruKey.toLowerCase()];
+    return {
+      ua: uaVal || '',
+      ru: ruVal || '',
+    };
+  }
+
+  // Общий случай: ищем поля ua/ru, либо uaText/ruText
+  const ua = row.ua || row.uaText || '';
+  const ru = row.ru || row.ruText || '';
+  return { ua: ua || '', ru: ru || '' };
+}
+
+// Парсер пары изображений (UA/RU) с поиском файлов и заполнением error.jpg при отсутствии
+function parseImagePair(row, sheetName, bases = ['image']) {
+  const result = {};
+  let has = false;
+
+  for (const base of bases) {
+    const uaField = `${base}UA`;
+    const ruField = `${base}RU`;
+    const uaVal = row[uaField] || row[`${base}Ua`] || null;
+    const ruVal = row[ruField] || row[`${base}Ru`] || null;
+
+    if (uaVal) {
+      const imagePath = processImageField(uaVal, sheetName);
+      result.ua = imagePath
+        ? `__REQUIRE_START__../../../assets/${imagePath}__REQUIRE_END__`
+        : `__REQUIRE_START__../../../assets/images/error.jpg__REQUIRE_END__`;
+      has = true;
+    }
+
+    if (ruVal) {
+      const imagePath = processImageField(ruVal, sheetName);
+      result.ru = imagePath
+        ? `__REQUIRE_START__../../../assets/${imagePath}__REQUIRE_END__`
+        : `__REQUIRE_START__../../../assets/images/error.jpg__REQUIRE_END__`;
+      has = true;
+    }
+
+    // Если нашли хотя бы один вариант, не пробуем другие базы
+    if (has) break;
+  }
+
+  if (!has) return null;
+
+  // синхронизируем языки: если только один заполнен — копируем на другой
+  if (result.ua && !result.ru) result.ru = result.ua;
+  if (result.ru && !result.ua) result.ua = result.ru;
+
+  return result;
+}
+
+// Парсер размеров/аспектов/resizeMode
+function parseImageSizing(row) {
+  const width = parseSize(getRowField(row, 'imageWidth'));
+  const height = parseSize(getRowField(row, 'imageHeight'));
+  const aspectRatio = parseAspectRatio(getRowField(row, 'imageAspectRatio'));
+  const resizeMode = getRowField(row, 'imageResizeMode') ? String(getRowField(row, 'imageResizeMode')).trim() : undefined;
+  const sizing = {};
+  if (width != null) sizing.width = width;
+  if (height != null) sizing.height = height;
+  if (aspectRatio != null) sizing.aspectRatio = aspectRatio;
+  if (resizeMode) sizing.resizeMode = resizeMode;
+  return sizing;
+}
+
 // Функция для преобразования строк Excel в объекты контента
 function parseContent(sheetName) {
   const sheet = workbook.Sheets[sheetName];
@@ -204,59 +278,16 @@ function parseContent(sheetName) {
 
     if (row.type === 'heroImage') {
       // heroImage - картинка с градиентом
-      let hasValidImage = false;
-      const width = parseSize(getRowField(row, 'imageWidth'));
-      const height = parseSize(getRowField(row, 'imageHeight'));
-      const aspectRatio = parseAspectRatio(getRowField(row, 'imageAspectRatio'));
-      const resizeMode = getRowField(row, 'imageResizeMode') ? String(getRowField(row, 'imageResizeMode')).trim() : undefined;
-      
-      if (width != null) item.width = width;
-      if (height != null) item.height = height;
-      if (aspectRatio != null) item.aspectRatio = aspectRatio;
-      if (resizeMode) item.resizeMode = resizeMode;
-      
-      if (row.imageUA) {
-        const imagePath = processImageField(row.imageUA, sheetName);
-        if (imagePath) {
-          if (!item.image) item.image = {};
-          item.image.ua = `__REQUIRE_START__../../../assets/${imagePath}__REQUIRE_END__`;
-          hasValidImage = true;
-        } else {
-          // Используем error.jpg если файл не найден
-          if (!item.image) item.image = {};
-          item.image.ua = `__REQUIRE_START__../../../assets/images/error.jpg__REQUIRE_END__`;
-          hasValidImage = true;
-        }
-      }
-      
-      if (row.imageRU) {
-        const imagePath = processImageField(row.imageRU, sheetName);
-        if (imagePath) {
-          if (!item.image) item.image = {};
-          item.image.ru = `__REQUIRE_START__../../../assets/${imagePath}__REQUIRE_END__`;
-          hasValidImage = true;
-        } else {
-          // Используем error.jpg если файл не найден
-          if (!item.image) item.image = {};
-          item.image.ru = `__REQUIRE_START__../../../assets/images/error.jpg__REQUIRE_END__`;
-          hasValidImage = true;
-        }
-      }
-      
-      if (hasValidImage) {
-        if (item.image.ua && !item.image.ru) {
-          item.image.ru = item.image.ua;
-        }
-        if (item.image.ru && !item.image.ua) {
-          item.image.ua = item.image.ru;
-        }
+      const sizing = parseImageSizing(row);
+      Object.assign(item, sizing);
+
+      const imagePair = parseImagePair(row, sheetName, ['image']);
+      if (imagePair) {
+        item.image = imagePair;
       }
     }
     else if (row.type === 'eyebrow' || row.type === 'title' || row.type === 'subtitle') {
-      item.text = {
-        ua: row.ua || '',
-        ru: row.ru || '',
-      };
+      item.text = parseLocalizedText(row);
     } 
     else if (row.type === 'languageSwitcher') {
       // languageSwitcher - это просто элемент без параметров
@@ -275,57 +306,14 @@ function parseContent(sheetName) {
       if (row.href) item.href = row.href;
     }
     else if (row.type === 'text') {
-      item.text = {
-        ua: row.ua || '',
-        ru: row.ru || '',
-      };
+      item.text = parseLocalizedText(row);
     }
     else if (row.type === 'card' || row.type === 'cardBig' || row.type === 'cardSmall') {
-      let hasValidImage = false;
-      
-      if (row.imageUA) {
-        const imagePath = processImageField(row.imageUA, sheetName);
-        if (imagePath) {
-          if (!item.image) item.image = {};
-          item.image.ua = `__REQUIRE_START__../../../assets/${imagePath}__REQUIRE_END__`;
-          hasValidImage = true;
-        } else {
-          if (!item.image) item.image = {};
-          item.image.ua = `__REQUIRE_START__../../../assets/images/error.jpg__REQUIRE_END__`;
-          hasValidImage = true;
-        }
-      }
-      
-      if (row.imageRU) {
-        const imagePath = processImageField(row.imageRU, sheetName);
-        if (imagePath) {
-          if (!item.image) item.image = {};
-          item.image.ru = `__REQUIRE_START__../../../assets/${imagePath}__REQUIRE_END__`;
-          hasValidImage = true;
-        } else {
-          if (!item.image) item.image = {};
-          item.image.ru = `__REQUIRE_START__../../../assets/images/error.jpg__REQUIRE_END__`;
-          hasValidImage = true;
-        }
-      }
-      
-      if (hasValidImage) {
-        if (item.image.ua && !item.image.ru) {
-          item.image.ru = item.image.ua;
-        }
-        if (item.image.ru && !item.image.ua) {
-          item.image.ua = item.image.ru;
-        }
-      }
-      
-      item.title = {
-        ua: row.titleUA || '',
-        ru: row.titleRU || '',
-      };
-      item.description = {
-        ua: row.descriptionUA || '',
-        ru: row.descriptionRU || '',
-      };
+      const imagePair = parseImagePair(row, sheetName, ['image']);
+      if (imagePair) item.image = imagePair;
+
+      item.title = parseLocalizedText(row, 'title');
+      item.description = parseLocalizedText(row, 'description');
       if (row.href) item.href = row.href;
     }
     else if (row.type === 'link') {
@@ -340,105 +328,19 @@ function parseContent(sheetName) {
       if (row.type === 'squareImage') {
         item.type = 'image';
       }
-      
-      const width = parseSize(getRowField(row, 'imageWidth'));
-      const height = parseSize(getRowField(row, 'imageHeight'));
-      const aspectRatio = parseAspectRatio(getRowField(row, 'imageAspectRatio'));
-      const resizeMode = getRowField(row, 'imageResizeMode') ? String(getRowField(row, 'imageResizeMode')).trim() : undefined;
-      
-      if (width != null) item.width = width;
-      if (height != null) item.height = height;
-      if (aspectRatio != null) item.aspectRatio = aspectRatio;
-      if (resizeMode) item.resizeMode = resizeMode;
-      
-      let hasValidImage = false;
-      
-      if (row.imageUA) {
-        const imagePath = processImageField(row.imageUA, sheetName);
-        if (imagePath) {
-          if (!item.src) item.src = {};
-          item.src.ua = `__REQUIRE_START__../../../assets/${imagePath}__REQUIRE_END__`;
-          hasValidImage = true;
-        } else {
-          if (!item.src) item.src = {};
-          item.src.ua = `__REQUIRE_START__../../../assets/images/error.jpg__REQUIRE_END__`;
-          hasValidImage = true;
-        }
-      }
-      
-      if (row.imageRU) {
-        const imagePath = processImageField(row.imageRU, sheetName);
-        if (imagePath) {
-          if (!item.src) item.src = {};
-          item.src.ru = `__REQUIRE_START__../../../assets/${imagePath}__REQUIRE_END__`;
-          hasValidImage = true;
-        } else {
-          if (!item.src) item.src = {};
-          item.src.ru = `__REQUIRE_START__../../../assets/images/error.jpg__REQUIRE_END__`;
-          hasValidImage = true;
-        }
-      }
-      
-      if (hasValidImage) {
-        if (item.src.ua && !item.src.ru) {
-          item.src.ru = item.src.ua;
-        }
-        if (item.src.ru && !item.src.ua) {
-          item.src.ua = item.src.ru;
-        }
-      }
+      const sizing = parseImageSizing(row);
+      Object.assign(item, sizing);
+
+      const srcPair = parseImagePair(row, sheetName, ['image']);
+      if (srcPair) item.src = srcPair;
     }
     else if (row.type === 'gif') {
       // GIF анимация - поддерживает gifUA/gifRU или imageUA/imageRU
-      const gifUa = row.gifUA || row.imageUA;
-      const gifRu = row.gifRU || row.imageRU;
-      
-      const width = parseSize(getRowField(row, 'imageWidth'));
-      const height = parseSize(getRowField(row, 'imageHeight'));
-      const aspectRatio = parseAspectRatio(getRowField(row, 'imageAspectRatio'));
-      const resizeMode = getRowField(row, 'imageResizeMode') ? String(getRowField(row, 'imageResizeMode')).trim() : undefined;
-      
-      if (width != null) item.width = width;
-      if (height != null) item.height = height;
-      if (aspectRatio != null) item.aspectRatio = aspectRatio;
-      if (resizeMode) item.resizeMode = resizeMode;
-      
-      let hasValidImage = false;
-      
-      if (gifUa) {
-        const imagePath = processImageField(gifUa, sheetName);
-        if (imagePath) {
-          if (!item.src) item.src = {};
-          item.src.ua = `__REQUIRE_START__../../../assets/${imagePath}__REQUIRE_END__`;
-          hasValidImage = true;
-        } else {
-          if (!item.src) item.src = {};
-          item.src.ua = `__REQUIRE_START__../../../assets/images/error.jpg__REQUIRE_END__`;
-          hasValidImage = true;
-        }
-      }
-      
-      if (gifRu) {
-        const imagePath = processImageField(gifRu, sheetName);
-        if (imagePath) {
-          if (!item.src) item.src = {};
-          item.src.ru = `__REQUIRE_START__../../../assets/${imagePath}__REQUIRE_END__`;
-          hasValidImage = true;
-        } else {
-          if (!item.src) item.src = {};
-          item.src.ru = `__REQUIRE_START__../../../assets/images/error.jpg__REQUIRE_END__`;
-          hasValidImage = true;
-        }
-      }
-      
-      if (hasValidImage) {
-        if (item.src.ua && !item.src.ru) {
-          item.src.ru = item.src.ua;
-        }
-        if (item.src.ru && !item.src.ua) {
-          item.src.ua = item.src.ru;
-        }
-      }
+      const sizing = parseImageSizing(row);
+      Object.assign(item, sizing);
+
+      const srcPair = parseImagePair(row, sheetName, ['gif', 'image']);
+      if (srcPair) item.src = srcPair;
     }
     else if (row.type === 'textLink') {
       // Преобразуем textLink в link для унифицированной обработки

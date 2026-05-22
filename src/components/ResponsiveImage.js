@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Image, Platform, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { layout as layoutTokens, spacing } from '../styles/theme';
 
 /**
  * ResponsiveImage — переиспользуемый компонент для адаптивных изображений
@@ -86,14 +87,14 @@ const ResponsiveImage = ({
   const horizontalPadding = padding * 2;
   const availableWidth = screenWidth - horizontalPadding;
 
-  // На desktop (web) ограничиваем контентом (~600px для читаемости)
+  // На desktop (web) ограничиваем контентом (theme.layout.maxContentWidth для читаемости)
   let contentMaxWidth = availableWidth;
-  if (Platform.OS === 'web' && availableWidth > 600) {
-    contentMaxWidth = 600;
+  if (Platform.OS === 'web' && availableWidth > layoutTokens.maxContentWidth) {
+    contentMaxWidth = layoutTokens.maxContentWidth;
   } else if (Platform.OS !== 'web' && Platform.OS !== 'android' && Platform.OS !== 'ios') {
     // Для других платформ (desktop apps)
-    if (availableWidth > 600) {
-      contentMaxWidth = 600;
+    if (availableWidth > layoutTokens.maxContentWidth) {
+      contentMaxWidth = layoutTokens.maxContentWidth;
     }
   }
 
@@ -133,7 +134,7 @@ const ResponsiveImage = ({
   };
 
   return (
-    <View style={[styles.container, { paddingHorizontal: padding }]}>
+    <View style={[styles.container, { paddingHorizontal: padding }]}> 
       <Image
         source={hasError && fallbackSource ? fallbackSource : source}
         style={[
@@ -156,7 +157,7 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginVertical: 16,
+    marginVertical: spacing.md,
   },
   image: {
     alignSelf: 'center',

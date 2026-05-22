@@ -8,6 +8,7 @@ import {
     type TextStyle,
     type ViewStyle,
 } from 'react-native';
+import { colors, radius, spacing } from '../styles/theme';
 
 type LanguageOption = {
   value: string;
@@ -77,12 +78,12 @@ export default function LanguageSwitcher({
 const styles = StyleSheet.create({
   root: {
     flexDirection: 'row',
-    backgroundColor: '#fff3eb',
-    borderRadius: 999,
-    padding: 4,
+    backgroundColor: colors.backgroundLight,
+    borderRadius: radius.round,
+    padding: spacing.xs / 2,
     alignSelf: 'center',
     borderWidth: 1,
-    borderColor: '#f2dbca',
+    borderColor: colors.backgroundLight,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.08,

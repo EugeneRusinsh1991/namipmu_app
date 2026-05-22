@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ActivityIndicator, Alert, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useAuth } from '../context/AuthContext';
+import { colors, radius, spacing, typography } from '../styles/theme';
 
 export default function LoginButton() {
   const { signin, signup, signinWithGoogle, logout, loading, user } = useAuth();
@@ -207,12 +208,12 @@ export default function LoginButton() {
 
 const styles = StyleSheet.create({
   loginButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: colors.primary,
     paddingVertical: 14,
-    paddingHorizontal: 16,
-    borderRadius: 8,
-    marginBottom: 12,
-    marginTop: 8,
+    paddingHorizontal: spacing.md,
+    borderRadius: radius.md,
+    marginBottom: spacing.sm,
+    marginTop: spacing.sm / 2,
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -221,9 +222,9 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   loginButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
+    color: colors.white,
+    fontSize: typography.fontSizeMd,
+    fontWeight: typography.fontWeight600 as any,
   },
   overlay: {
     flex: 1,
@@ -231,19 +232,19 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   modalContent: {
-    backgroundColor: '#fff',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    padding: 24,
+    backgroundColor: colors.white,
+    borderTopLeftRadius: radius.modal,
+    borderTopRightRadius: radius.modal,
+    padding: spacing.xl,
     maxHeight: '90%',
   },
   closeButton: {
     position: 'absolute',
-    top: 16,
-    right: 16,
+    top: spacing.md,
+    right: spacing.md,
     width: 32,
     height: 32,
-    borderRadius: 16,
+    borderRadius: radius.sm,
     backgroundColor: '#f0f0f0',
     justifyContent: 'center',
     alignItems: 'center',
@@ -257,84 +258,84 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: 22,
     fontWeight: '700',
-    marginBottom: 20,
+    marginBottom: spacing.lg,
     textAlign: 'center',
-    marginTop: 20,
+    marginTop: spacing.lg,
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    padding: 12,
-    marginBottom: 12,
-    fontSize: 16,
+    borderColor: colors.border,
+    borderRadius: radius.sm,
+    padding: spacing.sm,
+    marginBottom: spacing.sm,
+    fontSize: typography.fontSizeMd,
     backgroundColor: '#fafafa',
   },
   button: {
     padding: 14,
-    borderRadius: 8,
+    borderRadius: radius.sm,
     alignItems: 'center',
     marginBottom: 10,
   },
   primaryButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: colors.primary,
   },
   googleButton: {
-    backgroundColor: '#4285F4',
+    backgroundColor: colors.google,
   },
   logoutButton: {
-    backgroundColor: '#ff3b30',
-    marginTop: 24,
+    backgroundColor: colors.danger,
+    marginTop: spacing.lg,
   },
   disabledButton: {
     opacity: 0.6,
   },
   buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
+    color: colors.white,
+    fontSize: typography.fontSizeMd,
+    fontWeight: typography.fontWeight600 as any,
   },
   toggleText: {
-    color: '#007AFF',
+    color: colors.primary,
     textAlign: 'center',
-    fontSize: 14,
-    marginBottom: 16,
+    fontSize: typography.fontSizeSm,
+    marginBottom: spacing.md,
   },
   divider: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 16,
+    marginVertical: spacing.md,
   },
   dividerLine: {
     flex: 1,
     height: 1,
-    backgroundColor: '#ddd',
+    backgroundColor: colors.border,
   },
   dividerText: {
-    marginHorizontal: 10,
-    color: '#999',
-    fontSize: 14,
+    marginHorizontal: spacing.sm,
+    color: colors.muted,
+    fontSize: typography.fontSizeSm,
   },
   errorText: {
-    color: '#ff3b30',
-    marginBottom: 12,
+    color: colors.danger,
+    marginBottom: spacing.sm,
     textAlign: 'center',
-    fontSize: 14,
+    fontSize: typography.fontSizeSm,
   },
   profileInfo: {
-    marginBottom: 16,
-    paddingBottom: 12,
+    marginBottom: spacing.md,
+    paddingBottom: spacing.sm,
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
   },
   profileLabel: {
-    fontSize: 14,
+    fontSize: typography.fontSizeSm,
     color: '#666',
-    fontWeight: '600',
+    fontWeight: typography.fontWeight600 as any,
   },
   profileValue: {
-    fontSize: 16,
+    fontSize: typography.fontSizeMd,
     color: '#333',
-    marginTop: 4,
+    marginTop: spacing.xs,
   },
 });
