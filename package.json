@@ -10,6 +10,7 @@
     "web": "expo start --web",
     "lint": "expo lint",
     "generate": "node ./scripts/generateContent.js",
+    "validate-content": "node ./scripts/validateContent.js",
     "create-excel": "node ./scripts/createExcelTemplate.js",
     "template": "node ./scripts/createExcelTemplate.js",
     "backup": "node ./backup.js",

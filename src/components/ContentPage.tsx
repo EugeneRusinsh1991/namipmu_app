@@ -1,13 +1,14 @@
 import { Stack } from 'expo-router';
 import { ScrollView, View } from 'react-native';
 import { useLanguage } from '../context/LanguageContext';
+import type { ContentBlock } from '../content/types';
 import { globalStyles } from '../styles/globalStyles';
 import { HeroBlock } from './blocks';
 import ContentRenderer from './ContentRenderer';
 
 interface ContentPageProps {
   title: string;
-  contentModule: any;
+  contentModule: ContentBlock[];
 }
 
 export default function ContentPage({ title, contentModule }: ContentPageProps) {

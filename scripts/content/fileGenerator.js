@@ -79,10 +79,11 @@ function generateAppRouteFile(sheetName, exportName) {
   const componentName = toPascalCase(normalizedName);
   const routeCode = `// GENERATED FILE: this route is recreated by scripts/generateContent.js
 import ContentPage from '../components/ContentPage';
+import type { ContentBlock } from '../content/types';
 import { ${exportName} } from '../content/lessons/${normalizedName}Content';
 
 export default function ${componentName}() {
-  return <ContentPage title="${componentName}" contentModule={${exportName}} />;
+  return <ContentPage title="${componentName}" contentModule={${exportName} as ContentBlock[]} />;
 }
 `;
 
