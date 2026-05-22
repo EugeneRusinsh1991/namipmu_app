@@ -11,6 +11,9 @@ const PATHS = {
 // Поддерживаемые расширения для изображений
 const SUPPORTED_IMAGE_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg'];
 
+// Поддерживаемые расширения для видео
+const SUPPORTED_VIDEO_EXTENSIONS = ['.mp4', '.mov', '.webm', '.m4v', '.ogv'];
+
 // Специальные служебные листы (первые N листов пропускаются)
 const UTILITY_SHEETS_COUNT = 3;
 

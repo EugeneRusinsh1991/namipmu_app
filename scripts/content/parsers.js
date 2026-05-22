@@ -1,5 +1,6 @@
 const { getRowField } = require('./utils');
 const { processImageField } = require('./imageResolver');
+const { processVideoField } = require('./videoResolver');
 
 const LANGUAGE_ALIASES = {
   ua: ['ukr', 'ua'],
@@ -157,6 +158,47 @@ function parseImagePair(row, sheetName, bases = ['image']) {
   return result;
 }
 
+function parseVideoPair(row, sheetName, bases = ['video']) {
+  const result = {};
+  let has = false;
+
+  for (const base of bases) {
+    for (const lang of LANGUAGES) {
+      let value = getLocalizedFieldValue(row, lang, base);
+      if (!value && base) {
+        value = getLocalizedFieldValue(row, lang);
+      }
+      if (!value && base) {
+        value = getRowField(row, base);
+      }
+
+      if (!value) continue;
+
+      const videoPath = processVideoField(value, sheetName);
+      if (!videoPath) continue;
+
+      const formattedPath = videoPath.startsWith('http://') || videoPath.startsWith('https://')
+        ? videoPath
+        : `__REQUIRE_START__../../../assets/${videoPath}__REQUIRE_END__`;
+
+      result[lang] = formattedPath;
+      has = true;
+    }
+    if (has) break;
+  }
+
+  if (!has) return null;
+
+  const fallback = result.ua || result.ru || result.eng || result.ger;
+  for (const lang of LANGUAGES) {
+    if (!result[lang]) {
+      result[lang] = fallback;
+    }
+  }
+
+  return result;
+}
+
 function parseImageSizing(row) {
   const sizing = parseMetaString(getRowField(row, 'meta'));
 
@@ -185,5 +227,6 @@ module.exports = {
   parseAspectRatio,
   parseLocalizedText,
   parseImagePair,
+  parseVideoPair,
   parseImageSizing,
 };
