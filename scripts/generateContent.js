@@ -239,6 +239,117 @@ function parseImageSizing(row) {
   return sizing;
 }
 
+// Карта обработчиков типов контента
+const contentHandlers = {
+  heroimage(row, sheetName) {
+    const sizing = parseImageSizing(row);
+    const res = Object.assign({}, sizing);
+    const imagePair = parseImagePair(row, sheetName, ['image']);
+    if (imagePair) res.image = imagePair;
+    return res;
+  },
+
+  eyebrow(row, sheetName) {
+    return { text: parseLocalizedText(row) };
+  },
+  title(row, sheetName) {
+    return { text: parseLocalizedText(row) };
+  },
+  subtitle(row, sheetName) {
+    return { text: parseLocalizedText(row) };
+  },
+
+  languageswitcher() {
+    return {}; // просто элемент без дополнительных полей
+  },
+
+  navigationbuttons(row) {
+    const nextText = {
+      ru: row.ru || 'Следующий урок',
+      ua: row.ua || 'Наступний урок',
+    };
+    const res = {
+      backText: { ru: 'Назад', ua: 'Назад' },
+      backHref: '/',
+      nextText,
+    };
+    if (row.href) res.href = row.href;
+    return res;
+  },
+
+  text(row) {
+    return { text: parseLocalizedText(row) };
+  },
+
+  // card, cardBig, cardSmall handled as `card`
+  card(row, sheetName) {
+    const res = {};
+    const imagePair = parseImagePair(row, sheetName, ['image']);
+    if (imagePair) res.image = imagePair;
+    res.title = parseLocalizedText(row, 'title');
+    res.description = parseLocalizedText(row, 'description');
+    if (row.href) res.href = row.href;
+    return res;
+  },
+
+  link(row) {
+    return {
+      text: { ua: row.ua || '', ru: row.ru || '' },
+      ...(row.href ? { href: row.href } : {}),
+    };
+  },
+
+  image(row, sheetName) {
+    const res = {};
+    const sizing = parseImageSizing(row);
+    Object.assign(res, sizing);
+    const srcPair = parseImagePair(row, sheetName, ['image']);
+    if (srcPair) res.src = srcPair;
+    return res;
+  },
+
+  gif(row, sheetName) {
+    const res = {};
+    const sizing = parseImageSizing(row);
+    Object.assign(res, sizing);
+    const srcPair = parseImagePair(row, sheetName, ['gif', 'image']);
+    if (srcPair) res.src = srcPair;
+    return res;
+  },
+
+  // textLink -> link
+  textlink(row) {
+    return {
+      text: { ua: row.ua || row.uaText || '', ru: row.ru || row.ruText || '' },
+      ...(row.href ? { href: row.href } : {}),
+    };
+  },
+
+  // videoContainer -> video
+  videocontainer(row) {
+    const res = {};
+    if (row.imageRU || row.imageUA) {
+      res.url = row.imageRU || row.imageUA;
+    }
+    return res;
+  },
+
+  video(row) {
+    const res = {};
+    if (row.href) res.url = row.href;
+    return res;
+  },
+};
+
+// Алиасы типов (чтобы, например, cardBig и cardSmall обрабатывались как card)
+const typeAliases = {
+  cardbig: 'card',
+  cardsmall: 'card',
+  squareimage: 'image',
+  textlink: 'textlink',
+  videocontainer: 'videocontainer',
+};
+
 // Функция для преобразования строк Excel в объекты контента
 function parseContent(sheetName) {
   const sheet = workbook.Sheets[sheetName];
@@ -273,93 +384,24 @@ function parseContent(sheetName) {
       currentList = [];
     }
 
-    // Обработка остальных типов
-    const item = { type: row.type };
+    // Обработка остальных типов через contentHandlers
+    const originalType = String(row.type || '').trim();
+    const normalizedType = normalizeFieldName(originalType);
+    const aliasType = typeAliases[normalizedType] || normalizedType;
 
-    if (row.type === 'heroImage') {
-      // heroImage - картинка с градиентом
-      const sizing = parseImageSizing(row);
-      Object.assign(item, sizing);
+    // Сохраняем поведение: squareImage -> image, textLink -> link, videoContainer -> video
+    let outputType = originalType;
+    if (normalizedType === 'squareimage') outputType = 'image';
+    if (normalizedType === 'textlink') outputType = 'link';
+    if (normalizedType === 'videocontainer') outputType = 'video';
+    const item = { type: outputType };
 
-      const imagePair = parseImagePair(row, sheetName, ['image']);
-      if (imagePair) {
-        item.image = imagePair;
-      }
-    }
-    else if (row.type === 'eyebrow' || row.type === 'title' || row.type === 'subtitle') {
-      item.text = parseLocalizedText(row);
-    } 
-    else if (row.type === 'languageSwitcher') {
-      // languageSwitcher - это просто элемент без параметров
-    }
-    else if (row.type === 'navigationButtons') {
-      item.type = 'navigationButtons';
-      item.backText = {
-        ru: 'Назад',
-        ua: 'Назад',
-      };
-      item.backHref = '/';
-      item.nextText = {
-        ru: row.ru || 'Следующий урок',
-        ua: row.ua || 'Наступний урок',
-      };
-      if (row.href) item.href = row.href;
-    }
-    else if (row.type === 'text') {
-      item.text = parseLocalizedText(row);
-    }
-    else if (row.type === 'card' || row.type === 'cardBig' || row.type === 'cardSmall') {
-      const imagePair = parseImagePair(row, sheetName, ['image']);
-      if (imagePair) item.image = imagePair;
-
-      item.title = parseLocalizedText(row, 'title');
-      item.description = parseLocalizedText(row, 'description');
-      if (row.href) item.href = row.href;
-    }
-    else if (row.type === 'link') {
-      item.text = {
-        ua: row.ua || '',
-        ru: row.ru || '',
-      };
-      if (row.href) item.href = row.href;
-    }
-    else if (row.type === 'image' || row.type === 'squareImage') {
-      // Преобразуем squareImage в image для унифицированной обработки
-      if (row.type === 'squareImage') {
-        item.type = 'image';
-      }
-      const sizing = parseImageSizing(row);
-      Object.assign(item, sizing);
-
-      const srcPair = parseImagePair(row, sheetName, ['image']);
-      if (srcPair) item.src = srcPair;
-    }
-    else if (row.type === 'gif') {
-      // GIF анимация - поддерживает gifUA/gifRU или imageUA/imageRU
-      const sizing = parseImageSizing(row);
-      Object.assign(item, sizing);
-
-      const srcPair = parseImagePair(row, sheetName, ['gif', 'image']);
-      if (srcPair) item.src = srcPair;
-    }
-    else if (row.type === 'textLink') {
-      // Преобразуем textLink в link для унифицированной обработки
-      item.type = 'link';
-      item.text = {
-        ua: row.ua || row.uaText || '',
-        ru: row.ru || row.ruText || '',
-      };
-      if (row.href) item.href = row.href;
-    }
-    else if (row.type === 'videoContainer') {
-      // Преобразуем videoContainer в video для унифицированной обработки
-      item.type = 'video';
-      if (row.imageRU || row.imageUA) {
-        item.url = row.imageRU || row.imageUA;
-      }
-    }
-    else if (row.type === 'video') {
-      if (row.href) item.url = row.href;
+    const handler = contentHandlers[aliasType];
+    if (handler) {
+      const extra = handler(row, sheetName);
+      // Если обработчик вернул объект с полем `type`, оно может переопределить тип (как в squareImage/textLink/videoContainer)
+      if (extra && extra.type) item.type = extra.type;
+      Object.assign(item, extra || {});
     }
 
     content.push(item);
