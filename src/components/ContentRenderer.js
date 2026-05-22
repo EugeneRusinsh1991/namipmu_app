@@ -1,16 +1,24 @@
 import { LinearGradient } from 'expo-linear-gradient';
-import { Link } from 'expo-router';
-import { StyleSheet, Text, View } from 'react-native';
-import { WebView } from 'react-native-webview';
+import { View } from 'react-native';
 import { useLanguage } from '../context/LanguageContext';
 import { globalStyles } from '../styles/globalStyles';
 import { colors, spacing } from '../styles/theme';
-import { getLocalized, getLocalizedAsset } from '../utils/i18n';
-import AppButton from './AppButton';
-import Card from './Card';
+import { getLocalizedAsset } from '../utils/i18n';
 import ImageWithFallback from './ImageWithFallback';
-import LanguageSwitcher from './LanguageSwitcher';
-import ResponsiveImage from './ResponsiveImage';
+import {
+  CardBlock,
+  EyebrowBlock,
+  GifBlock,
+  ImageBlock,
+  LanguageSwitcherBlock,
+  LinkBlock,
+  ListBlock,
+  NavigationBlock,
+  SubtitleBlock,
+  TextContentBlock,
+  TitleBlock,
+  VideoBlock,
+} from './blocks';
 
 export function HeroImageRenderer({ content, lang = 'ru' }) {
   const heroItem = content.find(item => item.type === 'heroImage');
@@ -44,199 +52,50 @@ export default function ContentRenderer({ content, lang = 'ru' }) {
   const filteredContent = content.filter(item => item.type !== 'heroImage');
   let hadHeroImage = content.some(item => item.type === 'heroImage');
 
+  // Компонент для отрисовки конкретного блока контента
+  const renderBlock = (item, index, heroOverlapStyle) => {
+    switch (item.type) {
+      case 'title':
+        return <TitleBlock key={index} item={item} lang={lang} heroOverlapStyle={heroOverlapStyle} />;
+      case 'eyebrow':
+        return <EyebrowBlock key={index} item={item} lang={lang} heroOverlapStyle={heroOverlapStyle} />;
+      case 'subtitle':
+        return <SubtitleBlock key={index} item={item} lang={lang} heroOverlapStyle={heroOverlapStyle} />;
+      case 'text':
+        return <TextContentBlock key={index} item={item} lang={lang} heroOverlapStyle={heroOverlapStyle} />;
+      case 'languageSwitcher':
+        return <LanguageSwitcherBlock key={index} item={item} lang={lang} setLang={setLang} heroOverlapStyle={heroOverlapStyle} />;
+      case 'navigationButtons':
+        return <NavigationBlock key={index} item={item} lang={lang} heroOverlapStyle={heroOverlapStyle} />;
+      case 'list':
+        return <ListBlock key={index} item={item} lang={lang} heroOverlapStyle={heroOverlapStyle} />;
+      case 'image':
+        return <ImageBlock key={index} item={item} lang={lang} heroOverlapStyle={heroOverlapStyle} />;
+      case 'gif':
+        return <GifBlock key={index} item={item} lang={lang} heroOverlapStyle={heroOverlapStyle} />;
+      case 'video':
+        return <VideoBlock key={index} item={item} lang={lang} heroOverlapStyle={heroOverlapStyle} />;
+      case 'link':
+        return <LinkBlock key={index} item={item} lang={lang} heroOverlapStyle={heroOverlapStyle} />;
+      case 'card':
+      case 'cardBig':
+      case 'cardSmall':
+        return <CardBlock key={index} item={item} lang={lang} heroOverlapStyle={heroOverlapStyle} />;
+      default:
+        return null;
+    }
+  };
+
   return (
     <>
       {filteredContent.map((item, index) => {
-        const text = getLocalized(item.text, lang, '');
-
         // Если это первый элемент и была heroImage, применяем наложение
         const isFirstAfterHero = index === 0 && hadHeroImage;
         const heroOverlapStyle = isFirstAfterHero ? { marginTop: -spacing.xxl } : {};
 
-        if (item.type === 'title') {
-          return (
-            <Text key={index} style={[globalStyles.title, heroOverlapStyle]}>
-              {text}
-            </Text>
-          );
-        }
-
-        if (item.type === 'eyebrow') {
-          return (
-            <Text key={index} style={[globalStyles.eyebrow, heroOverlapStyle]}>
-              {text}
-            </Text>
-          );
-        }
-
-        if (item.type === 'subtitle') {
-          return (
-            <Text key={index} style={[globalStyles.subtitle, heroOverlapStyle]}>
-              {text}
-            </Text>
-          );
-        }
-
-        if (item.type === 'languageSwitcher') {
-          return (
-            <LanguageSwitcher
-              key={index}
-              value={lang}
-              onChange={(selected) => setLang(selected)}
-            />
-          );
-        }
-
-        if (item.type === 'navigationButtons') {
-          const backText = getLocalized(item.backText, lang, 'Назад');
-          const nextText = getLocalized(item.nextText, lang, '');
-          const nextHref = item.href || '/';
-
-          return (
-            <View key={index} style={StyleSheet.flatten([styles.navigationRow, heroOverlapStyle])}>
-              <Link href={item.backHref || '/'} asChild>
-                <AppButton
-                  title={backText}
-                  variant="secondary"
-                  accessibilityLabel={`Кнопка ${backText}`}
-                  style={styles.navigationButton}
-                />
-              </Link>
-              <Link href={nextHref} asChild>
-                <AppButton
-                  title={nextText}
-                  variant="primary"
-                  accessibilityLabel={`Кнопка ${nextText}`}
-                  style={StyleSheet.flatten([
-                    styles.navigationButton,
-                    styles.primaryButton,
-                  ])}
-                />
-              </Link>
-            </View>
-          );
-        }
-
-        if (item.type === 'list') {
-          return (
-            <View key={index} style={[globalStyles.listContainer, heroOverlapStyle]}>
-              {item.items.map((listItem, itemIndex) => {
-                const itemText = getLocalized(listItem.text, lang, '');
-
-                return (
-                  <View key={itemIndex} style={globalStyles.listItem}>
-                    <Text style={globalStyles.listBullet}>•</Text>
-                    <Text style={globalStyles.listItemText}>{itemText}</Text>
-                  </View>
-                );
-              })}
-            </View>
-          );
-        }
-
-        if (item.type === 'text') {
-          return (
-            <Text key={index} style={[globalStyles.text, heroOverlapStyle]}>
-              {text}
-            </Text>
-          );
-        }
-
-        if (item.type === 'image') {
-          const imageSrc = getLocalizedAsset(item.src, lang);
-
-          const isSquareImage = item.aspectRatio === 1 && item.width === item.height;
-          const imageMaxWidth = isSquareImage ? null : item.width || null;
-          
-          return (
-            <View key={index} style={heroOverlapStyle}>
-              <ResponsiveImage
-                source={imageSrc}
-                aspectRatio={item.aspectRatio}
-                minWidth={100}
-                maxWidth={imageMaxWidth}
-                padding={16}
-                resizeMode={item.resizeMode || 'contain'}
-              />
-            </View>
-          );
-        }
-
-        if (item.type === 'gif') {
-          const gifSrc = getLocalizedAsset(item.src, lang);
-
-          const isSquareImage = item.aspectRatio === 1 && item.width === item.height;
-          const gifMaxWidth = isSquareImage ? null : item.width || null;
-          
-          return (
-            <View key={index} style={heroOverlapStyle}>
-              <ResponsiveImage
-                source={gifSrc}
-                aspectRatio={item.aspectRatio}
-                minWidth={100}
-                maxWidth={gifMaxWidth}
-                padding={16}
-                resizeMode={item.resizeMode || 'contain'}
-              />
-            </View>
-          );
-        }
-
-        if (item.type === 'video' && item.url) {
-          return (
-            <View key={index} style={[globalStyles.videoContainer, heroOverlapStyle]}>
-              <WebView style={{ flex: 1 }} source={{ uri: item.url }} />
-            </View>
-          );
-        }
-
-        if (item.type === 'link' && item.href) {
-          const normalizedHref = typeof item.href === 'string' ? (item.href.startsWith('/') ? item.href : `/${item.href}`) : item.href;
-
-          return (
-            <Link key={index} href={normalizedHref} style={heroOverlapStyle}>
-              <Text style={globalStyles.textLink}>{text}</Text>
-            </Link>
-          );
-        }
-
-        if (item.type === 'card' || item.type === 'cardBig' || item.type === 'cardSmall') {
-          const cardTitle = getLocalized(item.title, lang, '');
-
-          const cardDescription = getLocalized(item.description, lang, '');
-
-          // Определяем размер карточки
-          const cardSize = item.type === 'cardSmall' ? 'small' : 'big';
-
-          return (
-            <View key={index} style={heroOverlapStyle}>
-              <Card
-                image={item.image}
-                title={cardTitle}
-                description={cardDescription}
-                href={item.href}
-                size={cardSize}
-              />
-            </View>
-          );
-        }
-
-        return null;
+        return renderBlock(item, index, heroOverlapStyle);
       })}
     </>
   );
 }
 
-const styles = StyleSheet.create({
-  navigationRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 24,
-  },
-  navigationButton: {
-    flex: 1,
-  },
-  primaryButton: {
-    marginLeft: 12,
-  },
-});
