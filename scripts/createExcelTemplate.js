@@ -71,6 +71,18 @@ const indexData = [
   }),
   createTemplateRow({
     id: 5,
+    type: 'languageSwitcher',
+    ukr: 'UA',
+    rus: 'RU',
+    eng: 'EN',
+    ger: 'DE',
+    ukr_sub: 'Переключатель языка',
+    rus_sub: 'Переключатель языка',
+    eng_sub: 'Language switcher',
+    ger_sub: 'Sprachumschalter',
+  }),
+  createTemplateRow({
+    id: 6,
     type: 'text',
     ukr: 'Цей текст відображається як звичайний абзац.',
     rus: 'Этот текст выводится как обычный параграф.',

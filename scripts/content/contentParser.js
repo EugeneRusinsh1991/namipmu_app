@@ -1,4 +1,5 @@
 const { normalizeFieldName } = require('./utils');
+const { parseLocalizedText } = require('./parsers');
 const { contentHandlers, typeMap } = require('./contentHandlers');
 
 function flushList(content, currentList) {
@@ -23,10 +24,7 @@ function parseContent(rows) {
 
     if (normalizedType === 'item') {
       currentList.push({
-        text: {
-          ua: row.ua || '',
-          ru: row.ru || '',
-        },
+        text: parseLocalizedText(row),
       });
       continue;
     }

@@ -21,11 +21,15 @@ export const imageStyles = StyleSheet.create({
     position: 'relative',
     marginBottom: -80,
     zIndex: 0,
+    overflow: 'hidden',
   },
 
   heroImageBackground: {
-    width: '100%',
-    height: '100%',
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
     resizeMode: 'cover',
   },
 

@@ -2,6 +2,30 @@ import React, { useEffect, useState } from 'react';
 import { Image, Platform, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { layout as layoutTokens, spacing } from '../styles/theme';
 
+function getUriFromSource(src) {
+  if (!src) return '';
+  if (typeof src === 'number') {
+    try {
+      const resolved = Image.resolveAssetSource(src);
+      return resolved && resolved.uri ? String(resolved.uri) : '';
+    } catch (e) {
+      return '';
+    }
+  }
+  if (typeof src === 'object' && src.uri) return String(src.uri);
+  if (typeof src === 'string') return src;
+  return '';
+}
+
+function isLikelyValidUri(uri) {
+  if (!uri) return false;
+  const s = String(uri).trim();
+  if (!s) return false;
+  if (/^https?:\/\//i.test(s)) return true;
+  if (s.includes('images/') || /\.(jpg|jpeg|png|gif|webp|mp4)$/i.test(s)) return true;
+  return false;
+}
+
 /**
  * ResponsiveImage — переиспользуемый компонент для адаптивных изображений
  * 
@@ -35,7 +59,7 @@ const ResponsiveImage = ({
 }) => {
   const windowDimensions = useWindowDimensions();
   const [imageDimensions, setImageDimensions] = useState(null);
-  const [failedSource, setFailedSource] = useState(null);
+  const [failedUri, setFailedUri] = useState('');
 
   // Получаем нативные размеры изображения из URI или require
   useEffect(() => {
@@ -123,14 +147,19 @@ const ResponsiveImage = ({
   }
 
   const handleError = (error) => {
-    setFailedSource(source);
+    try {
+      const uri = typeof source === 'object' && source?.uri ? source.uri : (typeof source === 'string' ? source : '');
+      setFailedUri(uri);
+    } catch (e) {
+      setFailedUri('');
+    }
     onError?.(error);
   };
 
   return (
-    <View style={[styles.container, { paddingHorizontal: padding }]}> 
+    <View style={[styles.container, { paddingHorizontal: padding, overflow: 'hidden' }]}> 
       <Image
-        source={failedSource === source && fallbackSource ? fallbackSource : source}
+        source={!source || (!isLikelyValidUri(getUriFromSource(source)) && !fallbackSource) || (getUriFromSource(source) === failedUri && fallbackSource) ? fallbackSource || undefined : source}
         style={[
           styles.image,
           {

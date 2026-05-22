@@ -1,33 +1,36 @@
 // GENERATED FILE: this content is recreated by scripts/generateContent.js
 export const indexContent = [
   {
-    "type": "heroImage"
+    "type": "heroImage",
+    "width": 1200,
+    "height": 520,
+    "resizeMode": "cover"
   },
   {
     "type": "eyebrow",
     "text": {
-      "ua": "Наталія Міроненко",
-      "ru": "Наталия Мироненко",
-      "eng": "",
-      "ger": ""
+      "ua": "Академія краси",
+      "ru": "Академия красоты",
+      "eng": "Beauty Academy",
+      "ger": "Beauty Academy"
     }
   },
   {
     "type": "title",
     "text": {
-      "ua": "НАЗВА КУРСУ",
-      "ru": "НАЗВАНИЕ КУРСА",
-      "eng": "",
-      "ger": ""
+      "ua": "Майстерність перманентного макіяжу",
+      "ru": "Мастерство перманентного макияжа",
+      "eng": "Master permanent makeup",
+      "ger": "Meister der Permanent Make-up"
     }
   },
   {
     "type": "subtitle",
     "text": {
-      "ua": "ПІДЗАГОЛОВОК",
-      "ru": "ПОДЗАГОЛОВОК",
-      "eng": "",
-      "ger": ""
+      "ua": "Навчайтеся у найкращих практиків",
+      "ru": "Учитесь у лучших практиков",
+      "eng": "Learn from top professionals",
+      "ger": "Lernen Sie von den besten Profis"
     }
   },
   {
@@ -35,90 +38,66 @@ export const indexContent = [
   },
   {
     "type": "card",
-    "image": {
-      "ua": require('../../../assets/images/index/card1.jpg'),
-      "ru": require('../../../assets/images/index/card1.jpg'),
-      "eng": require('../../../assets/images/index/card1.jpg'),
-      "ger": require('../../../assets/images/index/card1.jpg')
-    },
     "title": {
-      "ua": "",
-      "ru": "",
-      "eng": "",
-      "ger": ""
+      "ua": "Заголовок карточки",
+      "ru": "Заголовок карточки",
+      "eng": "Card title",
+      "ger": "Kartenüberschrift"
     },
     "description": {
-      "ua": "Строение кожи",
-      "ru": "Строение кожи",
-      "eng": "",
-      "ger": ""
+      "ua": "Опис карточки українською",
+      "ru": "Описание карточки на русском",
+      "eng": "Card description in English",
+      "ger": "Kartenbeschreibung auf Deutsch"
     },
     "href": "/skin"
   },
   {
     "type": "card",
-    "image": {
-      "ua": require('../../../assets/images/index/card1.jpg'),
-      "ru": require('../../../assets/images/index/card1.jpg'),
-      "eng": require('../../../assets/images/index/card1.jpg'),
-      "ger": require('../../../assets/images/index/card1.jpg')
-    },
     "title": {
-      "ua": "",
-      "ru": "",
-      "eng": "",
-      "ger": ""
+      "ua": "Заголовок карточки",
+      "ru": "Заголовок карточки",
+      "eng": "Card title",
+      "ger": "Kartenüberschrift"
     },
     "description": {
-      "ua": "Заживление пигмента в коже",
-      "ru": "Заживление пигмента в коже",
-      "eng": "",
-      "ger": ""
+      "ua": "Опис карточки українською",
+      "ru": "Описание карточки на русском",
+      "eng": "Card description in English",
+      "ger": "Kartenbeschreibung auf Deutsch"
     },
-    "href": "/pigment"
+    "href": "/skin"
   },
   {
     "type": "card",
-    "image": {
-      "ua": require('../../../assets/images/index/card1.jpg'),
-      "ru": require('../../../assets/images/index/card1.jpg'),
-      "eng": require('../../../assets/images/index/card1.jpg'),
-      "ger": require('../../../assets/images/index/card1.jpg')
-    },
     "title": {
-      "ua": "",
-      "ru": "",
-      "eng": "",
-      "ger": ""
+      "ua": "Заголовок карточки",
+      "ru": "Заголовок карточки",
+      "eng": "Card title",
+      "ger": "Kartenüberschrift"
     },
     "description": {
-      "ua": "Оборудование для ПМ",
-      "ru": "Оборудование для ПМ",
-      "eng": "",
-      "ger": ""
+      "ua": "Опис карточки українською",
+      "ru": "Описание карточки на русском",
+      "eng": "Card description in English",
+      "ger": "Kartenbeschreibung auf Deutsch"
     },
-    "href": "/equipment"
+    "href": "/skin"
   },
   {
     "type": "card",
-    "image": {
-      "ua": require('../../../assets/images/index/card1.jpg'),
-      "ru": require('../../../assets/images/index/card1.jpg'),
-      "eng": require('../../../assets/images/index/card1.jpg'),
-      "ger": require('../../../assets/images/index/card1.jpg')
-    },
     "title": {
-      "ua": "",
-      "ru": "",
-      "eng": "",
-      "ger": ""
+      "ua": "Заголовок карточки",
+      "ru": "Заголовок карточки",
+      "eng": "Card title",
+      "ger": "Kartenüberschrift"
     },
     "description": {
-      "ua": "Картриджи",
-      "ru": "Картриджи",
-      "eng": "",
-      "ger": ""
+      "ua": "Опис карточки українською",
+      "ru": "Описание карточки на русском",
+      "eng": "Card description in English",
+      "ger": "Kartenbeschreibung auf Deutsch"
     },
-    "href": "/cartriges"
+    "href": "/skin"
   }
 ];
