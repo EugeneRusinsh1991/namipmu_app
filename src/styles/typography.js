@@ -14,6 +14,7 @@ export const typographyStyles = StyleSheet.create({
     fontSize: 48,
     fontWeight: 'bold',
     marginBottom: 12,
+    color: '#2b2520',
     textAlign: 'flex-start',
     fontFamily: 'sans-serif', // 'serif' для классического | 'sans-serif' для современного - МЕНЯЙ ТУТ
   },
@@ -22,6 +23,7 @@ export const typographyStyles = StyleSheet.create({
     fontSize: 30,
     fontWeight: 'bold',
     marginBottom: 12,
+    color: '#2b2520',
     textAlign: 'flex-start',
     fontFamily: 'sans-serif', // 'serif' для классического | 'sans-serif' для современного - МЕНЯЙ ТУТ
   },
@@ -30,7 +32,7 @@ export const typographyStyles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 24,
     marginBottom: 12,
-    color: '#555',
+    color: '#6a5c4f',
     fontFamily: 'sans-serif', // 'serif' | 'sans-serif' - МЕНЯЙ ТУТ
     fontWeight: 'normal',
   },
@@ -41,5 +43,13 @@ export const typographyStyles = StyleSheet.create({
     color: 'blue',
     textAlign: 'center',
     fontFamily: 'sans-serif', // 'serif' | 'sans-serif' - МЕНЯЙ ТУТ
+  },
+
+  spacer: {
+    fontSize: 32,
+    lineHeight: 24,
+    color: '#826cff',
+    fontFamily: 'serif',
+    fontWeight: 'bold',
   },
 });

@@ -54,10 +54,10 @@ export const skinContent = [
   {
     "type": "spacerDivider",
     "title": {
-      "ua": "Секция",
-      "ru": "Секция",
-      "eng": "Section",
-      "ger": "Abschnitt"
+      "ua": "Подзаголовок",
+      "ru": "Підзаголовок",
+      "eng": "НА АНГЛ",
+      "ger": "НА НЕМ"
     }
   },
   {

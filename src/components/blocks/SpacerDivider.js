@@ -1,5 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native';
-import { colors, spacing, typography } from '../../styles/theme';
+import { globalStyles } from '../../styles/globalStyles';
+import { colors, spacing } from '../../styles/theme';
 import { getLocalized } from '../../utils/i18n';
 
 export function SpacerDivider({ item, lang, heroOverlapStyle }) {
@@ -11,7 +12,7 @@ export function SpacerDivider({ item, lang, heroOverlapStyle }) {
       {hasTitle ? (
         <>
           <View style={styles.line} />
-          <Text style={styles.text} numberOfLines={2} ellipsizeMode="tail">
+          <Text style={[styles.text, globalStyles.spacer]} numberOfLines={2} ellipsizeMode="tail">
             {title}
           </Text>
           <View style={styles.line} />
@@ -43,7 +44,6 @@ const styles = StyleSheet.create({
   text: {
     marginHorizontal: spacing.sm,
     color: colors.textPrimary,
-    fontSize: typography.fontSizeMd,
     textAlign: 'center',
     flexShrink: 1,
     minWidth: 0,
