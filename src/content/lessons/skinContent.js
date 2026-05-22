@@ -2,12 +2,9 @@
 export const skinContent = [
   {
     "type": "heroImage",
-    "image": {
-      "ua": require('../../../assets/images/skin/heroImage.jpg'),
-      "ru": require('../../../assets/images/skin/heroImage.jpg'),
-      "eng": require('../../../assets/images/skin/heroImage.jpg'),
-      "ger": require('../../../assets/images/skin/heroImage.jpg')
-    }
+    "width": 1200,
+    "height": 520,
+    "resizeMode": "cover"
   },
   {
     "type": "title",
@@ -31,7 +28,10 @@ export const skinContent = [
     "type": "languageSwitcher"
   },
   {
-    "type": "image"
+    "type": "image",
+    "width": 600,
+    "height": 400,
+    "resizeMode": "contain"
   },
   {
     "type": "text",
@@ -49,6 +49,15 @@ export const skinContent = [
       "ru": "Учитесь у лучших практиков",
       "eng": "Learn from top professionals",
       "ger": "Lernen Sie von den besten Profis"
+    }
+  },
+  {
+    "type": "spacerDivider",
+    "title": {
+      "ua": "Секция",
+      "ru": "Секция",
+      "eng": "Section",
+      "ger": "Abschnitt"
     }
   },
   {
@@ -107,6 +116,15 @@ export const skinContent = [
     ]
   },
   {
+    "type": "spacerDivider",
+    "title": {
+      "ua": "Секция",
+      "ru": "Секция",
+      "eng": "Section",
+      "ger": "Abschnitt"
+    }
+  },
+  {
     "type": "text",
     "text": {
       "ua": "Цей текст відображається як звичайний абзац.",
@@ -135,12 +153,9 @@ export const skinContent = [
   },
   {
     "type": "gif",
-    "src": {
-      "ua": require('../../../assets/images/skin/skin_types_rus.gif'),
-      "ru": require('../../../assets/images/skin/skin_types_rus.gif'),
-      "eng": require('../../../assets/images/skin/skin_types_rus.gif'),
-      "ger": require('../../../assets/images/skin/skin_types_rus.gif')
-    }
+    "width": 400,
+    "height": 225,
+    "resizeMode": "contain"
   },
   {
     "type": "navigationButtons",
@@ -157,6 +172,6 @@ export const skinContent = [
       "eng": "Next lesson",
       "ger": "Nächste Lektion"
     },
-    "href": "/skin"
+    "href": "/next-page"
   }
 ];

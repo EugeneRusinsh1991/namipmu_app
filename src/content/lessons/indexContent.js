@@ -1,7 +1,10 @@
 // GENERATED FILE: this content is recreated by scripts/generateContent.js
 export const indexContent = [
   {
-    "type": "heroImage"
+    "type": "heroImage",
+    "width": 1200,
+    "height": 520,
+    "resizeMode": "cover"
   },
   {
     "type": "eyebrow",
@@ -47,7 +50,7 @@ export const indexContent = [
       "eng": "Card description in English",
       "ger": "Kartenbeschreibung auf Deutsch"
     },
-    "href": "/skin"
+    "href": "/lesson-example"
   },
   {
     "type": "card",
@@ -63,7 +66,7 @@ export const indexContent = [
       "eng": "Card description in English",
       "ger": "Kartenbeschreibung auf Deutsch"
     },
-    "href": "/skin"
+    "href": "/lesson-example"
   },
   {
     "type": "card",
@@ -79,7 +82,7 @@ export const indexContent = [
       "eng": "Card description in English",
       "ger": "Kartenbeschreibung auf Deutsch"
     },
-    "href": "/skin"
+    "href": "/lesson-example"
   },
   {
     "type": "card",
@@ -95,6 +98,9 @@ export const indexContent = [
       "eng": "Card description in English",
       "ger": "Kartenbeschreibung auf Deutsch"
     },
-    "href": "/skin"
+    "href": "/lesson-example"
+  },
+  {
+    "type": "languageSwitcher"
   }
 ];

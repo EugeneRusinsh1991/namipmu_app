@@ -4,6 +4,7 @@ import { LanguageSwitcherBlock } from './LanguageSwitcherBlock';
 import { LinkBlock } from './LinkBlock';
 import { ListBlock } from './ListBlock';
 import { NavigationBlock } from './NavigationBlock';
+import { SpacerDivider } from './SpacerDivider';
 import { EyebrowBlock, SubtitleBlock, TextContentBlock, TitleBlock } from './TextBlock';
 import { VideoBlock } from './VideoBlock';
 
@@ -19,6 +20,7 @@ export const blockRegistry = {
   gif: GifBlock,
   video: VideoBlock,
   link: LinkBlock,
+  spacerDivider: SpacerDivider,
   card: CardBlock,
   cardBig: CardBlock,
   cardSmall: CardBlock,

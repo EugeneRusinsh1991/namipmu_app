@@ -19,6 +19,8 @@ const typeMap = {
   gif: 'gif',
   video: 'video',
   videocontainer: 'video',
+  spacer: 'spacerDivider',
+  spacerdivider: 'spacerDivider',
 };
 
 const contentHandlers = {
@@ -96,6 +98,12 @@ const contentHandlers = {
     const srcPair = parseImagePair(row, sheetName, ['gif', 'image']);
     if (srcPair) res.src = srcPair;
     return res;
+  },
+
+  spacerDivider(row) {
+    return {
+      title: parseLocalizedText(row),
+    };
   },
 
   video(row, sheetName) {

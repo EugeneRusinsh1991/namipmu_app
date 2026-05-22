@@ -46,6 +46,10 @@ export type LinkBlock = ContentBlockBase<'link'> & {
   href?: string;
 };
 
+export type SpacerDividerBlock = ContentBlockBase<'spacerDivider'> & {
+  title?: LocalizedText;
+};
+
 export type VideoBlock = ContentBlockBase<'video'> & {
   url?: string;
 };
@@ -66,6 +70,7 @@ export type ContentBlock =
   | CardBlock
   | ListBlock
   | LinkBlock
+  | SpacerDividerBlock
   | VideoBlock
   | LanguageSwitcherBlock
   | NavigationButtonsBlock;

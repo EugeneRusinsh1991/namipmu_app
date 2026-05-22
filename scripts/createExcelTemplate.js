@@ -147,6 +147,18 @@ const indexData = [
   }),
   createTemplateRow({
     id: 12,
+    type: 'spacer',
+    ukr: 'Секция',
+    rus: 'Секция',
+    eng: 'Section',
+    ger: 'Abschnitt',
+  }),
+  createTemplateRow({
+    id: 13,
+    type: 'spacer',
+  }),
+  createTemplateRow({
+    id: 14,
     type: 'navigationButtons',
     ukr: 'Наступний урок',
     rus: 'Следующий урок',
@@ -189,84 +201,10 @@ indexSheet['!cols'] = [
 xlsx.utils.book_append_sheet(workbook, indexSheet, 'Шаблон заполнения');
 console.log('✅ Лист "Шаблон заполнения" создан');
 
-const helpData = [
-  {
-    column: 'id',
-    description: 'Порядковый номер строки / сортировка элементов.',
-    example: '1',
-  },
-  {
-    column: 'type',
-    description: 'Тип блока: text, image, gif, card, video, heroImage, eyebrow, title, subtitle, item, link, navigationButtons.',
-    example: 'card',
-  },
-  {
-    column: 'ukr',
-    description: 'Основное поле для украинского текста или пути к медиа.',
-    example: 'Текст UA / images/example.jpg',
-  },
-  {
-    column: 'rus',
-    description: 'Основное поле для русского текста или пути к медиа.',
-    example: 'Текст RU / images/example.jpg',
-  },
-  {
-    column: 'eng',
-    description: 'Основное поле для английского текста или пути к медиа.',
-    example: 'Text EN / images/example.jpg',
-  },
-  {
-    column: 'ger',
-    description: 'Основное поле для немецкого текста или пути к медиа.',
-    example: 'Text DE / images/example.jpg',
-  },
-  {
-    column: 'ukr_sub',
-    description: 'Вспомогательное поле для карточек или подписей на украинском.',
-    example: 'Описание UA',
-  },
-  {
-    column: 'rus_sub',
-    description: 'Вспомогательное поле для карточек или подписей на русском.',
-    example: 'Описание RU',
-  },
-  {
-    column: 'eng_sub',
-    description: 'Вспомогательное поле для карточек или подписей на английском.',
-    example: 'Description EN',
-  },
-  {
-    column: 'ger_sub',
-    description: 'Вспомогательное поле для карточек или подписей на немецком.',
-    example: 'Beschreibung DE',
-  },
-  {
-    column: 'href',
-    description: 'Ссылка для карточек, кнопок, видео или навигации.',
-    example: '/next-page или https://...',
-  },
-  {
-    column: 'meta',
-    description: 'Параметры для изображений / gif: w=300;h=200;resizeMode=contain.',
-    example: 'w=600;h=400;resizeMode=contain',
-  },
-];
-
-const helpSheet = xlsx.utils.json_to_sheet(helpData, {
-  header: ['column', 'description', 'example'],
-});
-helpSheet['!cols'] = [
-  { wch: 18 },
-  { wch: 60 },
-  { wch: 40 },
-];
-xlsx.utils.book_append_sheet(workbook, helpSheet, 'Колонки и примеры');
-
 const outputPath = path.join(__dirname, '../src/content/content_TEMPLATE.xlsx');
 xlsx.writeFile(workbook, outputPath);
 
 console.log('\n✅ content_TEMPLATE.xlsx успешно создан!');
 console.log(`📍 Путь: ${outputPath}`);
-console.log('\n✅ Файл содержит листы:');
+console.log('\n✅ Файл содержит лист:');
 console.log('   1️⃣  "Шаблон заполнения" - готовый шаблон для редактирования');
-console.log('   2️⃣  "Колонки и примеры" - объяснение новых столбцов');
