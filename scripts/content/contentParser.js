@@ -1,53 +1,44 @@
 const { normalizeFieldName } = require('./utils');
-const { contentHandlers, typeAliases } = require('./contentHandlers');
-const { parseLocalizedText } = require('./parsers');
+const { contentHandlers, typeMap } = require('./contentHandlers');
 
-// Преобразование строк Excel в объекты контента
+function flushList(content, currentList) {
+  if (!currentList.length) return [];
+
+  content.push({
+    type: 'list',
+    items: currentList,
+  });
+
+  return [];
+}
+
 function parseContent(rows) {
   const filteredRows = rows.filter(row => row.id && row.type);
-  
   const content = [];
   let currentList = [];
 
-  for (let i = 0; i < filteredRows.length; i++) {
-    const row = filteredRows[i];
-    const sheetName = row.__sheetName; // Передается при вызове
+  for (const row of filteredRows) {
+    const originalType = String(row.type || '').trim();
+    const normalizedType = normalizeFieldName(originalType);
 
-    // Если это item, добавляем в текущий список
-    if (row.type === 'item') {
+    if (normalizedType === 'item') {
       currentList.push({
         text: {
           ua: row.ua || '',
           ru: row.ru || '',
-        }
+        },
       });
       continue;
     }
 
-    // Если было накопленное items, сохраняем список перед переходом на другой тип
-    if (currentList.length > 0) {
-      content.push({
-        type: 'list',
-        items: currentList
-      });
-      currentList = [];
-    }
+    currentList = flushList(content, currentList);
 
-    // Обработка остальных типов через contentHandlers
-    const originalType = String(row.type || '').trim();
-    const normalizedType = normalizeFieldName(originalType);
-    const aliasType = typeAliases[normalizedType] || normalizedType;
-
-    // Сохраняем поведение: squareImage -> image, textLink -> link, videoContainer -> video
-    let outputType = originalType;
-    if (normalizedType === 'squareimage') outputType = 'image';
-    if (normalizedType === 'textlink') outputType = 'link';
-    if (normalizedType === 'videocontainer') outputType = 'video';
+    const outputType = typeMap[normalizedType] || originalType;
     const item = { type: outputType };
+    const handler = contentHandlers[outputType];
 
-    const handler = contentHandlers[aliasType];
     if (handler) {
-      const extra = handler(row, sheetName);
+      const extra = handler(row, row.__sheetName, { originalType, normalizedType, outputType });
       if (extra && extra.type) item.type = extra.type;
       Object.assign(item, extra || {});
     }
@@ -55,17 +46,11 @@ function parseContent(rows) {
     content.push(item);
   }
 
-  // Если список остался в конце, добавляем его
-  if (currentList.length > 0) {
-    content.push({
-      type: 'list',
-      items: currentList
-    });
-  }
-
+  flushList(content, currentList);
   return content;
 }
 
 module.exports = {
   parseContent,
 };
+

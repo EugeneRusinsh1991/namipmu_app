@@ -5,9 +5,7 @@ import Card from '../Card';
 export function CardBlock({ item, lang, heroOverlapStyle }) {
   const cardTitle = getLocalized(item.title, lang, '');
   const cardDescription = getLocalized(item.description, lang, '');
-
-  // Определяем размер карточки
-  const cardSize = item.type === 'cardSmall' ? 'small' : 'big';
+  const cardSize = item.size || (item.type === 'cardSmall' ? 'small' : 'big');
 
   return (
     <View style={heroOverlapStyle}>
@@ -21,3 +19,4 @@ export function CardBlock({ item, lang, heroOverlapStyle }) {
     </View>
   );
 }
+
