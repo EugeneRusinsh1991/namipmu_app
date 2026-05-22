@@ -1,11 +1,13 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import { Link } from 'expo-router';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { useLanguage } from '../context/LanguageContext';
 import { globalStyles } from '../styles/globalStyles';
+import AppButton from './AppButton';
 import Card from './Card';
 import ImageWithFallback from './ImageWithFallback';
+import LanguageSwitcher from './LanguageSwitcher';
 import ResponsiveImage from './ResponsiveImage';
 
 export function HeroImageRenderer({ content, lang = 'ru' }) {
@@ -80,25 +82,11 @@ export default function ContentRenderer({ content, lang = 'ru' }) {
 
         if (item.type === 'languageSwitcher') {
           return (
-            <View key={index} style={globalStyles.langWrap}>
-              <TouchableOpacity
-                onPress={() => setLang('ua')}
-                style={[globalStyles.langBtn, lang === 'ua' && globalStyles.langBtnActive]}
-              >
-                <Text style={[globalStyles.langText, lang === 'ua' && globalStyles.langTextActive]}>
-                  Українська
-                </Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                onPress={() => setLang('ru')}
-                style={[globalStyles.langBtn, lang === 'ru' && globalStyles.langBtnActive]}
-              >
-                <Text style={[globalStyles.langText, lang === 'ru' && globalStyles.langTextActive]}>
-                  Русский
-                </Text>
-              </TouchableOpacity>
-            </View>
+            <LanguageSwitcher
+              key={index}
+              value={lang}
+              onChange={(selected) => setLang(selected)}
+            />
           );
         }
 
@@ -114,12 +102,25 @@ export default function ContentRenderer({ content, lang = 'ru' }) {
           const nextHref = item.href || '/';
 
           return (
-            <View key={index} style={[globalStyles.langWrap, heroOverlapStyle]}>
-              <Link href={item.backHref || '/'} style={[globalStyles.langBtn, globalStyles.navBtn]}>
-                <Text style={globalStyles.langText}>{backText}</Text>
+            <View key={index} style={StyleSheet.flatten([styles.navigationRow, heroOverlapStyle])}>
+              <Link href={item.backHref || '/'} asChild>
+                <AppButton
+                  title={backText}
+                  variant="secondary"
+                  accessibilityLabel={`Кнопка ${backText}`}
+                  style={styles.navigationButton}
+                />
               </Link>
-              <Link href={nextHref} style={[globalStyles.langBtn, globalStyles.navBtn]}>
-                <Text style={globalStyles.langText}>{nextText}</Text>
+              <Link href={nextHref} asChild>
+                <AppButton
+                  title={nextText}
+                  variant="primary"
+                  accessibilityLabel={`Кнопка ${nextText}`}
+                  style={StyleSheet.flatten([
+                    styles.navigationButton,
+                    styles.primaryButton,
+                  ])}
+                />
               </Link>
             </View>
           );
@@ -247,3 +248,17 @@ export default function ContentRenderer({ content, lang = 'ru' }) {
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  navigationRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 24,
+  },
+  navigationButton: {
+    flex: 1,
+  },
+  primaryButton: {
+    marginLeft: 12,
+  },
+});
