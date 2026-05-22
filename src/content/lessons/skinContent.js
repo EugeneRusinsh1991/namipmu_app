@@ -1,7 +1,13 @@
 // GENERATED FILE: this content is recreated by scripts/generateContent.js
 export const skinContent = [
   {
-    "type": "heroImage"
+    "type": "heroImage",
+    "image": {
+      "ua": require('../../../assets/images/skin/heroImage.jpg'),
+      "ru": require('../../../assets/images/skin/heroImage.jpg'),
+      "eng": require('../../../assets/images/skin/heroImage.jpg'),
+      "ger": require('../../../assets/images/skin/heroImage.jpg')
+    }
   },
   {
     "type": "title",
