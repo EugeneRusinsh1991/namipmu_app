@@ -4,6 +4,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { useLanguage } from '../context/LanguageContext';
 import { globalStyles } from '../styles/globalStyles';
+import { getLocalized, getLocalizedAsset } from '../utils/i18n';
 import AppButton from './AppButton';
 import Card from './Card';
 import ImageWithFallback from './ImageWithFallback';
@@ -15,9 +16,7 @@ export function HeroImageRenderer({ content, lang = 'ru' }) {
   
   if (!heroItem) return null;
 
-  const heroImageSrc = typeof heroItem.image === 'object' && heroItem.image !== null
-    ? heroItem.image[lang] || heroItem.image.ru || heroItem.image.ua
-    : heroItem.image;
+  const heroImageSrc = getLocalizedAsset(heroItem.image, lang);
   
   return (
     <View style={globalStyles.heroImage}>
@@ -47,10 +46,7 @@ export default function ContentRenderer({ content, lang = 'ru' }) {
   return (
     <>
       {filteredContent.map((item, index) => {
-        const text =
-          typeof item.text === 'object' && item.text !== null
-            ? item.text[lang] || item.text.ru || item.text.ua || ''
-            : item.text;
+        const text = getLocalized(item.text, lang, '');
 
         // Если это первый элемент и была heroImage, применяем наложение
         const isFirstAfterHero = index === 0 && hadHeroImage;
@@ -91,14 +87,8 @@ export default function ContentRenderer({ content, lang = 'ru' }) {
         }
 
         if (item.type === 'navigationButtons') {
-          const backText =
-            typeof item.backText === 'object' && item.backText !== null
-              ? item.backText[lang] || item.backText.ru || item.backText.ua || 'Назад'
-              : item.backText || 'Назад';
-          const nextText =
-            typeof item.nextText === 'object' && item.nextText !== null
-              ? item.nextText[lang] || item.nextText.ru || item.nextText.ua || ''
-              : item.nextText || '';
+          const backText = getLocalized(item.backText, lang, 'Назад');
+          const nextText = getLocalized(item.nextText, lang, '');
           const nextHref = item.href || '/';
 
           return (
@@ -130,10 +120,7 @@ export default function ContentRenderer({ content, lang = 'ru' }) {
           return (
             <View key={index} style={[globalStyles.listContainer, heroOverlapStyle]}>
               {item.items.map((listItem, itemIndex) => {
-                const itemText =
-                  typeof listItem.text === 'object' && listItem.text !== null
-                    ? listItem.text[lang] || listItem.text.ru || listItem.text.ua || ''
-                    : listItem.text;
+                const itemText = getLocalized(listItem.text, lang, '');
 
                 return (
                   <View key={itemIndex} style={globalStyles.listItem}>
@@ -155,9 +142,7 @@ export default function ContentRenderer({ content, lang = 'ru' }) {
         }
 
         if (item.type === 'image') {
-          const imageSrc = typeof item.src === 'object' && item.src !== null
-            ? item.src[lang] || item.src.ru || item.src.ua
-            : item.src;
+          const imageSrc = getLocalizedAsset(item.src, lang);
 
           const isSquareImage = item.aspectRatio === 1 && item.width === item.height;
           const imageMaxWidth = isSquareImage ? null : item.width || null;
@@ -177,9 +162,7 @@ export default function ContentRenderer({ content, lang = 'ru' }) {
         }
 
         if (item.type === 'gif') {
-          const gifSrc = typeof item.src === 'object' && item.src !== null
-            ? item.src[lang] || item.src.ru || item.src.ua
-            : item.src;
+          const gifSrc = getLocalizedAsset(item.src, lang);
 
           const isSquareImage = item.aspectRatio === 1 && item.width === item.height;
           const gifMaxWidth = isSquareImage ? null : item.width || null;
@@ -217,15 +200,9 @@ export default function ContentRenderer({ content, lang = 'ru' }) {
         }
 
         if (item.type === 'card' || item.type === 'cardBig' || item.type === 'cardSmall') {
-          const cardTitle =
-            typeof item.title === 'object' && item.title !== null
-              ? item.title[lang] || item.title.ru || item.title.ua || ''
-              : item.title;
-          
-          const cardDescription =
-            typeof item.description === 'object' && item.description !== null
-              ? item.description[lang] || item.description.ru || item.description.ua || ''
-              : item.description;
+          const cardTitle = getLocalized(item.title, lang, '');
+
+          const cardDescription = getLocalized(item.description, lang, '');
 
           // Определяем размер карточки
           const cardSize = item.type === 'cardSmall' ? 'small' : 'big';

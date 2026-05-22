@@ -1,6 +1,7 @@
 import { Link } from 'expo-router';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useLanguage } from '../context/LanguageContext';
+import { getLocalized, getLocalizedAsset } from '../utils/i18n';
 import ImageWithFallback from './ImageWithFallback';
 
 export default function Card({ image, title, description, href, size = 'big' }) {
@@ -33,19 +34,7 @@ export default function Card({ image, title, description, href, size = 'big' }) 
   const config = sizeConfig[size] || sizeConfig.big;
 
   // Получаем картинку в зависимости от языка
-  const getImage = () => {
-    if (!image) return null;
-    
-    // Если это объект с ua/ru
-    if (typeof image === 'object' && image !== null) {
-      return image[lang] || image.ru || image.ua;
-    }
-    
-    // Если это просто require() из старого формата
-    return image;
-  };
-
-  const imageSource = getImage();
+  const imageSource = getLocalizedAsset(image, lang);
 
   // Динамические стили в зависимости от размера
   const dynamicCardStyle = {
@@ -79,19 +68,8 @@ export default function Card({ image, title, description, href, size = 'big' }) 
 
   const normalizedHref = typeof href === 'string' ? (href.startsWith('/') ? href : `/${href}`) : undefined;
 
-  const safeText = value => {
-    if (value == null) return '';
-    if (typeof value === 'string' || typeof value === 'number') return String(value);
-    if (typeof value === 'object' && value !== null) {
-      if (typeof value[lang] === 'string') return value[lang];
-      if (typeof value.ru === 'string') return value.ru;
-      if (typeof value.ua === 'string') return value.ua;
-    }
-    return '';
-  };
-
-  const safeTitle = safeText(title);
-  const safeDescription = safeText(description);
+  const safeTitle = getLocalized(title, lang, '');
+  const safeDescription = getLocalized(description, lang, '');
 
   const cardInner = (
     <Pressable
