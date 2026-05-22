@@ -26,6 +26,8 @@ type LanguageSwitcherProps = {
 const defaultOptions: LanguageOption[] = [
   { value: 'ua', label: 'Українська' },
   { value: 'ru', label: 'Русский' },
+  { value: 'eng', label: 'English' },
+  { value: 'ger', label: 'Deutsch' },
 ];
 
 export default function LanguageSwitcher({

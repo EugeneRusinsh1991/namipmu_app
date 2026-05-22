@@ -7,21 +7,27 @@ export const indexContent = [
     "type": "eyebrow",
     "text": {
       "ua": "Наталія Міроненко",
-      "ru": "Наталия Мироненко"
+      "ru": "Наталия Мироненко",
+      "eng": "",
+      "ger": ""
     }
   },
   {
     "type": "title",
     "text": {
       "ua": "НАЗВА КУРСУ",
-      "ru": "НАЗВАНИЕ КУРСА"
+      "ru": "НАЗВАНИЕ КУРСА",
+      "eng": "",
+      "ger": ""
     }
   },
   {
     "type": "subtitle",
     "text": {
       "ua": "ПІДЗАГОЛОВОК",
-      "ru": "ПОДЗАГОЛОВОК"
+      "ru": "ПОДЗАГОЛОВОК",
+      "eng": "",
+      "ger": ""
     }
   },
   {
@@ -31,15 +37,21 @@ export const indexContent = [
     "type": "card",
     "image": {
       "ua": require('../../../assets/images/index/card1.jpg'),
-      "ru": require('../../../assets/images/index/card1.jpg')
+      "ru": require('../../../assets/images/index/card1.jpg'),
+      "eng": require('../../../assets/images/index/card1.jpg'),
+      "ger": require('../../../assets/images/index/card1.jpg')
     },
     "title": {
-      "ua": "Шкіра",
-      "ru": "Кожа"
+      "ua": "",
+      "ru": "",
+      "eng": "",
+      "ger": ""
     },
     "description": {
       "ua": "Строение кожи",
-      "ru": "Строение кожи"
+      "ru": "Строение кожи",
+      "eng": "",
+      "ger": ""
     },
     "href": "/skin"
   },
@@ -47,15 +59,21 @@ export const indexContent = [
     "type": "card",
     "image": {
       "ua": require('../../../assets/images/index/card1.jpg'),
-      "ru": require('../../../assets/images/index/card1.jpg')
+      "ru": require('../../../assets/images/index/card1.jpg'),
+      "eng": require('../../../assets/images/index/card1.jpg'),
+      "ger": require('../../../assets/images/index/card1.jpg')
     },
     "title": {
-      "ua": "Заживление пигмента в коже ",
-      "ru": "Заживление пигмента в коже "
+      "ua": "",
+      "ru": "",
+      "eng": "",
+      "ger": ""
     },
     "description": {
-      "ua": "Заживление пигмента в коже ",
-      "ru": "Заживление пигмента в коже "
+      "ua": "Заживление пигмента в коже",
+      "ru": "Заживление пигмента в коже",
+      "eng": "",
+      "ger": ""
     },
     "href": "/pigment"
   },
@@ -63,15 +81,21 @@ export const indexContent = [
     "type": "card",
     "image": {
       "ua": require('../../../assets/images/index/card1.jpg'),
-      "ru": require('../../../assets/images/index/card1.jpg')
+      "ru": require('../../../assets/images/index/card1.jpg'),
+      "eng": require('../../../assets/images/index/card1.jpg'),
+      "ger": require('../../../assets/images/index/card1.jpg')
     },
     "title": {
-      "ua": "Оборудование для ПМ",
-      "ru": "Оборудование для ПМ"
+      "ua": "",
+      "ru": "",
+      "eng": "",
+      "ger": ""
     },
     "description": {
       "ua": "Оборудование для ПМ",
-      "ru": "Оборудование для ПМ"
+      "ru": "Оборудование для ПМ",
+      "eng": "",
+      "ger": ""
     },
     "href": "/equipment"
   },
@@ -79,15 +103,21 @@ export const indexContent = [
     "type": "card",
     "image": {
       "ua": require('../../../assets/images/index/card1.jpg'),
-      "ru": require('../../../assets/images/index/card1.jpg')
+      "ru": require('../../../assets/images/index/card1.jpg'),
+      "eng": require('../../../assets/images/index/card1.jpg'),
+      "ger": require('../../../assets/images/index/card1.jpg')
     },
     "title": {
-      "ua": "Картриджи ",
-      "ru": "Картриджи "
+      "ua": "",
+      "ru": "",
+      "eng": "",
+      "ger": ""
     },
     "description": {
-      "ua": "Картриджи ",
-      "ru": "Картриджи "
+      "ua": "Картриджи",
+      "ru": "Картриджи",
+      "eng": "",
+      "ger": ""
     },
     "href": "/cartriges"
   }

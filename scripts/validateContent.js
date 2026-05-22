@@ -7,31 +7,66 @@ const { getRowField, normalizeFieldName } = require('./content/utils');
 
 const TEXT_TYPES = new Set(['eyebrow', 'title', 'subtitle', 'text', 'link']);
 const MEDIA_TYPES = new Set(['heroImage', 'image', 'gif']);
+const LANG_ALIASES = {
+  ua: ['ukr', 'ua'],
+  ru: ['rus', 'ru'],
+  eng: ['eng', 'en'],
+  ger: ['ger', 'de'],
+};
 
 function hasValue(value) {
   return value != null && String(value).trim() !== '';
 }
 
 function getLocalizedFields(row, base = '') {
-  const prefix = base ? `${base}` : '';
-  return {
-    ua: getRowField(row, `${prefix}UA`) || getRowField(row, `${prefix}Ua`) || getRowField(row, 'ua') || getRowField(row, 'uaText'),
-    ru: getRowField(row, `${prefix}RU`) || getRowField(row, `${prefix}Ru`) || getRowField(row, 'ru') || getRowField(row, 'ruText'),
-  };
+  const result = {};
+  const suffix = base ? `_${base}` : '';
+  for (const [lang, aliases] of Object.entries(LANG_ALIASES)) {
+    let value = '';
+    for (const alias of aliases) {
+      const field = `${alias}${suffix}`;
+      const candidate = getRowField(row, field);
+      if (hasValue(candidate)) {
+        value = candidate;
+        break;
+      }
+    }
+
+    if (!value && base === 'sub') {
+      const fallback = getRowField(row, `description${lang === 'ua' ? 'UA' : lang === 'ru' ? 'RU' : lang.toUpperCase()}`);
+      if (hasValue(fallback)) value = fallback;
+    }
+
+    result[lang] = value || '';
+  }
+
+  return result;
 }
 
 function getMediaFields(row, outputType) {
-  const bases = outputType === 'gif' ? ['gif', 'image'] : ['image'];
-  const fields = [];
+  const values = [];
+  const aliasSources = ['ukr', 'ua', 'rus', 'ru', 'eng', 'ger'];
 
-  for (const base of bases) {
-    fields.push(
-      { label: `${base}UA`, value: getRowField(row, `${base}UA`) || getRowField(row, `${base}Ua`) },
-      { label: `${base}RU`, value: getRowField(row, `${base}RU`) || getRowField(row, `${base}Ru`) },
-    );
+  for (const alias of aliasSources) {
+    const value = getRowField(row, alias);
+    if (hasValue(value)) {
+      values.push({ label: alias, value });
+    }
   }
 
-  return fields;
+  if (!values.length) {
+    const bases = outputType === 'gif' ? ['gif', 'image'] : ['image'];
+    for (const base of bases) {
+      ['UA', 'RU', 'ENG', 'GER'].forEach(code => {
+        const value = getRowField(row, `${base}${code}`);
+        if (hasValue(value)) {
+          values.push({ label: `${base}${code}`, value });
+        }
+      });
+    }
+  }
+
+  return values;
 }
 
 function addIssue(issues, level, sheetName, rowNumber, message) {
@@ -44,8 +79,8 @@ function validateRow(row, sheetName, rowNumber, issues) {
 
   if (normalizedType === 'item') {
     const text = getLocalizedFields(row);
-    if (!hasValue(text.ua) && !hasValue(text.ru)) {
-      addIssue(issues, 'warning', sheetName, rowNumber, 'List item has no ru/ua text.');
+    if (!Object.values(text).some(hasValue)) {
+      addIssue(issues, 'warning', sheetName, rowNumber, 'List item has no localized text.');
     }
     return;
   }
@@ -58,15 +93,15 @@ function validateRow(row, sheetName, rowNumber, issues) {
 
   if (TEXT_TYPES.has(outputType)) {
     const text = getLocalizedFields(row);
-    if (!hasValue(text.ua) && !hasValue(text.ru)) {
-      addIssue(issues, 'warning', sheetName, rowNumber, `${outputType} block has no ru/ua text.`);
+    if (!Object.values(text).some(hasValue)) {
+      addIssue(issues, 'warning', sheetName, rowNumber, `${outputType} block has no localized text.`);
     }
   }
 
   if (outputType === 'card') {
-    const title = getLocalizedFields(row, 'title');
-    if (!hasValue(title.ua) && !hasValue(title.ru)) {
-      addIssue(issues, 'warning', sheetName, rowNumber, 'Card has no titleUA/titleRU.');
+    const title = getLocalizedFields(row);
+    if (!Object.values(title).some(hasValue)) {
+      addIssue(issues, 'warning', sheetName, rowNumber, 'Card has no title in main language columns.');
     }
   }
 
@@ -74,20 +109,18 @@ function validateRow(row, sheetName, rowNumber, issues) {
     addIssue(issues, 'warning', sheetName, rowNumber, 'Link has no href.');
   }
 
-  if (outputType === 'video' && !hasValue(row.href) && !hasValue(row.imageRU) && !hasValue(row.imageUA)) {
-    addIssue(issues, 'warning', sheetName, rowNumber, 'Video has no href or imageRU/imageUA URL.');
+  if (outputType === 'video' && !hasValue(row.href) && !Object.values(getLocalizedFields(row)).some(hasValue)) {
+    addIssue(issues, 'warning', sheetName, rowNumber, 'Video has no href or URL in language columns.');
   }
 
   if (MEDIA_TYPES.has(outputType)) {
     const mediaFields = getMediaFields(row, outputType);
-    const filledFields = mediaFields.filter(field => hasValue(field.value));
-
-    if (!filledFields.length) {
+    if (!mediaFields.length) {
       addIssue(issues, 'warning', sheetName, rowNumber, `${outputType} block has no image fields.`);
       return;
     }
 
-    for (const field of filledFields) {
+    for (const field of mediaFields) {
       const resolved = processImageField(String(field.value), sheetName);
       if (!resolved) {
         addIssue(issues, 'warning', sheetName, rowNumber, `${field.label} asset not found: ${field.value}`);

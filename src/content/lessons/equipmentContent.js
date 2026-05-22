@@ -4,14 +4,18 @@ export const equipmentContent = [
     "type": "heroImage",
     "image": {
       "ua": require('../../../assets/images/equipment/heroImage.jpg'),
-      "ru": require('../../../assets/images/equipment/heroImage.jpg')
+      "ru": require('../../../assets/images/equipment/heroImage.jpg'),
+      "eng": require('../../../assets/images/equipment/heroImage.jpg'),
+      "ger": require('../../../assets/images/equipment/heroImage.jpg')
     }
   },
   {
     "type": "title",
     "text": {
       "ua": "Оборудование для ПМ",
-      "ru": "Оборудование для ПМ"
+      "ru": "Оборудование для ПМ",
+      "eng": "",
+      "ger": ""
     }
   },
   {
@@ -21,7 +25,9 @@ export const equipmentContent = [
     "type": "text",
     "text": {
       "ua": "Машинки в тату индустрии делятся на два вида:",
-      "ru": "Машинки в тату индустрии делятся на два вида:"
+      "ru": "Машинки в тату индустрии делятся на два вида:",
+      "eng": "",
+      "ger": ""
     }
   },
   {
@@ -49,14 +55,18 @@ export const equipmentContent = [
     "resizeMode": "contain",
     "src": {
       "ua": require('../../../assets/images/equipment/equipment1_rus.png'),
-      "ru": require('../../../assets/images/equipment/equipment1_rus.png')
+      "ru": require('../../../assets/images/equipment/equipment1_rus.png'),
+      "eng": require('../../../assets/images/equipment/equipment1_rus.png'),
+      "ger": require('../../../assets/images/equipment/equipment1_rus.png')
     }
   },
   {
     "type": "text",
     "text": {
-      "ua": "Роторные аппараты стостоят из: ",
-      "ru": "Роторные аппараты стостоят из: "
+      "ua": "Роторные аппараты стостоят из:",
+      "ru": "Роторные аппараты стостоят из:",
+      "eng": "",
+      "ger": ""
     }
   },
   {
@@ -114,14 +124,18 @@ export const equipmentContent = [
     "resizeMode": "contain",
     "src": {
       "ua": require('../../../assets/images/equipment/equipment1_rus.png'),
-      "ru": require('../../../assets/images/equipment/equipment1_rus.png')
+      "ru": require('../../../assets/images/equipment/equipment1_rus.png'),
+      "eng": require('../../../assets/images/equipment/equipment1_rus.png'),
+      "ger": require('../../../assets/images/equipment/equipment1_rus.png')
     }
   },
   {
     "type": "text",
     "text": {
       "ua": "Помимо того что роторные аппараты делятся по типам питания, так же их разделяют по на три вида в зависимости от хода иглы.",
-      "ru": "Помимо того что роторные аппараты делятся по типам питания, так же их разделяют по на три вида в зависимости от хода иглы."
+      "ru": "Помимо того что роторные аппараты делятся по типам питания, так же их разделяют по на три вида в зависимости от хода иглы.",
+      "eng": "",
+      "ger": ""
     }
   }
 ];

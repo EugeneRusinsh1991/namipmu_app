@@ -1,7 +1,15 @@
 const { getRowField } = require('./utils');
 const { processImageField } = require('./imageResolver');
 
-// Парсирование размера (число или строка)
+const LANGUAGE_ALIASES = {
+  ua: ['ukr', 'ua'],
+  ru: ['rus', 'ru'],
+  eng: ['eng', 'en'],
+  ger: ['ger', 'de'],
+};
+
+const LANGUAGES = ['ua', 'ru', 'eng', 'ger'];
+
 function parseSize(value) {
   if (value == null || String(value).trim() === '') return null;
   const trimmed = String(value).trim();
@@ -12,7 +20,6 @@ function parseSize(value) {
   return trimmed;
 }
 
-// Парсирование соотношения сторон (1.5, 1:1, 1x2 и т.п.)
 function parseAspectRatio(value) {
   if (value == null || String(value).trim() === '') return null;
   const trimmed = String(value).trim();
@@ -28,75 +35,148 @@ function parseAspectRatio(value) {
   return Number.isFinite(num) && num > 0 ? num : null;
 }
 
-// Парсирование локализованного текста
-// Если указан base (например 'title'), ищет titleUA/titleRU
-function parseLocalizedText(row, base) {
-  if (base) {
-    const uaKey = `${base}UA`;
-    const ruKey = `${base}RU`;
-    const uaVal = row[uaKey] || row[`${base}Ua`] || row[uaKey.toLowerCase()];
-    const ruVal = row[ruKey] || row[`${base}Ru`] || row[ruKey.toLowerCase()];
-    return {
-      ua: uaVal || '',
-      ru: ruVal || '',
-    };
+function parseMetaString(meta) {
+  const sizing = {};
+  if (meta == null || String(meta).trim() === '') return sizing;
+
+  const parts = String(meta).split(';').map(part => part.trim()).filter(Boolean);
+  for (const part of parts) {
+    const [key, value] = part.split('=').map(x => x.trim());
+    if (!key) continue;
+    const lowerKey = key.toLowerCase();
+    if (lowerKey === 'w' || lowerKey === 'width') {
+      const width = parseSize(value);
+      if (width != null) sizing.width = width;
+    }
+    if (lowerKey === 'h' || lowerKey === 'height') {
+      const height = parseSize(value);
+      if (height != null) sizing.height = height;
+    }
+    if (lowerKey === 'aspectratio' || lowerKey === 'ratio') {
+      const aspectRatio = parseAspectRatio(value);
+      if (aspectRatio != null) sizing.aspectRatio = aspectRatio;
+    }
+    if (lowerKey === 'resizemode') {
+      const mode = String(value || '').trim();
+      if (mode) sizing.resizeMode = mode;
+    }
   }
 
-  const ua = row.ua || row.uaText || '';
-  const ru = row.ru || row.ruText || '';
-  return { ua: ua || '', ru: ru || '' };
+  return sizing;
 }
 
-// Парсирование пары изображений (UA/RU) с заполнением error.jpg при отсутствии
+function normalizeLangKey(lang) {
+  const suffix = lang === 'ua' ? 'UA' : lang === 'ru' ? 'RU' : lang === 'eng' ? 'ENG' : 'GER';
+  return suffix;
+}
+
+function getLocalizedFieldValue(row, lang, base = '') {
+  const aliases = LANGUAGE_ALIASES[lang] || [];
+  const values = [];
+  if (base) {
+    const legacyKey = `${base}${normalizeLangKey(lang)}`;
+    values.push(legacyKey);
+    for (const alias of aliases) {
+      values.push(`${alias}_${base}`);
+      values.push(`${base}_${alias}`);
+    }
+  } else {
+    values.push(...aliases);
+  }
+
+  for (const field of values) {
+    const value = getRowField(row, field);
+    if (value != null && String(value).trim() !== '') {
+      return String(value).trim();
+    }
+  }
+
+  return '';
+}
+
+function parseLocalizedText(row, base) {
+  const result = {};
+  for (const lang of LANGUAGES) {
+    let value = '';
+
+    if (!base) {
+      value = getLocalizedFieldValue(row, lang);
+      if (!value && ['title', 'text', 'subtitle', 'eyebrow', 'link'].includes(base)) {
+        value = getLocalizedFieldValue(row, lang, base);
+      }
+    } else if (base === 'sub') {
+      value = getLocalizedFieldValue(row, lang, 'sub');
+      if (!value) {
+        value = getLocalizedFieldValue(row, lang, 'description');
+      }
+    } else {
+      value = getLocalizedFieldValue(row, lang, base);
+    }
+
+    result[lang] = value || '';
+  }
+
+  return result;
+}
+
 function parseImagePair(row, sheetName, bases = ['image']) {
   const result = {};
   let has = false;
 
   for (const base of bases) {
-    const uaField = `${base}UA`;
-    const ruField = `${base}RU`;
-    const uaVal = row[uaField] || row[`${base}Ua`] || null;
-    const ruVal = row[ruField] || row[`${base}Ru`] || null;
+    for (const lang of LANGUAGES) {
+      let value = getLocalizedFieldValue(row, lang, base);
+      if (!value && base) {
+        value = getLocalizedFieldValue(row, lang);
+      }
 
-    if (uaVal) {
-      const imagePath = processImageField(uaVal, sheetName);
-      result.ua = imagePath
-        ? `__REQUIRE_START__../../../assets/${imagePath}__REQUIRE_END__`
-        : `__REQUIRE_START__../../../assets/images/error.jpg__REQUIRE_END__`;
+      if (!value) continue;
+
+      const imagePath = processImageField(value, sheetName);
+      if (!imagePath) continue;
+
+      const formattedPath = imagePath.startsWith('http://') || imagePath.startsWith('https://')
+        ? imagePath
+        : `__REQUIRE_START__../../../assets/${imagePath}__REQUIRE_END__`;
+
+      result[lang] = formattedPath;
       has = true;
     }
-
-    if (ruVal) {
-      const imagePath = processImageField(ruVal, sheetName);
-      result.ru = imagePath
-        ? `__REQUIRE_START__../../../assets/${imagePath}__REQUIRE_END__`
-        : `__REQUIRE_START__../../../assets/images/error.jpg__REQUIRE_END__`;
-      has = true;
-    }
-
     if (has) break;
   }
 
   if (!has) return null;
 
-  // Синхронизация языков: если только один заполнен — копируем на другой
-  if (result.ua && !result.ru) result.ru = result.ua;
-  if (result.ru && !result.ua) result.ua = result.ru;
+  const fallback = result.ua || result.ru || result.eng || result.ger;
+  for (const lang of LANGUAGES) {
+    if (!result[lang]) {
+      result[lang] = fallback;
+    }
+  }
 
   return result;
 }
 
-// Парсирование размеров/аспектов/resizeMode изображения
 function parseImageSizing(row) {
-  const width = parseSize(getRowField(row, 'imageWidth'));
-  const height = parseSize(getRowField(row, 'imageHeight'));
-  const aspectRatio = parseAspectRatio(getRowField(row, 'imageAspectRatio'));
-  const resizeMode = getRowField(row, 'imageResizeMode') ? String(getRowField(row, 'imageResizeMode')).trim() : undefined;
-  const sizing = {};
-  if (width != null) sizing.width = width;
-  if (height != null) sizing.height = height;
-  if (aspectRatio != null) sizing.aspectRatio = aspectRatio;
-  if (resizeMode) sizing.resizeMode = resizeMode;
+  const sizing = parseMetaString(getRowField(row, 'meta'));
+
+  if (sizing.width == null) {
+    const width = parseSize(getRowField(row, 'imageWidth'));
+    if (width != null) sizing.width = width;
+  }
+  if (sizing.height == null) {
+    const height = parseSize(getRowField(row, 'imageHeight'));
+    if (height != null) sizing.height = height;
+  }
+  if (sizing.aspectRatio == null) {
+    const aspectRatio = parseAspectRatio(getRowField(row, 'imageAspectRatio'));
+    if (aspectRatio != null) sizing.aspectRatio = aspectRatio;
+  }
+  if (!sizing.resizeMode) {
+    const resizeMode = getRowField(row, 'imageResizeMode');
+    if (resizeMode) sizing.resizeMode = String(resizeMode).trim();
+  }
+
   return sizing;
 }
 

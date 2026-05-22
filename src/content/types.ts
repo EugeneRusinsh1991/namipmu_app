@@ -1,4 +1,4 @@
-export type LanguageCode = 'ru' | 'ua';
+export type LanguageCode = 'ru' | 'ua' | 'eng' | 'ger';
 
 export type LocalizedValue<T> = Partial<Record<LanguageCode, T>>;
 export type LocalizedText = LocalizedValue<string>;

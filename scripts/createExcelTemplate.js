@@ -3,106 +3,258 @@ const path = require('path');
 
 console.log('🔨 Создание Excel файла с шаблоном...\n');
 
-// Создаём пустую книгу
 const workbook = xlsx.utils.book_new();
 
-// ==========================================
-// ЛИСТ: ШАБЛОН ЗАПОЛНЕНИЯ - ВСЕ ТИПЫ ЭЛЕМЕНТОВ
-// ==========================================
-// Вспомогательная функция для создания объектов с гарантированным порядком колонок:
-// id → type → [для каждого поля: RU, затем UA] → gifRU → gifUA → imageRU → imageUA → titleRU → titleUA → descriptionRU → descriptionUA → href → imageWidth → imageHeight → imageAspectRatio → imageResizeMode
-function createTemplateRow(
+function createTemplateRow({
   id,
   type,
-  ru = '',
-  ua = '',
-  gifRU = '',
-  gifUA = '',
-  imageRU = '',
-  imageUA = '',
-  titleRU = '',
-  titleUA = '',
-  descriptionRU = '',
-  descriptionUA = '',
+  ukr = '',
+  rus = '',
+  eng = '',
+  ger = '',
+  ukr_sub = '',
+  rus_sub = '',
+  eng_sub = '',
+  ger_sub = '',
   href = '',
-  imageWidth = '',
-  imageHeight = '',
-  imageAspectRatio = '',
-  imageResizeMode = ''
-) {
+  meta = '',
+}) {
   return {
     id,
     type,
-    ru,
-    ua,
-    gifRU,
-    gifUA,
-    imageRU,
-    imageUA,
-    titleRU,
-    titleUA,
-    descriptionRU,
-    descriptionUA,
+    ukr,
+    rus,
+    eng,
+    ger,
+    ukr_sub,
+    rus_sub,
+    eng_sub,
+    ger_sub,
     href,
-    imageWidth,
-    imageHeight,
-    imageAspectRatio,
-    imageResizeMode,
+    meta,
   };
 }
 
 const indexData = [
-  createTemplateRow(1, 'heroImage', '', '', 'images/hero.jpg', 'images/hero.jpg', '', '', '↑ Большой баннер вверху (100% ширина × 250px)', '↑ Великий банер вверху (100% ширина × 250px)', ''),
-  createTemplateRow(2, 'eyebrow', 'Beauty Academy', 'Beauty Academy', '', '', '', '', '', '', ''),
-  createTemplateRow(3, 'title', 'Master the Art of Beauty', 'Оволодіти мистецтвом краси', '', '', '', '', '', '', ''),
-  createTemplateRow(4, 'subtitle', 'Основные направления обучения', 'Основні напрями навчання', '', '', '', '', '', '', ''),
-  createTemplateRow(5, 'text', 'Добро пожаловать на наш интерактивный курс. Здесь вы найдёте все необходимые знания и практические навыки для профессионального развития.', 'Ласкаво просимо на наш інтерактивний курс. Тут ви знайдете всі необхідні знання та практичні навички для професійного розвитку.', '', '', '', '', '', '', ''),
-  createTemplateRow(6, 'squareImage', '', '', 'images/example_ru.jpg', 'images/example_ua.jpg', '', '', '↑ Квадратное изображение (300×300px, по центру)', '↑ Квадратне зображення (300×300px, по центру)', '', 300, 300, 1, 'contain'),
-  createTemplateRow(7, 'card', '', '', 'images/card_ru.jpg', 'images/card_ua.jpg', 'Обычная карточка', 'Звичайна карточка', 'Описание - используется для ссылок на другие уроки', 'Опис - використовується для посилань на інші уроки', '/other-page'),
-  createTemplateRow(8, 'cardBig', '', '', 'images/lesson_big.jpg', 'images/lesson_big.jpg', 'Большая карточка (CardBig)', 'Велика карточка (CardBig)', 'Размер: 280px ширина, больший акцент', 'Розмір: 280px ширина, більший акцент', '/lesson'),
-  createTemplateRow(9, 'cardSmall', '', '', 'images/test1.jpg', 'images/test1.jpg', 'Малая карточка', 'Мала карточка', 'Размер: 160px, для списков', 'Розмір: 160px, для списків', '/test'),
-  createTemplateRow(10, 'cardSmall', '', '', 'images/test2.jpg', 'images/test2.jpg', 'Малая карточка 2', 'Мала карточка 2', 'Можно ставить несколько подряд', 'Можна ставити кілька поспіль', '/test2'),
-  createTemplateRow(11, 'languageSwitcher', '', '', '', '', '', '', '↑ Переключатель языка (Укр/Рус)', '↑ Перемикач мови (Укр/Рус)', ''),
-  createTemplateRow(12, 'subtitle', 'Что вы будете изучать:', 'Що ви будете вивчати:', '', '', '', '', '', '', ''),
-  createTemplateRow(13, 'item', 'Основные техники макияжа и подготовка кожи', 'Основні техніки макіяжу та підготовка шкіри', '', '', '', '', '', '', ''),
-  createTemplateRow(14, 'item', 'Цветовая теория и подбор оттенков', 'Теорія кольору та підбір відтінків', '', '', '', '', '', '', ''),
-  createTemplateRow(15, 'item', 'Работа с различными типами кожи', 'Робота з різними типами шкіри', '', '', '', '', '', '', ''),
-  createTemplateRow(16, 'text', 'Вы получите практический опыт и сертификат после прохождения курса.', 'Ви отримаєте практичний досвід та сертифікат після проходження курсу.', '', '', '', '', '', '', ''),
-  createTemplateRow(17, 'textLink', 'Узнать больше о программе обучения →', 'Дізнатися більше про програму навчання →', '', '', '', '', '', '', '/learn-more'),
-  createTemplateRow(18, 'videoContainer', '', '', 'https://www.youtube.com/embed/dQw4w9WgXcQ', 'https://www.youtube.com/embed/dQw4w9WgXcQ', '', '', '↑ Видеоэлемент (указать URL видео на YouTube)', '↑ Відеоелемент (вказати URL відео на YouTube)', ''),
-  createTemplateRow(19, 'gif', '', '', 'images/animation_ru.gif', 'images/animation_ua.gif', '', '', '', '', '', 400, 225, '16:9', 'contain'),
-  createTemplateRow(20, 'navigationButtons', 'Следующий урок', 'Наступний урок', '', '', '', '', '', '', '', '/pigment'),
+  createTemplateRow({
+    id: 1,
+    type: 'heroImage',
+    ukr: 'images/hero.jpg',
+    rus: 'images/hero.jpg',
+    eng: 'images/hero.jpg',
+    ger: 'images/hero.jpg',
+    meta: 'w=1200;h=520;resizeMode=cover',
+  }),
+  createTemplateRow({
+    id: 2,
+    type: 'eyebrow',
+    ukr: 'Академія краси',
+    rus: 'Академия красоты',
+    eng: 'Beauty Academy',
+    ger: 'Beauty Academy',
+  }),
+  createTemplateRow({
+    id: 3,
+    type: 'title',
+    ukr: 'Майстерність перманентного макіяжу',
+    rus: 'Мастерство перманентного макияжа',
+    eng: 'Master permanent makeup',
+    ger: 'Meister der Permanent Make-up',
+  }),
+  createTemplateRow({
+    id: 4,
+    type: 'subtitle',
+    ukr: 'Навчайтеся у найкращих практиків',
+    rus: 'Учитесь у лучших практиков',
+    eng: 'Learn from top professionals',
+    ger: 'Lernen Sie von den besten Profis',
+  }),
+  createTemplateRow({
+    id: 5,
+    type: 'text',
+    ukr: 'Цей текст відображається як звичайний абзац.',
+    rus: 'Этот текст выводится как обычный параграф.',
+    eng: 'This text is rendered as a normal paragraph.',
+    ger: 'Dieser Text wird als normaler Absatz angezeigt.',
+  }),
+  createTemplateRow({
+    id: 6,
+    type: 'image',
+    ukr: 'images/example.jpg',
+    rus: 'images/example.jpg',
+    eng: 'images/example.jpg',
+    ger: 'images/example.jpg',
+    meta: 'w=600;h=400;resizeMode=contain',
+  }),
+  createTemplateRow({
+    id: 7,
+    type: 'gif',
+    ukr: 'images/animation.gif',
+    rus: 'images/animation.gif',
+    eng: 'images/animation.gif',
+    ger: 'images/animation.gif',
+    meta: 'w=400;h=225;resizeMode=contain',
+  }),
+  createTemplateRow({
+    id: 8,
+    type: 'card',
+    ukr: 'Заголовок карточки',
+    rus: 'Заголовок карточки',
+    eng: 'Card title',
+    ger: 'Kartenüberschrift',
+    ukr_sub: 'Опис карточки українською',
+    rus_sub: 'Описание карточки на русском',
+    eng_sub: 'Card description in English',
+    ger_sub: 'Kartenbeschreibung auf Deutsch',
+    href: '/lesson-example',
+  }),
+  createTemplateRow({
+    id: 9,
+    type: 'video',
+    ukr: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+    rus: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+    eng: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+    ger: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+  }),
+  createTemplateRow({
+    id: 10,
+    type: 'link',
+    ukr: 'Детальніше про курс',
+    rus: 'Подробнее о курсе',
+    eng: 'Read more about the course',
+    ger: 'Mehr über den Kurs',
+    href: '/course',
+  }),
+  createTemplateRow({
+    id: 11,
+    type: 'item',
+    ukr: 'Пункт списку UA',
+    rus: 'Пункт списка RU',
+    eng: 'List item EN',
+    ger: 'Listenelement DE',
+  }),
+  createTemplateRow({
+    id: 12,
+    type: 'navigationButtons',
+    ukr: 'Наступний урок',
+    rus: 'Следующий урок',
+    eng: 'Next lesson',
+    ger: 'Nächste Lektion',
+    href: '/next-page',
+  }),
 ];
 
-// Создаём листы
-const indexSheet = xlsx.utils.json_to_sheet(indexData);
+const indexSheet = xlsx.utils.json_to_sheet(indexData, {
+  header: [
+    'id',
+    'type',
+    'ukr',
+    'rus',
+    'eng',
+    'ger',
+    'ukr_sub',
+    'rus_sub',
+    'eng_sub',
+    'ger_sub',
+    'href',
+    'meta',
+  ],
+});
 indexSheet['!cols'] = [
-  { wch: 5 },   // id
-  { wch: 20 },  // type
-  { wch: 35 },  // ru (text RU)
-  { wch: 35 },  // ua (text UA)
-  { wch: 30 },  // gifRU
-  { wch: 30 },  // gifUA
-  { wch: 30 },  // imageRU
-  { wch: 30 },  // imageUA
-  { wch: 35 },  // titleRU
-  { wch: 35 },  // titleUA
-  { wch: 35 },  // descriptionRU
-  { wch: 35 },  // descriptionUA
-  { wch: 25 },  // href
-  { wch: 15 },  // imageWidth
-  { wch: 15 },  // imageHeight
-  { wch: 20 },  // imageAspectRatio
-  { wch: 15 },  // imageResizeMode
+  { wch: 5 },
+  { wch: 20 },
+  { wch: 35 },
+  { wch: 35 },
+  { wch: 35 },
+  { wch: 35 },
+  { wch: 35 },
+  { wch: 35 },
+  { wch: 35 },
+  { wch: 35 },
+  { wch: 25 },
+  { wch: 35 },
 ];
 xlsx.utils.book_append_sheet(workbook, indexSheet, 'Шаблон заполнения');
-console.log(`✅ Лист "Шаблон заполнения" создан`);
+console.log('✅ Лист "Шаблон заполнения" создан');
 
-// Сохраняем файл
+const helpData = [
+  {
+    column: 'id',
+    description: 'Порядковый номер строки / сортировка элементов.',
+    example: '1',
+  },
+  {
+    column: 'type',
+    description: 'Тип блока: text, image, gif, card, video, heroImage, eyebrow, title, subtitle, item, link, navigationButtons.',
+    example: 'card',
+  },
+  {
+    column: 'ukr',
+    description: 'Основное поле для украинского текста или пути к медиа.',
+    example: 'Текст UA / images/example.jpg',
+  },
+  {
+    column: 'rus',
+    description: 'Основное поле для русского текста или пути к медиа.',
+    example: 'Текст RU / images/example.jpg',
+  },
+  {
+    column: 'eng',
+    description: 'Основное поле для английского текста или пути к медиа.',
+    example: 'Text EN / images/example.jpg',
+  },
+  {
+    column: 'ger',
+    description: 'Основное поле для немецкого текста или пути к медиа.',
+    example: 'Text DE / images/example.jpg',
+  },
+  {
+    column: 'ukr_sub',
+    description: 'Вспомогательное поле для карточек или подписей на украинском.',
+    example: 'Описание UA',
+  },
+  {
+    column: 'rus_sub',
+    description: 'Вспомогательное поле для карточек или подписей на русском.',
+    example: 'Описание RU',
+  },
+  {
+    column: 'eng_sub',
+    description: 'Вспомогательное поле для карточек или подписей на английском.',
+    example: 'Description EN',
+  },
+  {
+    column: 'ger_sub',
+    description: 'Вспомогательное поле для карточек или подписей на немецком.',
+    example: 'Beschreibung DE',
+  },
+  {
+    column: 'href',
+    description: 'Ссылка для карточек, кнопок, видео или навигации.',
+    example: '/next-page или https://...',
+  },
+  {
+    column: 'meta',
+    description: 'Параметры для изображений / gif: w=300;h=200;resizeMode=contain.',
+    example: 'w=600;h=400;resizeMode=contain',
+  },
+];
+
+const helpSheet = xlsx.utils.json_to_sheet(helpData, {
+  header: ['column', 'description', 'example'],
+});
+helpSheet['!cols'] = [
+  { wch: 18 },
+  { wch: 60 },
+  { wch: 40 },
+];
+xlsx.utils.book_append_sheet(workbook, helpSheet, 'Колонки и примеры');
+
 const outputPath = path.join(__dirname, '../src/content/content_TEMPLATE.xlsx');
 xlsx.writeFile(workbook, outputPath);
 
 console.log('\n✅ content_TEMPLATE.xlsx успешно создан!');
 console.log(`📍 Путь: ${outputPath}`);
-console.log('\n� ЛИСТЫ В ФАЙЛЕ:');
+console.log('\n✅ Файл содержит листы:');
 console.log('   1️⃣  "Шаблон заполнения" - готовый шаблон для редактирования');
+console.log('   2️⃣  "Колонки и примеры" - объяснение новых столбцов');

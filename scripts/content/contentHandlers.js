@@ -46,12 +46,14 @@ const contentHandlers = {
   },
 
   navigationButtons(row) {
-    const nextText = {
-      ru: row.ru || 'Следующий урок',
-      ua: row.ua || 'Наступний урок',
-    };
+    const nextText = parseLocalizedText(row);
     const res = {
-      backText: { ru: 'Назад', ua: 'Назад' },
+      backText: {
+        ru: 'Назад',
+        ua: 'Назад',
+        eng: 'Back',
+        ger: 'Zurück',
+      },
       backHref: '/',
       nextText,
     };
@@ -67,8 +69,8 @@ const contentHandlers = {
     const res = {};
     const imagePair = parseImagePair(row, sheetName, ['image']);
     if (imagePair) res.image = imagePair;
-    res.title = parseLocalizedText(row, 'title');
-    res.description = parseLocalizedText(row, 'description');
+    res.title = parseLocalizedText(row);
+    res.description = parseLocalizedText(row, 'sub');
     if (context.normalizedType === 'cardbig') res.size = 'big';
     if (context.normalizedType === 'cardsmall') res.size = 'small';
     if (row.href) res.href = row.href;
@@ -98,8 +100,12 @@ const contentHandlers = {
 
   video(row) {
     const res = {};
-    if (row.href) res.url = row.href;
-    if (row.imageRU || row.imageUA) res.url = row.imageRU || row.imageUA;
+    if (row.href) {
+      res.url = row.href;
+    } else {
+      const url = row.ukr || row.rus || row.eng || row.ger;
+      if (url) res.url = url;
+    }
     return res;
   },
 };
