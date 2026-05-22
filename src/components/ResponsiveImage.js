@@ -35,29 +35,15 @@ const ResponsiveImage = ({
 }) => {
   const windowDimensions = useWindowDimensions();
   const [imageDimensions, setImageDimensions] = useState(null);
-  const [assetAspectRatio, setAssetAspectRatio] = useState(null);
-  const [hasError, setHasError] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [failedSource, setFailedSource] = useState(null);
 
   // Получаем нативные размеры изображения из URI или require
   useEffect(() => {
     if (!source) return;
 
-    setIsLoading(true);
-    setHasError(false);
-    setAssetAspectRatio(null);
-
     // Определяем URI в зависимости от типа source
     let imageUri = null;
     if (typeof source === 'number') {
-      try {
-        const resolved = Image.resolveAssetSource(source);
-        if (resolved && resolved.width && resolved.height) {
-          setAssetAspectRatio(resolved.width / resolved.height);
-        }
-      } catch (error) {
-        console.warn('Failed to resolve asset source:', error);
-      }
       imageUri = null;
     } else if (typeof source === 'object' && source.uri) {
       imageUri = source.uri;
@@ -69,16 +55,12 @@ const ResponsiveImage = ({
       Image.getSize(
         imageUri,
         (width, height) => {
-          setImageDimensions({ width, height });
-          setIsLoading(false);
+          setImageDimensions({ source, width, height });
         },
         (error) => {
           console.warn('Failed to get image size:', error);
-          setIsLoading(false);
         }
       );
-    } else {
-      setIsLoading(false);
     }
   }, [source]);
 
@@ -111,7 +93,19 @@ const ResponsiveImage = ({
   let finalHeight = finalWidth;
   let computedAspectRatio = aspectRatio;
 
-  const actualAspectRatio = assetAspectRatio || (imageDimensions ? imageDimensions.width / imageDimensions.height : null);
+  let assetAspectRatio = null;
+  if (typeof source === 'number') {
+    try {
+      const resolved = Image.resolveAssetSource(source);
+      if (resolved && resolved.width && resolved.height) {
+        assetAspectRatio = resolved.width / resolved.height;
+      }
+    } catch (error) {
+      console.warn('Failed to resolve asset source:', error);
+    }
+  }
+
+  const actualAspectRatio = assetAspectRatio || (imageDimensions?.source === source ? imageDimensions.width / imageDimensions.height : null);
 
   if (actualAspectRatio) {
     const diff = aspectRatio ? Math.abs(actualAspectRatio - aspectRatio) / aspectRatio : 1;
@@ -129,14 +123,14 @@ const ResponsiveImage = ({
   }
 
   const handleError = (error) => {
-    setHasError(true);
+    setFailedSource(source);
     onError?.(error);
   };
 
   return (
     <View style={[styles.container, { paddingHorizontal: padding }]}> 
       <Image
-        source={hasError && fallbackSource ? fallbackSource : source}
+        source={failedSource === source && fallbackSource ? fallbackSource : source}
         style={[
           styles.image,
           {
@@ -147,7 +141,6 @@ const ResponsiveImage = ({
         ]}
         resizeMode={resizeMode}
         onError={handleError}
-        onLoad={() => setIsLoading(false)}
       />
     </View>
   );

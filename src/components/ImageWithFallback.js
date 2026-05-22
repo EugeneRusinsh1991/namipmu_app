@@ -1,5 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Image } from 'react-native';
+
+const errorImage = require('../../assets/images/error.jpg');
 
 /**
  * ImageWithFallback — простой компонент для изображений с обработкой ошибок
@@ -14,27 +16,11 @@ const ImageWithFallback = ({
   resizeMode = 'cover', 
   fallbackStyle = {} 
 }) => {
-  const [hasError, setHasError] = useState(false);
-  const [validSource, setValidSource] = useState(source);
-  
-  // ERROR картинка которая показывается при любой ошибке
-  const errorImage = require('../../assets/images/error.jpg');
-
-  useEffect(() => {
-    // Проверяем валидность source при его изменении
-    if (!source) {
-      setHasError(true);
-      setValidSource(errorImage);
-    } else {
-      setHasError(false);
-      setValidSource(source);
-    }
-  }, [source]);
+  const [failedSource, setFailedSource] = useState(null);
 
   // Обработчик ошибки загрузки
   const handleError = () => {
-    setHasError(true);
-    setValidSource(errorImage);
+    setFailedSource(source);
   };
 
   const isPositiveNumber = value => typeof value === 'number' && value > 0;
@@ -51,7 +37,7 @@ const ImageWithFallback = ({
 
   return (
     <Image
-      source={hasError ? errorImage : validSource}
+      source={!source || failedSource === source ? errorImage : source}
       style={computedStyle}
       onError={handleError}
       resizeMode={resizeMode}
