@@ -1,10 +1,7 @@
 // GENERATED FILE: this content is recreated by scripts/generateContent.js
 export const skinContent = [
   {
-    "type": "heroImage",
-    "width": 1200,
-    "height": 520,
-    "resizeMode": "cover"
+    "type": "heroImage"
   },
   {
     "type": "title",
@@ -28,10 +25,7 @@ export const skinContent = [
     "type": "languageSwitcher"
   },
   {
-    "type": "image",
-    "width": 600,
-    "height": 400,
-    "resizeMode": "contain"
+    "type": "image"
   },
   {
     "type": "text",
@@ -126,9 +120,6 @@ export const skinContent = [
   },
   {
     "type": "gif",
-    "width": 400,
-    "height": 225,
-    "resizeMode": "contain",
     "src": {
       "ua": require('../../../assets/images/skin/skin_types_rus.gif'),
       "ru": require('../../../assets/images/skin/skin_types_rus.gif'),
@@ -152,11 +143,5 @@ export const skinContent = [
       "ger": "Nächste Lektion"
     },
     "href": "/skin"
-  },
-  {
-    "type": "gif",
-    "width": 400,
-    "height": 225,
-    "resizeMode": "contain"
   }
 ];

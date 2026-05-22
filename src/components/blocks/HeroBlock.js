@@ -1,5 +1,5 @@
 import { LinearGradient } from 'expo-linear-gradient';
-import { View } from 'react-native';
+import { Platform, View, useWindowDimensions } from 'react-native';
 import { globalStyles } from '../../styles/globalStyles';
 import { colors } from '../../styles/theme';
 import { getLocalizedAsset } from '../../utils/i18n';
@@ -26,15 +26,23 @@ export function HeroBlock({ content, lang = 'ru' }) {
   const heroImageSrc = getLocalizedAsset(heroItem.image, lang);
   const safeHeroSrc = isLikelyValidMedia(heroImageSrc) ? heroImageSrc : require('../../../assets/images/error.jpg');
   
+  const { width: windowWidth } = useWindowDimensions();
+  const defaultHeight = 250;
+  const wrapperStyle = {
+    ...globalStyles.heroImage,
+    height: heroItem?.height || defaultHeight,
+    width: Platform.OS === 'web' ? '100vw' : windowWidth,
+    alignSelf: 'center',
+    position: 'relative',
+    left: Platform.OS === 'web' ? 'calc(50% - 50vw)' : undefined,
+  };
+
   return (
-    <View style={globalStyles.heroImage}>
+    <View style={wrapperStyle}>
       <ImageWithFallback
         source={safeHeroSrc}
         style={globalStyles.heroImageBackground}
-        width={heroItem.width}
-        height={heroItem.height}
-        aspectRatio={heroItem.aspectRatio}
-        resizeMode={heroItem.resizeMode}
+        resizeMode={'cover'}
       />
       <LinearGradient
         colors={['transparent', colors.backgroundLight]}

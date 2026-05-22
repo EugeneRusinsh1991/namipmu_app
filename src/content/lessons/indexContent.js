@@ -1,10 +1,7 @@
 // GENERATED FILE: this content is recreated by scripts/generateContent.js
 export const indexContent = [
   {
-    "type": "heroImage",
-    "width": 1200,
-    "height": 520,
-    "resizeMode": "cover"
+    "type": "heroImage"
   },
   {
     "type": "eyebrow",

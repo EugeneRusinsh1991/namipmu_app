@@ -77,7 +77,7 @@ export default function Card({ image, title, description, href, size = 'big' }) 
       style={dynamicCardStyle}
       accessibilityRole={normalizedHref ? 'link' : 'button'}
     >
-      {imageSource && <ImageWithFallback source={imageSource} style={dynamicImageStyle} />}
+      <ImageWithFallback source={imageSource} style={dynamicImageStyle} />
 
       <View style={dynamicContentStyle}>
         <Text style={dynamicTitleStyle}>{safeTitle}</Text>
