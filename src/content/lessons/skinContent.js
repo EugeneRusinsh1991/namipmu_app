@@ -58,15 +58,6 @@ export const skinContent = [
     }
   },
   {
-    "type": "video",
-    "src": {
-      "ua": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-      "ru": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-      "eng": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-      "ger": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-    }
-  },
-  {
     "type": "text",
     "text": {
       "ua": "Цей текст відображається як звичайний абзац.",

@@ -7,7 +7,8 @@ interface ProgressBarProps {
 }
 
 export default function ProgressBar({ progress }: ProgressBarProps) {
-  const clampedProgress = Math.max(0, Math.min(100, progress));
+  // Ensure progress is a valid number to prevent "Value is undefined" errors in native styles
+  const clampedProgress = isNaN(progress) ? 0 : Math.max(0, Math.min(100, progress));
 
   return (
     <View style={styles.container}>

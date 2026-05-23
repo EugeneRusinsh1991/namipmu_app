@@ -26,9 +26,9 @@ export const blockRegistry = {
   link: LinkBlock,
   quiz: QuizBlock,
   checklist: ChecklistBlock,
+  spacer: SpacerDivider,
   spacerDivider: SpacerDivider,
   card: CardBlock,
   cardBig: CardBlock,
   cardSmall: CardBlock,
 };
-

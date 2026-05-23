@@ -19,14 +19,11 @@ export default function ContentPage({ title, contentModule }: ContentPageProps) 
   const { lang } = useLanguage();
   const [progress, setProgress] = useState(0);
 
-  if (typeof __DEV__ !== 'undefined' && __DEV__) {
-    console.log('ContentPage imported components', {
-      HeroBlock,
-      ContentRenderer,
-      PageLanguageButton,
-      HeaderTextSizeControls,
-      ProgressBar,
-    });
+  // Runtime check for undefined components
+  if (!HeroBlock || !ContentRenderer || !ProgressBar || !HeaderTextSizeControls || !PageLanguageButton) {
+    console.error('CRITICAL: One of the core components is undefined. Check your exports/imports.');
+    console.log('HeroBlock:', !!HeroBlock, 'ContentRenderer:', !!ContentRenderer, 'ProgressBar:', !!ProgressBar);
+    console.log('HeaderTextSizeControls:', !!HeaderTextSizeControls, 'PageLanguageButton:', !!PageLanguageButton);
   }
 
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {

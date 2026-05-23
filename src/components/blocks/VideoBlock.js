@@ -42,9 +42,9 @@ export function VideoBlock({ item, lang, heroOverlapStyle }) {
     const AV = isWeb ? null : require('expo-av');
     const Video = AV?.Video ?? AV?.default?.Video ?? AV?.default ?? AV ?? null;
     const localizedSrc = getLocalizedAsset(item?.src, lang);
-    const assetSource = typeof localizedSrc === 'object' || typeof localizedSrc === 'number' ? localizedSrc : null;
+    const assetSource = (localizedSrc && (typeof localizedSrc === 'object' || typeof localizedSrc === 'number')) ? localizedSrc : null;
     const sourceLocation = assetSource || item?.url || localizedSrc;
-    const sourceText = typeof sourceLocation === 'string' ? sourceLocation.trim() : '';
+    const sourceText = typeof sourceLocation === 'string' ? sourceLocation.trim() : (sourceLocation?.uri || '');
     const embedUrl = getYoutubeEmbedUrl(sourceText);
     const remoteVideoUrl = sourceText && isHttpUrl(sourceText) ? sourceText : null;
     const canRenderExpoVideo = !!(Video && assetSource);
@@ -118,7 +118,7 @@ export function VideoBlock({ item, lang, heroOverlapStyle }) {
 
     return (
       <View style={[styles.container, heroOverlapStyle]}>
-        {isWeb ? (
+        {isWeb || !embedUrl ? (
           <iframe
             style={styles.webview}
             src={RICKROLL_EMBED_URL}
@@ -149,8 +149,9 @@ export function VideoBlock({ item, lang, heroOverlapStyle }) {
 
 const styles = StyleSheet.create({
   container: {
-    ...globalStyles.videoContainer,
+    ...(globalStyles.videoContainer || { height: 220, width: '100%' }),
     backgroundColor: '#000',
+    overflow: 'hidden',
   },
   video: {
     flex: 1,

@@ -1,3 +1,4 @@
+import { StyleSheet } from 'react-native';
 import { imageStyles } from './images';
 import { languageStyles } from './language';
 import { layoutStyles } from './layout';
@@ -6,12 +7,18 @@ import { quizStyles } from './quiz';
 import { typographyStyles } from './typography';
 
 // 📦 Объединяем все стили в один объект
-// Каждый стиль живет в отдельном файле для лучшей организации
+// Используем функцию для "распаковки" StyleSheet (превращаем ID в объекты)
+const unroll = (sheet) => {
+  const out = {};
+  for (const key in sheet) { out[key] = StyleSheet.flatten(sheet[key]); }
+  return out;
+};
+
 export const globalStyles = {
-  ...layoutStyles,
-  ...typographyStyles,
-  ...imageStyles,
-  ...listStyles,
-  ...languageStyles,
-  ...quizStyles,
+  ...unroll(layoutStyles),
+  ...unroll(typographyStyles),
+  ...unroll(imageStyles),
+  ...unroll(listStyles),
+  ...unroll(languageStyles),
+  ...unroll(quizStyles),
 };
