@@ -11,9 +11,9 @@ export default function Card({ image, title, description, href, size = 'big' }) 
   // Конфигурация для разных размеров
   const sizeConfig = {
     big: {
-      cardWidth: 280,
-      imageHeight: 100,
-      contentHeight: 150,
+      cardWidth: 320,
+      imageHeight: 150,
+      contentHeight: 100,
       contentPadding: spacing.md,
       titleFontSize: 18,
       titleMarginBottom: 8,
@@ -21,9 +21,9 @@ export default function Card({ image, title, description, href, size = 'big' }) 
       descriptionLineHeight: 20,
     },
     small: {
-      cardWidth: 160,
-      imageHeight: 80,
-      contentHeight: 100,
+      cardWidth: 190,
+      imageHeight: 110,
+      contentHeight: 70,
       contentPadding: spacing.sm,
       titleFontSize: 14,
       titleMarginBottom: 6,

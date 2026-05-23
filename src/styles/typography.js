@@ -16,12 +16,12 @@ export const typographyStyles = StyleSheet.create({
   },
 
   title: {
-    fontSize: 48,
+    fontSize: 36,
     fontWeight: 'bold',
     marginBottom: 12,
-    color: '#2b2520',
+    color: '#1A1A1A',
     textAlign: 'flex-start',
-    fontFamily: 'sans-serif', // 'serif' для классического | 'sans-serif' для современного - МЕНЯЙ ТУТ
+    fontFamily: 'serif', // 'serif' для классического | 'sans-serif' для современного - МЕНЯЙ ТУТ
     // fontFamily: 'YourCustomFontName', // Раскомментируй и укажи имя загруженного шрифта
     // lineHeight: 56,
     // letterSpacing: -1,
@@ -30,12 +30,12 @@ export const typographyStyles = StyleSheet.create({
   },
 
   subtitle: {
-    fontSize: 30,
+    fontSize: 26,
     fontWeight: 'bold',
     marginBottom: 12,
-    color: '#2b2520',
+    color: '#1A1A1A',
     textAlign: 'flex-start',
-    fontFamily: 'sans-serif', // 'serif' для классического | 'sans-serif' для современного - МЕНЯЙ ТУТ
+    fontFamily: 'serif', // 'serif' для классического | 'sans-serif' для современного - МЕНЯЙ ТУТ
     // fontFamily: 'YourCustomFontName', // Раскомментируй и укажи имя загруженного шрифта
     // lineHeight: 36,
     // letterSpacing: 0.5,
@@ -44,12 +44,13 @@ export const typographyStyles = StyleSheet.create({
 
   text: {
     fontSize: 16,
-    lineHeight: 24,
+    lineHeight: 26, // Свободный межстрочный интервал
     marginBottom: 12,
-    color: '#6a5c4f',
+    color: '#666666',
     fontFamily: 'sans-serif', // 'serif' | 'sans-serif' - МЕНЯЙ ТУТ
     fontWeight: 'normal',
     // fontFamily: 'YourCustomFontName', // Раскомментируй и укажи имя загруженного шрифта
+    // lineHeight: 24, // Более плотный интервал
     // textAlign: 'justify', // 'auto' | 'left' | 'right' | 'center' | 'justify'
     // letterSpacing: 0.2,
   },
