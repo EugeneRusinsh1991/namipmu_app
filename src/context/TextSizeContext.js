@@ -2,8 +2,8 @@ import { createContext, useContext, useState } from 'react';
 
 const TextSizeContext = createContext();
 
-const MIN_FONT_SCALE = 0.85;
-const MAX_FONT_SCALE = 1.35;
+const MIN_FONT_SCALE = 0.8;
+const MAX_FONT_SCALE = 1.4;
 const FONT_SCALE_STEP = 0.1;
 
 export function TextSizeProvider({ children }) {

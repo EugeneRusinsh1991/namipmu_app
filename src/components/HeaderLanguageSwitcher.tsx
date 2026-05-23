@@ -38,10 +38,7 @@ export default function PageLanguageButton() {
     <>
       {/* Button positioned absolute inside page */}
       <Pressable
-        style={({ pressed }) => [
-          styles.button,
-          pressed && styles.buttonPressed,
-        ]}
+        style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}
         onPress={() => setIsOpen(!isOpen)}
         accessibilityRole="button"
         accessibilityLabel={`Язык: ${currentLanguage?.label}`}
@@ -99,10 +96,6 @@ export default function PageLanguageButton() {
 
 const styles = StyleSheet.create({
   button: {
-    position: 'absolute',
-    top: 30,              // 👈 ОТСТУП СВЕРХУ - меняй тут
-    right: 30,            // 👈 ОТСТУП СПРАВА - меняй тут
-    zIndex: 100,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,

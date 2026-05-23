@@ -1,9 +1,10 @@
 import { Stack } from 'expo-router';
 import { useState } from 'react';
-import { ScrollView, View, type NativeScrollEvent, type NativeSyntheticEvent } from 'react-native';
+import { ScrollView, StyleSheet, View, type NativeScrollEvent, type NativeSyntheticEvent } from 'react-native';
 import type { ContentBlock } from '../content/types';
 import { useLanguage } from '../context/LanguageContext';
 import { globalStyles } from '../styles/globalStyles';
+import { colors, radius } from '../styles/theme';
 import { HeroBlock } from './blocks/HeroBlock';
 import ContentRenderer from './ContentRenderer';
 import PageLanguageButton from './HeaderLanguageSwitcher';
@@ -51,15 +52,39 @@ export default function ContentPage({ title, contentModule }: ContentPageProps) 
         {/* Hero section with fixed language and font controls */}
         <View style={{ position: 'relative' }}>
           <HeroBlock content={contentModule} lang={lang} />
-          <HeaderTextSizeControls />
-          <PageLanguageButton />
+          <View style={styles.headerControls}>
+            <PageLanguageButton />
+            <HeaderTextSizeControls />
+          </View>
         </View>
         
         {/* Content below */}
-        <View style={globalStyles.container}>
+        <View style={(globalStyles as any).container}>
           <ContentRenderer content={contentModule} lang={lang} />
         </View>
       </ScrollView>
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  headerControls: {
+    position: 'absolute',
+    top: 30,
+    right: 24,
+    zIndex: 200,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    backgroundColor: colors.white,
+    borderRadius: radius.md,
+    borderWidth: 1,
+    borderColor: colors.border,
+    padding: 6,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.12,
+    shadowRadius: 10,
+    elevation: 6,
+  },
+});

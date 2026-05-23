@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useTextSize } from '../context/TextSizeContext';
-import { colors, radius } from '../styles/theme';
+import { colors } from '../styles/theme';
 
 export default function HeaderTextSizeControls() {
   const {
@@ -34,28 +34,14 @@ export default function HeaderTextSizeControls() {
 
 const styles = StyleSheet.create({
   container: {
-    position: 'absolute',
-    top: 30,
-    right: 124,
-    zIndex: 110,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: colors.white,
-    borderRadius: radius.xl,
-    borderWidth: 1,
-    borderColor: colors.border,
-    padding: 6,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.12,
-    shadowRadius: 12,
-    elevation: 5,
   },
   button: {
     paddingVertical: 6,
     paddingHorizontal: 10,
     borderRadius: 10,
-    backgroundColor: colors.cardBackground,
+    backgroundColor: colors.white,
     borderWidth: 1,
     borderColor: colors.border,
   },
@@ -69,8 +55,8 @@ const styles = StyleSheet.create({
   },
   labelContainer: {
     marginHorizontal: 8,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
     borderRadius: 10,
     backgroundColor: colors.white,
     borderWidth: 1,
