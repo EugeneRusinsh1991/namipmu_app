@@ -34,9 +34,6 @@ export const indexContent = [
     }
   },
   {
-    "type": "languageSwitcher"
-  },
-  {
     "type": "card",
     "title": {
       "ua": "Заголовок карточки",
@@ -99,8 +96,5 @@ export const indexContent = [
       "ger": "Kartenbeschreibung auf Deutsch"
     },
     "href": "/skin"
-  },
-  {
-    "type": "languageSwitcher"
   }
 ];

@@ -5,6 +5,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { globalStyles } from '../styles/globalStyles';
 import { HeroBlock } from './blocks';
 import ContentRenderer from './ContentRenderer';
+import PageLanguageButton from './HeaderLanguageSwitcher';
 
 interface ContentPageProps {
   title: string;
@@ -19,7 +20,13 @@ export default function ContentPage({ title, contentModule }: ContentPageProps) 
       <Stack.Screen options={{ title }} />
       
       <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: 120 }}>
-        <HeroBlock content={contentModule} lang={lang} />
+        {/* Hero section with fixed language button */}
+        <View style={{ position: 'relative' }}>
+          <HeroBlock content={contentModule} lang={lang} />
+          <PageLanguageButton />
+        </View>
+        
+        {/* Content below */}
         <View style={globalStyles.container}>
           <ContentRenderer content={contentModule} lang={lang} />
         </View>

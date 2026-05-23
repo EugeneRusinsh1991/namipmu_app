@@ -50,6 +50,24 @@ export type SpacerDividerBlock = ContentBlockBase<'spacerDivider'> & {
   title?: LocalizedText;
 };
 
+export type QuizOption = {
+  text: LocalizedText;
+  value: string;
+};
+
+export type QuizQuestion = {
+  question: LocalizedText;
+  options: QuizOption[];
+  correctAnswer?: string;
+};
+
+export type QuizBlock = ContentBlockBase<'quiz'> & {
+  title?: LocalizedText;
+  description?: LocalizedText;
+  href?: string;
+  questions?: QuizQuestion[];
+};
+
 export type VideoBlock = ContentBlockBase<'video'> & {
   url?: string;
 };
@@ -71,6 +89,7 @@ export type ContentBlock =
   | ListBlock
   | LinkBlock
   | SpacerDividerBlock
+  | QuizBlock
   | VideoBlock
   | LanguageSwitcherBlock
   | NavigationButtonsBlock;

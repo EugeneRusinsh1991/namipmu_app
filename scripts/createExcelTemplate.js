@@ -166,6 +166,15 @@ const indexData = [
     ger: 'Nächste Lektion',
     href: '/next-page',
   }),
+  createTemplateRow({
+    id: 15,
+    type: 'quiz',
+    ukr: 'Квиз: проверьте себя',
+    rus: 'Квиз: проверьте себя',
+    eng: 'Quiz: test yourself',
+    ger: 'Quiz: test yourself',
+    href: 'quiz1',
+  }),
 ];
 
 const indexSheet = xlsx.utils.json_to_sheet(indexData, {
@@ -200,6 +209,110 @@ indexSheet['!cols'] = [
 ];
 xlsx.utils.book_append_sheet(workbook, indexSheet, 'Шаблон заполнения');
 console.log('✅ Лист "Шаблон заполнения" создан');
+
+const quizData = [
+  createTemplateRow({
+    id: 1,
+    type: 'title',
+    ukr: 'Квиз: базовые знания',
+    rus: 'Квиз: базовые знания',
+    eng: 'Quiz: basic knowledge',
+    ger: 'Quiz: Grundkenntnisse',
+  }),
+  createTemplateRow({
+    id: 2,
+    type: 'text',
+    ukr: 'Выберите правильный вариант ответа.',
+    rus: 'Выберите правильный вариант ответа.',
+    eng: 'Choose the correct answer.',
+    ger: 'Wählen Sie die richtige Antwort.',
+  }),
+  {
+    id: 3,
+    type: 'question',
+    ukr: 'Какой цвет получается при смешивании красного и синего?',
+    rus: 'Какой цвет получается при смешивании красного и синего?',
+    eng: 'What color do you get when you mix red and blue?',
+    ger: 'Welche Farbe ergibt sich beim Mischen von Rot und Blau?',
+    option1_ua: 'Фиолетовый',
+    option1_ru: 'Фиолетовый',
+    option1_eng: 'Purple',
+    option1_ger: 'Lila',
+    option2_ua: 'Зеленый',
+    option2_ru: 'Зеленый',
+    option2_eng: 'Green',
+    option2_ger: 'Grün',
+    option3_ua: 'Оранжевый',
+    option3_ru: 'Оранжевый',
+    option3_eng: 'Orange',
+    option3_ger: 'Orange',
+    correct: '1',
+  },
+  {
+    id: 4,
+    type: 'question',
+    ukr: 'Какая из этих форм является правильной?',
+    rus: 'Какая из этих форм является правильной?',
+    eng: 'Which of these shapes is correct?',
+    ger: 'Welche dieser Formen ist korrekt?',
+    option1_ua: 'Круг',
+    option1_ru: 'Круг',
+    option1_eng: 'Circle',
+    option1_ger: 'Kreis',
+    option2_ua: 'Треугольник',
+    option2_ru: 'Треугольник',
+    option2_eng: 'Triangle',
+    option2_ger: 'Dreieck',
+    correct: '2',
+  },
+];
+
+const quizSheet = xlsx.utils.json_to_sheet(quizData, {
+  header: [
+    'id',
+    'type',
+    'ukr',
+    'rus',
+    'eng',
+    'ger',
+    'option1_ua',
+    'option1_ru',
+    'option1_eng',
+    'option1_ger',
+    'option2_ua',
+    'option2_ru',
+    'option2_eng',
+    'option2_ger',
+    'option3_ua',
+    'option3_ru',
+    'option3_eng',
+    'option3_ger',
+    'correct',
+  ],
+});
+quizSheet['!cols'] = [
+  { wch: 5 },
+  { wch: 18 },
+  { wch: 35 },
+  { wch: 35 },
+  { wch: 35 },
+  { wch: 35 },
+  { wch: 25 },
+  { wch: 25 },
+  { wch: 25 },
+  { wch: 25 },
+  { wch: 25 },
+  { wch: 25 },
+  { wch: 25 },
+  { wch: 25 },
+  { wch: 25 },
+  { wch: 25 },
+  { wch: 25 },
+  { wch: 25 },
+  { wch: 15 },
+];
+
+xlsx.utils.book_append_sheet(workbook, quizSheet, 'quiz1');
 
 const outputPath = path.join(__dirname, '../src/content/content_TEMPLATE.xlsx');
 xlsx.writeFile(workbook, outputPath);

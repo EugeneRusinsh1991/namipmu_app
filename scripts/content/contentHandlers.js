@@ -14,6 +14,7 @@ const typeMap = {
   cardsmall: 'card',
   link: 'link',
   textlink: 'link',
+  quiz: 'quiz',
   image: 'image',
   squareimage: 'image',
   gif: 'gif',
@@ -83,6 +84,14 @@ const contentHandlers = {
     return {
       text: parseLocalizedText(row),
       ...(row.href ? { href: row.href } : {}),
+    };
+  },
+
+  quiz(row) {
+    return {
+      title: parseLocalizedText(row),
+      href: row.href ? String(row.href).trim() : undefined,
+      questions: [],
     };
   },
 

@@ -25,9 +25,6 @@ export const skinContent = [
     }
   },
   {
-    "type": "languageSwitcher"
-  },
-  {
     "type": "image",
     "width": 600,
     "height": 400,
@@ -173,5 +170,90 @@ export const skinContent = [
       "ger": "Nächste Lektion"
     },
     "href": "/next-page"
+  },
+  {
+    "type": "quiz",
+    "title": {
+      "ua": "Квиз: проверьте себя",
+      "ru": "Квиз: проверьте себя",
+      "eng": "Quiz: test yourself",
+      "ger": "Quiz: test yourself"
+    },
+    "href": "quiz1",
+    "questions": [
+      {
+        "question": {
+          "ua": "Какой цвет получается при смешивании красного и синего?",
+          "ru": "Какой цвет получается при смешивании красного и синего?",
+          "eng": "What color do you get when you mix red and blue?",
+          "ger": "Welche Farbe ergibt sich beim Mischen von Rot und Blau?"
+        },
+        "options": [
+          {
+            "text": {
+              "ua": "Фиолетовый",
+              "ru": "Фиолетовый",
+              "eng": "Purple",
+              "ger": "Lila"
+            },
+            "value": "1"
+          },
+          {
+            "text": {
+              "ua": "Зеленый",
+              "ru": "Зеленый",
+              "eng": "Green",
+              "ger": "Grün"
+            },
+            "value": "2"
+          },
+          {
+            "text": {
+              "ua": "Оранжевый",
+              "ru": "Оранжевый",
+              "eng": "Orange",
+              "ger": "Orange"
+            },
+            "value": "3"
+          }
+        ],
+        "correctAnswer": "1"
+      },
+      {
+        "question": {
+          "ua": "Какая из этих форм является правильной?",
+          "ru": "Какая из этих форм является правильной?",
+          "eng": "Which of these shapes is correct?",
+          "ger": "Welche dieser Formen ist korrekt?"
+        },
+        "options": [
+          {
+            "text": {
+              "ua": "Круг",
+              "ru": "Круг",
+              "eng": "Circle",
+              "ger": "Kreis"
+            },
+            "value": "1"
+          },
+          {
+            "text": {
+              "ua": "Треугольник",
+              "ru": "Треугольник",
+              "eng": "Triangle",
+              "ger": "Dreieck"
+            },
+            "value": "2"
+          }
+        ],
+        "correctAnswer": "2"
+      }
+    ],
+    "description": {
+      "ua": "Выберите правильный вариант ответа.",
+      "ru": "Выберите правильный вариант ответа.",
+      "eng": "Choose the correct answer.",
+      "ger": "Wählen Sie die richtige Antwort."
+    }
   }
 ];

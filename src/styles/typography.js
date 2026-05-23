@@ -8,6 +8,11 @@ export const typographyStyles = StyleSheet.create({
     color: '#ffffff',
     fontFamily: 'sans-serif', // 'serif' для классического | 'sans-serif' для современного - МЕНЯЙ ТУТ
     letterSpacing: 1,
+    // fontFamily: 'YourCustomFontName', // Раскомментируй и укажи имя загруженного шрифта
+    // textTransform: 'uppercase', // 'none' | 'uppercase' | 'lowercase' | 'capitalize'
+    // lineHeight: 24,
+    // marginTop: 10,
+    // opacity: 0.9,
   },
 
   title: {
@@ -17,6 +22,11 @@ export const typographyStyles = StyleSheet.create({
     color: '#2b2520',
     textAlign: 'flex-start',
     fontFamily: 'sans-serif', // 'serif' для классического | 'sans-serif' для современного - МЕНЯЙ ТУТ
+    // fontFamily: 'YourCustomFontName', // Раскомментируй и укажи имя загруженного шрифта
+    // lineHeight: 56,
+    // letterSpacing: -1,
+    // textTransform: 'none',
+    // marginTop: 20,
   },
 
   subtitle: {
@@ -26,6 +36,10 @@ export const typographyStyles = StyleSheet.create({
     color: '#2b2520',
     textAlign: 'flex-start',
     fontFamily: 'sans-serif', // 'serif' для классического | 'sans-serif' для современного - МЕНЯЙ ТУТ
+    // fontFamily: 'YourCustomFontName', // Раскомментируй и укажи имя загруженного шрифта
+    // lineHeight: 36,
+    // letterSpacing: 0.5,
+    // fontStyle: 'italic', // 'normal' | 'italic'
   },
 
   text: {
@@ -35,6 +49,9 @@ export const typographyStyles = StyleSheet.create({
     color: '#6a5c4f',
     fontFamily: 'sans-serif', // 'serif' | 'sans-serif' - МЕНЯЙ ТУТ
     fontWeight: 'normal',
+    // fontFamily: 'YourCustomFontName', // Раскомментируй и укажи имя загруженного шрифта
+    // textAlign: 'justify', // 'auto' | 'left' | 'right' | 'center' | 'justify'
+    // letterSpacing: 0.2,
   },
 
   textLink: {
@@ -43,6 +60,10 @@ export const typographyStyles = StyleSheet.create({
     color: 'blue',
     textAlign: 'center',
     fontFamily: 'sans-serif', // 'serif' | 'sans-serif' - МЕНЯЙ ТУТ
+    // fontFamily: 'YourCustomFontName', // Раскомментируй и укажи имя загруженного шрифта
+    // textDecorationLine: 'underline', // 'none' | 'underline' | 'line-through'
+    // fontWeight: '600',
+    // paddingVertical: 10,
   },
 
   spacer: {
@@ -51,5 +72,9 @@ export const typographyStyles = StyleSheet.create({
     color: '#826cff',
     fontFamily: 'serif',
     fontWeight: 'bold',
+    // fontFamily: 'YourCustomFontName', // Раскомментируй и укажи имя загруженного шрифта
+    // marginVertical: 20,
+    // letterSpacing: 5,
+    // textAlign: 'center',
   },
 });

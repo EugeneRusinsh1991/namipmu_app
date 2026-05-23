@@ -25,7 +25,7 @@ function generateContentFile(workbook, sheetName) {
     row.__sheetName = sheetName;
   });
 
-  const content = parseContent(rows);
+  const content = parseContent(rows, workbook);
   
   if (!content) {
     console.log(`⚠️ Лист "${sheetName}" пуст или не найден`);
