@@ -155,23 +155,6 @@ export const skinContent = [
     "resizeMode": "contain"
   },
   {
-    "type": "navigationButtons",
-    "backText": {
-      "ru": "Назад",
-      "ua": "Назад",
-      "eng": "Back",
-      "ger": "Zurück"
-    },
-    "backHref": "/",
-    "nextText": {
-      "ua": "Наступний урок",
-      "ru": "Следующий урок",
-      "eng": "Next lesson",
-      "ger": "Nächste Lektion"
-    },
-    "href": "/next-page"
-  },
-  {
     "type": "quiz",
     "title": {
       "ua": "Квиз: проверьте себя",
@@ -317,5 +300,22 @@ export const skinContent = [
         }
       }
     ]
+  },
+  {
+    "type": "navigationButtons",
+    "backText": {
+      "ru": "Назад",
+      "ua": "Назад",
+      "eng": "Back",
+      "ger": "Zurück"
+    },
+    "backHref": "/",
+    "nextText": {
+      "ua": "Наступний урок",
+      "ru": "Следующий урок",
+      "eng": "Next lesson",
+      "ger": "Nächste Lektion"
+    },
+    "href": "/next-page"
   }
 ];

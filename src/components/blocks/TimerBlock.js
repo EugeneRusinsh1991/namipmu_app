@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import { globalStyles } from '../../styles/globalStyles';
+import { colors } from '../../styles/theme';
 import { getLocalized } from '../../utils/i18n';
 
 export function TimerBlock({ item, lang }) {
@@ -73,7 +75,7 @@ export function TimerBlock({ item, lang }) {
   return (
     <View style={styles.card}>
       <View style={styles.headerRow}>
-        <Text style={styles.title}>{title}</Text>
+        <Text style={globalStyles.subtitle}>{title}</Text>
         <Text style={styles.icon}>⏱️</Text>
       </View>
 
@@ -81,7 +83,7 @@ export function TimerBlock({ item, lang }) {
         <View style={styles.ring}>
           <Animated.View style={[styles.innerFill, progressStyle]} />
           <View style={styles.timeLabelWrap} pointerEvents="none">
-            <Text style={styles.timeLabel}>{formatTime(remaining)}</Text>
+            <Text style={[globalStyles.title, styles.timeLabelOverride]}>{formatTime(remaining)}</Text>
           </View>
         </View>
       </View>
@@ -92,13 +94,13 @@ export function TimerBlock({ item, lang }) {
           onPress={toggleRun}
           style={[styles.btn, isRunning ? styles.btnPause : styles.btnStart]}
         >
-          <Text style={[styles.btnText, isRunning ? styles.btnTextPause : styles.btnTextStart]}>
+          <Text style={[globalStyles.text, styles.btnTextOverride]}>
             {isRunning ? 'Пауза' : 'Старт'}
           </Text>
         </TouchableOpacity>
 
         <TouchableOpacity activeOpacity={0.8} onPress={reset} style={[styles.btn, styles.btnReset]}>
-          <Text style={[styles.btnText, styles.btnTextReset]}>Скинути</Text>
+          <Text style={[globalStyles.text, styles.btnTextOverride]}>Скинути</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -110,15 +112,17 @@ const INNER_PADDING = 8;
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.cardBackground,
     borderRadius: 16,
     padding: 16,
     marginVertical: 12,
-    shadowColor: '#000',
+    shadowColor: colors.textPrimary,
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.08,
     shadowRadius: 12,
     elevation: 3,
+    borderWidth: 1,
+    borderColor: colors.border,
   },
   headerRow: {
     flexDirection: 'row',
@@ -145,7 +149,7 @@ const styles = StyleSheet.create({
     height: SIZE,
     borderRadius: SIZE / 2,
     borderWidth: 2,
-    borderColor: '#e6e6e6',
+    borderColor: '#e6ddd6',
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',
@@ -156,7 +160,7 @@ const styles = StyleSheet.create({
     width: SIZE - INNER_PADDING * 2,
     height: SIZE - INNER_PADDING * 2,
     borderRadius: (SIZE - INNER_PADDING * 2) / 2,
-    backgroundColor: '#ffd6e6',
+    backgroundColor: '#f6e7e8',
   },
   timeLabelWrap: {
     alignItems: 'center',
@@ -184,15 +188,17 @@ const styles = StyleSheet.create({
     marginHorizontal: 6,
   },
   btnStart: {
-    backgroundColor: '#ff4da6',
+    backgroundColor: '#f3e6e7',
+    borderColor: '#ddb2b8',
+    borderWidth: 1,
   },
   btnPause: {
-    backgroundColor: '#f0f0f5',
+    backgroundColor: '#f7f3f0',
   },
   btnReset: {
     backgroundColor: '#fff',
     borderWidth: 1,
-    borderColor: '#e6e6e6',
+    borderColor: '#e6ddd6',
   },
   btnText: {
     fontSize: 16,
@@ -206,5 +212,14 @@ const styles = StyleSheet.create({
   },
   btnTextReset: {
     color: '#0b1226',
+  },
+  timeLabelOverride: {
+    textAlign: 'center',
+    includeFontPadding: false,
+  },
+  btnTextOverride: {
+    fontWeight: '700',
+    fontSize: 16,
+    color: '#7c5a61',
   },
 });

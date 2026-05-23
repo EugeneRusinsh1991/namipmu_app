@@ -26,13 +26,13 @@ export default function ProgressBar({ progress }: ProgressBarProps) {
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    height: 3,
+    height: 2, // Более тонкая, элегантная линия
     backgroundColor: colors.border,
     overflow: 'hidden',
     zIndex: 50,
   },
   bar: {
     height: '100%',
-    backgroundColor: colors.primary,
+    backgroundColor: colors.accent, // Используем основной акцент (пыльная роза)
   },
 });

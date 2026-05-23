@@ -20,9 +20,9 @@ export function ChecklistBlock({ item, lang, heroOverlapStyle }) {
 
   return (
     <View style={[globalStyles.quizContainer, heroOverlapStyle, styles.container]}>
-      {title ? <Text style={globalStyles.quizTitle}>{title}</Text> : null}
-      {description ? <Text style={globalStyles.quizDescription}>{description}</Text> : null}
-      <Text style={styles.progressLabel}>{`${doneCount} / ${items.length} ${lang === 'eng' ? 'done' : lang === 'ger' ? 'erledigt' : 'выполнено'}`}</Text>
+      {title ? <Text style={globalStyles.title}>{title}</Text> : null}
+      {description ? <Text style={globalStyles.text}>{description}</Text> : null}
+      <Text style={[globalStyles.text, styles.progressLabel]}>{`${doneCount} / ${items.length} ${lang === 'eng' ? 'done' : lang === 'ger' ? 'erledigt' : 'выполнено'}`}</Text>
       {items.map((itemData, index) => {
         const itemText = getLocalized(itemData.text, lang, '');
         const checked = Boolean(checkedItems[index]);
@@ -36,7 +36,7 @@ export function ChecklistBlock({ item, lang, heroOverlapStyle }) {
             <View style={[styles.checkbox, checked ? styles.checkboxChecked : null]}>
               {checked ? <Text style={styles.checkmark}>✓</Text> : null}
             </View>
-            <Text style={[styles.itemText, checked ? styles.itemTextChecked : null]}>{itemText}</Text>
+            <Text style={[globalStyles.text, styles.itemText, checked ? styles.itemTextChecked : null]}>{itemText}</Text>
           </Pressable>
         );
       })}
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
   progressLabel: {
     fontSize: 14,
     marginBottom: 12,
-    color: '#6a5c4f',
+    color: '#7d6c63',
   },
   itemRow: {
     flexDirection: 'row',
@@ -59,29 +59,32 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     paddingHorizontal: 14,
     borderRadius: 16,
-    backgroundColor: '#f8f5f1',
+    backgroundColor: '#fbf7f3',
+    borderWidth: 1,
+    borderColor: '#e6ddd6',
     marginBottom: 10,
   },
   itemRowChecked: {
-    backgroundColor: '#e7f1e8',
+    backgroundColor: '#f2f0ec',
+    borderColor: '#d8d0c7',
   },
   checkbox: {
     width: 24,
     height: 24,
     borderRadius: 6,
     borderWidth: 1,
-    borderColor: '#b8b0a4',
+    borderColor: '#d8d0c7',
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 12,
     backgroundColor: '#fff',
   },
   checkboxChecked: {
-    borderColor: '#4d8f67',
-    backgroundColor: '#4d8f67',
+    borderColor: '#8d9b7a',
+    backgroundColor: '#e6eedf',
   },
   checkmark: {
-    color: '#fff',
+    color: '#4d6b4c',
     fontSize: 14,
     lineHeight: 18,
   },
@@ -91,7 +94,7 @@ const styles = StyleSheet.create({
     color: '#2b2520',
   },
   itemTextChecked: {
-    color: '#4d8f67',
+    color: '#7d8a75',
     textDecorationLine: 'line-through',
   },
 });

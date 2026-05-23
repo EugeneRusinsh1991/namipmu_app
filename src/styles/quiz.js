@@ -1,13 +1,14 @@
 import { StyleSheet } from 'react-native';
+import { colors } from './theme';
 
 export const quizStyles = StyleSheet.create({
   quizContainer: {
     marginBottom: 20,
     padding: 16,
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.cardBackground,
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: '#e1d9d1',
+    borderColor: colors.border,
   },
   quizTitle: {
     fontSize: 24,
@@ -43,32 +44,32 @@ export const quizStyles = StyleSheet.create({
     backgroundColor: '#f8f5f1',
   },
   quizOptionSelected: {
-    borderColor: '#6b8f67',
-    backgroundColor: '#eaf2e8',
+    borderColor: colors.accent,
+    backgroundColor: '#f7e5e7',
   },
   quizOptionCorrect: {
-    borderColor: '#3d7f3d',
-    backgroundColor: '#d8f0d8',
+    borderColor: colors.success,
+    backgroundColor: '#e9efde',
   },
   quizOptionWrong: {
-    borderColor: '#c24f4f',
-    backgroundColor: '#f4d7d7',
+    borderColor: colors.warning,
+    backgroundColor: '#f7e9df',
   },
   quizOptionText: {
     fontSize: 16,
-    color: '#2b2520',
+    color: colors.textPrimary,
   },
   quizSubmitButton: {
     marginTop: 8,
     padding: 14,
     borderRadius: 12,
     alignItems: 'center',
-    backgroundColor: '#6b8f67',
+    backgroundColor: '#f5e8e9',
   },
   quizSubmitText: {
     fontSize: 16,
     fontWeight: '700',
-    color: '#ffffff',
+    color: colors.accent,
   },
   quizResultText: {
     marginTop: 12,
