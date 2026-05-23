@@ -14,7 +14,6 @@ function MediaBlock({ item, lang, heroOverlapStyle }) {
         aspectRatio={item.aspectRatio}
         minWidth={100}
         maxWidth={maxWidth}
-        padding={16}
         resizeMode={item.resizeMode || 'contain'}
       />
     </View>
@@ -28,4 +27,3 @@ export function ImageBlock(props) {
 export function GifBlock(props) {
   return <MediaBlock {...props} />;
 }
-

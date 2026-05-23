@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Image, Platform, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { Image, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { colors, layout as layoutTokens, radius, spacing } from '../styles/theme';
 const errorImage = require('../..//assets/images/error.jpg');
 
@@ -53,7 +53,7 @@ const ResponsiveImage = ({
   aspectRatio,
   minWidth = 100,
   maxWidth = null,
-  padding = 21, // Добавили по 5 пикселей с каждой стороны (итого +10 к ширине)
+  padding = layoutTokens.containerPadding,
   resizeMode = 'contain',
   onError,
   fallbackSource,
@@ -95,16 +95,8 @@ const ResponsiveImage = ({
   const horizontalPadding = padding * 2;
   const availableWidth = screenWidth - horizontalPadding;
 
-  // На desktop (web) ограничиваем контентом (theme.layout.maxContentWidth для читаемости)
-  let contentMaxWidth = availableWidth;
-  if (Platform.OS === 'web' && availableWidth > layoutTokens.maxContentWidth) {
-    contentMaxWidth = layoutTokens.maxContentWidth;
-  } else if (Platform.OS !== 'web' && Platform.OS !== 'android' && Platform.OS !== 'ios') {
-    // Для других платформ (desktop apps)
-    if (availableWidth > layoutTokens.maxContentWidth) {
-      contentMaxWidth = layoutTokens.maxContentWidth;
-    }
-  }
+  // Ограничиваем контентом (theme.layout.maxContentWidth) для консистентности на всех устройствах
+  const contentMaxWidth = Math.min(availableWidth, layoutTokens.maxContentWidth);
 
   // Применяем явный maxWidth если передан
   let finalMaxWidth = contentMaxWidth;
@@ -160,7 +152,7 @@ const ResponsiveImage = ({
   };
 
   return (
-    <View style={[styles.container, { paddingHorizontal: padding }]}> 
+    <View style={styles.container}> 
       <Image
         source={
           useFallback || !source || (!isLikelyValidUri(getUriFromSource(source)) && !fallbackSource) || (getUriFromSource(source) === failedUri && fallbackSource)

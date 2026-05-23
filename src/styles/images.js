@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { layout } from './theme';
 
 export const imageStyles = StyleSheet.create({
   squareCenteredImage: {
@@ -47,5 +48,8 @@ export const imageStyles = StyleSheet.create({
     height: 220,
     borderRadius: 10,
     overflow: 'hidden',
+    width: '100%',
+    maxWidth: layout.maxContentWidth,
+    alignSelf: 'center',
   },
 });

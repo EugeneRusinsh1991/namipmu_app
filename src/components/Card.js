@@ -1,17 +1,22 @@
 import { Link } from 'expo-router';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { useLanguage } from '../context/LanguageContext';
-import { colors, radius, spacing, typography } from '../styles/theme';
+import { colors, layout, radius, spacing, typography } from '../styles/theme';
 import { getLocalized, getLocalizedAsset } from '../utils/i18n';
 import ImageWithFallback from './ImageWithFallback';
 
 export default function Card({ image, title, description, href, size = 'big' }) {
   const { lang } = useLanguage();
+  const { width: windowWidth } = useWindowDimensions();
+
+  // Вычисляем ширину для большой карточки, чтобы она совпадала с шириной контента
+  const availableWidth = windowWidth - layout.containerPadding * 2;
+  const cardWidthBig = Math.min(availableWidth, layout.maxContentWidth || 600);
 
   // Конфигурация для разных размеров
   const sizeConfig = {
     big: {
-      cardWidth: 320,
+      cardWidth: cardWidthBig,
       imageHeight: 150,
       contentHeight: 110,
       contentPadding: spacing.lg,

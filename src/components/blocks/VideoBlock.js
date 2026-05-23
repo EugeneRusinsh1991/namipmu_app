@@ -1,4 +1,4 @@
-import { Platform, StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, Text, View } from 'react-native';
 import { globalStyles } from '../../styles/globalStyles';
 import { getLocalizedAsset } from '../../utils/i18n';
 
@@ -36,78 +36,115 @@ function createHtmlVideoPage(videoUrl) {
 }
 
 export function VideoBlock({ item, lang, heroOverlapStyle }) {
-  const WebView = isWeb ? null : require('react-native-webview').WebView;
-  const Video = !isWeb ? require('expo-av').Video : null;
-  const localizedSrc = getLocalizedAsset(item.src, lang);
-  const assetSource = typeof localizedSrc === 'object' || typeof localizedSrc === 'number' ? localizedSrc : null;
-  const sourceLocation = assetSource || item.url || localizedSrc;
-  const sourceText = typeof sourceLocation === 'string' ? sourceLocation.trim() : '';
-  const embedUrl = getYoutubeEmbedUrl(sourceText);
-  const remoteVideoUrl = sourceText && isHttpUrl(sourceText) ? sourceText : null;
-  const canRenderExpoVideo = !!(Video && assetSource);
+  try {
+    const WebViewModule = isWeb ? null : require('react-native-webview');
+    const WebView = WebViewModule?.WebView ?? WebViewModule?.default?.WebView ?? WebViewModule?.default ?? WebViewModule ?? null;
+    const AV = isWeb ? null : require('expo-av');
+    const Video = AV?.Video ?? AV?.default?.Video ?? AV?.default ?? AV ?? null;
+    const localizedSrc = getLocalizedAsset(item?.src, lang);
+    const assetSource = typeof localizedSrc === 'object' || typeof localizedSrc === 'number' ? localizedSrc : null;
+    const sourceLocation = assetSource || item?.url || localizedSrc;
+    const sourceText = typeof sourceLocation === 'string' ? sourceLocation.trim() : '';
+    const embedUrl = getYoutubeEmbedUrl(sourceText);
+    const remoteVideoUrl = sourceText && isHttpUrl(sourceText) ? sourceText : null;
+    const canRenderExpoVideo = !!(Video && assetSource);
 
-  if (typeof __DEV__ !== 'undefined' && __DEV__) {
-    console.log('VideoBlock render', { assetSource, sourceText, embedUrl, remoteVideoUrl, hasNativeVideo: !!(Video && assetSource) });
-  }
+    if (typeof __DEV__ !== 'undefined' && __DEV__) {
+      console.log('VideoBlock render', {
+        assetSource,
+        sourceText,
+        embedUrl,
+        remoteVideoUrl,
+        hasNativeVideo: !!(Video && assetSource),
+        AVExists: !!AV,
+        VideoExport: !!Video,
+        WebViewExists: !!WebView,
+        item
+      });
+    }
 
-  if (canRenderExpoVideo) {
-    return (
-      <View style={[styles.container, heroOverlapStyle]}>
-        <Video
-          source={assetSource}
-          useNativeControls
-          resizeMode="contain"
-          style={styles.video}
-        />
-      </View>
-    );
-  }
+    if (canRenderExpoVideo) {
+      return (
+        <View style={[styles.container, heroOverlapStyle]}>
+          <Video
+            source={assetSource}
+            useNativeControls
+            resizeMode="contain"
+            style={styles.video}
+          />
+        </View>
+      );
+    }
 
-  if (embedUrl) {
+    const webviewAvailable = !!WebView;
+
+    if (embedUrl) {
+      return (
+        <View style={[styles.container, heroOverlapStyle]}>
+          {isWeb ? (
+            <iframe
+              style={styles.webview}
+              src={embedUrl}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              title="YouTube video"
+            />
+          ) : webviewAvailable ? (
+            <WebView style={styles.webview} source={{ uri: embedUrl }} />
+          ) : (
+            <View style={styles.fallbackContainer}>
+              <Text style={styles.fallbackText}>Видеоплеер недоступен</Text>
+            </View>
+          )}
+        </View>
+      );
+    }
+
+    if (remoteVideoUrl) {
+      return (
+        <View style={[styles.container, heroOverlapStyle]}>
+          {isWeb ? (
+            <video style={styles.webview} controls src={remoteVideoUrl} />
+          ) : webviewAvailable ? (
+            <WebView style={styles.webview} source={{ html: createHtmlVideoPage(remoteVideoUrl) }} />
+          ) : (
+            <View style={styles.fallbackContainer}>
+              <Text style={styles.fallbackText}>Видео недоступно</Text>
+            </View>
+          )}
+        </View>
+      );
+    }
+
     return (
       <View style={[styles.container, heroOverlapStyle]}>
         {isWeb ? (
           <iframe
             style={styles.webview}
-            src={embedUrl}
+            src={RICKROLL_EMBED_URL}
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
-            title="YouTube video"
+            title="Rickroll video"
           />
+        ) : webviewAvailable ? (
+          <WebView style={styles.webview} source={{ uri: RICKROLL_EMBED_URL }} />
         ) : (
-          <WebView style={styles.webview} source={{ uri: embedUrl }} />
+          <View style={styles.fallbackContainer}>
+            <Text style={styles.fallbackText}>Видео недоступно</Text>
+          </View>
         )}
       </View>
     );
-  }
-
-  if (remoteVideoUrl) {
+  } catch (err) {
+    console.error('VideoBlock error', err, { item, lang });
     return (
       <View style={[styles.container, heroOverlapStyle]}>
-        {isWeb ? (
-          <video style={styles.webview} controls src={remoteVideoUrl} />
-        ) : (
-          <WebView style={styles.webview} source={{ html: createHtmlVideoPage(remoteVideoUrl) }} />
-        )}
+        <View style={styles.fallbackContainer}>
+          <Text style={styles.fallbackText}>Ошибка воспроизведения видео</Text>
+        </View>
       </View>
     );
   }
-
-  return (
-    <View style={[styles.container, heroOverlapStyle]}>
-      {isWeb ? (
-        <iframe
-          style={styles.webview}
-          src={RICKROLL_EMBED_URL}
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-          title="Rickroll video"
-        />
-      ) : (
-        <WebView style={styles.webview} source={{ uri: RICKROLL_EMBED_URL }} />
-      )}
-    </View>
-  );
 }
 
 const styles = StyleSheet.create({
@@ -120,5 +157,16 @@ const styles = StyleSheet.create({
   },
   webview: {
     flex: 1,
+  },
+  fallbackContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 24,
+  },
+  fallbackText: {
+    color: '#fff',
+    fontSize: 14,
+    textAlign: 'center',
   },
 });
