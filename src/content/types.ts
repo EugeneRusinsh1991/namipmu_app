@@ -72,6 +72,10 @@ export type VideoBlock = ContentBlockBase<'video'> & {
   url?: string;
 };
 
+export type TimerBlock = ContentBlockBase<'timer'> & {
+  seconds?: number;
+};
+
 export type LanguageSwitcherBlock = ContentBlockBase<'languageSwitcher'>;
 
 export type NavigationButtonsBlock = ContentBlockBase<'navigationButtons'> & {
@@ -91,5 +95,6 @@ export type ContentBlock =
   | SpacerDividerBlock
   | QuizBlock
   | VideoBlock
+  | TimerBlock
   | LanguageSwitcherBlock
   | NavigationButtonsBlock;

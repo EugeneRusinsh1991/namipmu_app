@@ -255,5 +255,13 @@ export const skinContent = [
       "eng": "Choose the correct answer.",
       "ger": "Wählen Sie die richtige Antwort."
     }
+  },
+  {
+    "type": "timer",
+    "seconds": 30
+  },
+  {
+    "type": "timer",
+    "seconds": 60
   }
 ];

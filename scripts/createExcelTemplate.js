@@ -175,6 +175,15 @@ const indexData = [
     ger: 'Quiz: test yourself',
     href: 'quiz1',
   }),
+  createTemplateRow({
+    id: 16,
+    type: 'timer',
+    ukr: '',
+    rus: '',
+    eng: '',
+    ger: '',
+    meta: 'seconds=180',
+  }),
 ];
 
 const indexSheet = xlsx.utils.json_to_sheet(indexData, {

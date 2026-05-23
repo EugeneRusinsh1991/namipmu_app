@@ -7,6 +7,7 @@ import { NavigationBlock } from './NavigationBlock';
 import { QuizBlock } from './QuizBlock';
 import { SpacerDivider } from './SpacerDivider';
 import { EyebrowBlock, SubtitleBlock, TextContentBlock, TitleBlock } from './TextBlock';
+import { TimerBlock } from './TimerBlock';
 import { VideoBlock } from './VideoBlock';
 
 export const blockRegistry = {
@@ -20,6 +21,7 @@ export const blockRegistry = {
   image: ImageBlock,
   gif: GifBlock,
   video: VideoBlock,
+  timer: TimerBlock,
   link: LinkBlock,
   quiz: QuizBlock,
   spacerDivider: SpacerDivider,

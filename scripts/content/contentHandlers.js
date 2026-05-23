@@ -22,6 +22,8 @@ const typeMap = {
   videocontainer: 'video',
   spacer: 'spacerDivider',
   spacerdivider: 'spacerDivider',
+  таймер: 'timer',
+  timer: 'timer',
 };
 
 const contentHandlers = {
@@ -128,6 +130,22 @@ const contentHandlers = {
       ? String(url).trim()
       : 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
     return res;
+  },
+
+  // Timer block: read seconds from `meta` (plain number or seconds=NUM)
+  timer(row) {
+    const meta = (row.meta || row.seconds || '').toString();
+    let seconds = null;
+
+    if (meta) {
+      const m = meta.match(/seconds?=\s*(\d+)/i);
+      if (m) seconds = parseInt(m[1], 10);
+      else if (/^\d+$/.test(meta.trim())) seconds = parseInt(meta.trim(), 10);
+    }
+
+    return {
+      seconds: Number.isFinite(seconds) && seconds > 0 ? seconds : undefined,
+    };
   },
 };
 
