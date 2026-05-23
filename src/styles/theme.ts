@@ -40,7 +40,7 @@ export const radius = {
 };
 
 export const layout = {
-  containerPadding: 20,
+  containerPadding: 30, // Увеличили основной отступ для страниц
   maxWidth: 800,
   maxContentWidth: 600,
 };

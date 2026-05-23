@@ -4,8 +4,7 @@ export const listStyles = StyleSheet.create({
   listContainer: {
     marginTop: 0,
     marginBottom: 12,
-    marginHorizontal: 0,
-    paddingVertical: 0,
+    marginHorizontal: ,
     paddingHorizontal: 0,
     paddingLeft: 16,
     backgroundColor: '#e4dcec',

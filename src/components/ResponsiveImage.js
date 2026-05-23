@@ -53,7 +53,7 @@ const ResponsiveImage = ({
   aspectRatio,
   minWidth = 100,
   maxWidth = null,
-  padding = 16,
+  padding = 21, // Добавили по 5 пикселей с каждой стороны (итого +10 к ширине)
   resizeMode = 'contain',
   onError,
   fallbackSource,
