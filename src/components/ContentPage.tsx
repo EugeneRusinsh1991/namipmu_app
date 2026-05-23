@@ -4,7 +4,7 @@ import { ScrollView, View, type NativeScrollEvent, type NativeSyntheticEvent } f
 import type { ContentBlock } from '../content/types';
 import { useLanguage } from '../context/LanguageContext';
 import { globalStyles } from '../styles/globalStyles';
-import { HeroBlock } from './blocks';
+import { HeroBlock } from './blocks/HeroBlock';
 import ContentRenderer from './ContentRenderer';
 import PageLanguageButton from './HeaderLanguageSwitcher';
 import HeaderTextSizeControls from './HeaderTextSizeControls';
@@ -18,6 +18,16 @@ interface ContentPageProps {
 export default function ContentPage({ title, contentModule }: ContentPageProps) {
   const { lang } = useLanguage();
   const [progress, setProgress] = useState(0);
+
+  if (typeof __DEV__ !== 'undefined' && __DEV__) {
+    console.log('ContentPage imported components', {
+      HeroBlock,
+      ContentRenderer,
+      PageLanguageButton,
+      HeaderTextSizeControls,
+      ProgressBar,
+    });
+  }
 
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const { contentOffset, contentSize, layoutMeasurement } = event.nativeEvent;

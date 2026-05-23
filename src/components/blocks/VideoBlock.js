@@ -1,4 +1,3 @@
-import { Video } from 'expo-av';
 import { Platform, StyleSheet, View } from 'react-native';
 import { globalStyles } from '../../styles/globalStyles';
 import { getLocalizedAsset } from '../../utils/i18n';
@@ -7,6 +6,10 @@ const RICKROLL_VIDEO_ID = 'dQw4w9WgXcQ';
 const RICKROLL_EMBED_URL = `https://www.youtube.com/embed/${RICKROLL_VIDEO_ID}?rel=0`;
 
 const isWeb = Platform.OS === 'web';
+
+if (typeof __DEV__ !== 'undefined' && __DEV__) {
+  console.log('VideoBlock module loaded', { isWeb });
+}
 
 function getYoutubeEmbedUrl(source) {
   if (!source) return null;
@@ -34,14 +37,20 @@ function createHtmlVideoPage(videoUrl) {
 
 export function VideoBlock({ item, lang, heroOverlapStyle }) {
   const WebView = isWeb ? null : require('react-native-webview').WebView;
+  const Video = !isWeb ? require('expo-av').Video : null;
   const localizedSrc = getLocalizedAsset(item.src, lang);
   const assetSource = typeof localizedSrc === 'object' || typeof localizedSrc === 'number' ? localizedSrc : null;
   const sourceLocation = assetSource || item.url || localizedSrc;
   const sourceText = typeof sourceLocation === 'string' ? sourceLocation.trim() : '';
   const embedUrl = getYoutubeEmbedUrl(sourceText);
   const remoteVideoUrl = sourceText && isHttpUrl(sourceText) ? sourceText : null;
+  const canRenderExpoVideo = !!(Video && assetSource);
 
-  if (assetSource) {
+  if (typeof __DEV__ !== 'undefined' && __DEV__) {
+    console.log('VideoBlock render', { assetSource, sourceText, embedUrl, remoteVideoUrl, hasNativeVideo: !!(Video && assetSource) });
+  }
+
+  if (canRenderExpoVideo) {
     return (
       <View style={[styles.container, heroOverlapStyle]}>
         <Video
