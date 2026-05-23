@@ -27,15 +27,19 @@ export function HeroBlock({ content, lang = 'ru' }) {
   const safeHeroSrc = isLikelyValidMedia(heroImageSrc) ? heroImageSrc : require('../../../assets/images/error.jpg');
   
   const { width: windowWidth } = useWindowDimensions();
-  const defaultHeight = 250;
   const wrapperStyle = {
     ...globalStyles.heroImage,
-    height: heroItem?.height || defaultHeight,
     width: Platform.OS === 'web' ? '100vw' : windowWidth,
     alignSelf: 'center',
     position: 'relative',
     left: Platform.OS === 'web' ? 'calc(50% - 50vw)' : undefined,
   };
+
+  const requestedHeight = Number(heroItem.height);
+  if (Number.isFinite(requestedHeight)) {
+    const styleHeight = Number(globalStyles.heroImage?.height) || undefined;
+    wrapperStyle.height = styleHeight ? Math.min(requestedHeight, styleHeight) : requestedHeight;
+  }
 
   return (
     <View style={wrapperStyle}>

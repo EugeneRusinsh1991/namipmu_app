@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 import { layout } from './theme';
 
 export const imageStyles = StyleSheet.create({
@@ -18,9 +18,15 @@ export const imageStyles = StyleSheet.create({
 
   heroImage: {
     width: '100%',
-    height: 250,
+    height: Platform.select({
+      web: 250,
+      default: 200,
+    }),
     position: 'relative',
-    marginBottom: -80,
+    marginBottom: Platform.select({
+      web: -40,      // Уменьшаем нахлест пропорционально высоте
+      default: -30,  // Уменьшаем нахлест для мобильных
+    }),
     zIndex: 0,
     overflow: 'hidden',
   },
@@ -41,7 +47,10 @@ export const imageStyles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    height: 150,
+    height: Platform.select({
+      web: 120,      // Адаптируем высоту градиента под новую высоту блока
+      default: 80,   // Адаптируем градиент для мобильных
+    }),
   },
 
   videoContainer: {
