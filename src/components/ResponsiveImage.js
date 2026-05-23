@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Image, Platform, StyleSheet, useWindowDimensions, View } from 'react-native';
-import { layout as layoutTokens, spacing } from '../styles/theme';
+import { colors, layout as layoutTokens, radius, spacing } from '../styles/theme';
 const errorImage = require('../..//assets/images/error.jpg');
 
 function getUriFromSource(src) {
@@ -160,7 +160,7 @@ const ResponsiveImage = ({
   };
 
   return (
-    <View style={[styles.container, { paddingHorizontal: padding, overflow: 'hidden' }]}> 
+    <View style={[styles.container, { paddingHorizontal: padding }]}> 
       <Image
         source={
           useFallback || !source || (!isLikelyValidUri(getUriFromSource(source)) && !fallbackSource) || (getUriFromSource(source) === failedUri && fallbackSource)
@@ -190,6 +190,10 @@ const styles = StyleSheet.create({
   },
   image: {
     alignSelf: 'center',
+    borderRadius: radius.md,
+    borderWidth: 1,
+    borderColor: colors.border,
+    backgroundColor: colors.cardBackground,
   },
 });
 

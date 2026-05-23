@@ -13,12 +13,12 @@ export default function Card({ image, title, description, href, size = 'big' }) 
     big: {
       cardWidth: 320,
       imageHeight: 150,
-      contentHeight: 100,
-      contentPadding: spacing.md,
-      titleFontSize: 18,
-      titleMarginBottom: 8,
+      contentHeight: 110,
+      contentPadding: spacing.lg,
+      titleFontSize: 20,
+      titleMarginBottom: 10,
       descriptionFontSize: typography.fontSizeSm,
-      descriptionLineHeight: 20,
+      descriptionLineHeight: 22,
     },
     small: {
       cardWidth: 190,
@@ -99,18 +99,18 @@ export default function Card({ image, title, description, href, size = 'big' }) 
 
 const styles = StyleSheet.create({
   card: {
-    borderRadius: radius.lg,
+    borderRadius: radius.md,
     overflow: 'hidden',
     marginBottom: 20,
     backgroundColor: colors.cardBackground,
-    elevation: 5,
     alignSelf: 'center',
     borderWidth: 1,
-    borderColor: colors.cardBackground,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    borderColor: colors.border,
+    shadowColor: colors.textPrimary,
+    shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
-    shadowRadius: 8,
+    shadowRadius: 14,
+    elevation: 4,
   },
 
   image: {
@@ -122,8 +122,11 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    fontWeight: 'bold',
+    fontWeight: '600',
+    color: colors.textPrimary,
   },
 
-  description: {},
+  description: {
+    color: colors.bodyText,
+  },
 });

@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import {
-    Modal,
-    Pressable,
-    StyleSheet,
-    Text,
-    View,
+  Modal,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
 } from 'react-native';
 import { useLanguage } from '../context/LanguageContext';
 import { colors, radius } from '../styles/theme';
@@ -113,10 +113,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.12,
+    shadowRadius: 12,
+    elevation: 4,
   },
   buttonPressed: {
     opacity: 0.7,
@@ -146,10 +146,10 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     minWidth: 180,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
+    shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.15,
-    shadowRadius: 8,
-    elevation: 5,
+    shadowRadius: 20,
+    elevation: 6,
     borderWidth: 1,
     borderColor: colors.border,
   },

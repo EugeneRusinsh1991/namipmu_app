@@ -1,14 +1,15 @@
 import React from 'react';
 import {
-    Pressable,
-    StyleSheet,
-    Text,
-    type GestureResponderEvent,
-    type PressableProps,
-    type StyleProp,
-    type TextStyle,
-    type ViewStyle,
+  Pressable,
+  StyleSheet,
+  Text,
+  type GestureResponderEvent,
+  type PressableProps,
+  type StyleProp,
+  type TextStyle,
+  type ViewStyle,
 } from 'react-native';
+import { colors, radius } from '../styles/theme';
 
 type AppButtonVariant = 'primary' | 'secondary' | 'ghost';
 
@@ -70,32 +71,31 @@ export default function AppButton({
 
 const styles = StyleSheet.create({
   button: {
-    borderRadius: 16,
+    borderRadius: radius.lg,
     paddingVertical: 14,
-    paddingHorizontal: 18,
+    paddingHorizontal: 24,
     minHeight: 52,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.08,
-    shadowRadius: 18,
-    elevation: 3,
+    shadowColor: colors.textPrimary,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 14,
+    elevation: 4,
   },
   primary: {
-    backgroundColor: '#8f735f',
+    backgroundColor: colors.accent,
   },
   secondary: {
-    backgroundColor: '#fff',
+    backgroundColor: 'transparent',
     borderWidth: 1,
-    borderColor: '#d8b69b',
+    borderColor: colors.border,
   },
   ghost: {
     backgroundColor: 'transparent',
   },
   pressed: {
-    opacity: 0.88,
-    transform: [{ scale: 0.995 }],
+    opacity: 0.8,
   },
   disabled: {
     opacity: 0.55,
@@ -109,12 +109,12 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   labelSecondary: {
-    color: '#2b1d14',
+    color: colors.textPrimary,
   },
   labelGhost: {
-    color: '#2b1d14',
+    color: colors.textPrimary,
   },
   labelDisabled: {
-    color: '#7f6a5a',
+    color: colors.secondaryText,
   },
 });
