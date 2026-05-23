@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { globalStyles } from '../../styles/globalStyles';
 import { getLocalized } from '../../utils/i18n';
+import ScaledText from '../ScaledText';
 
 export function ChecklistBlock({ item, lang, heroOverlapStyle }) {
   const items = Array.isArray(item.items) ? item.items : [];
@@ -20,9 +21,9 @@ export function ChecklistBlock({ item, lang, heroOverlapStyle }) {
 
   return (
     <View style={[globalStyles.quizContainer, heroOverlapStyle, styles.container]}>
-      {title ? <Text style={globalStyles.title}>{title}</Text> : null}
-      {description ? <Text style={globalStyles.text}>{description}</Text> : null}
-      <Text style={[globalStyles.text, styles.progressLabel]}>{`${doneCount} / ${items.length} ${lang === 'eng' ? 'done' : lang === 'ger' ? 'erledigt' : 'выполнено'}`}</Text>
+      {title ? <ScaledText style={globalStyles.title}>{title}</ScaledText> : null}
+      {description ? <ScaledText style={globalStyles.text}>{description}</ScaledText> : null}
+      <ScaledText style={[globalStyles.text, styles.progressLabel]}>{`${doneCount} / ${items.length} ${lang === 'eng' ? 'done' : lang === 'ger' ? 'erledigt' : 'выполнено'}`}</ScaledText>
       {items.map((itemData, index) => {
         const itemText = getLocalized(itemData.text, lang, '');
         const checked = Boolean(checkedItems[index]);
@@ -34,9 +35,9 @@ export function ChecklistBlock({ item, lang, heroOverlapStyle }) {
             android_ripple={{ color: '#f1f1f1' }}
           >
             <View style={[styles.checkbox, checked ? styles.checkboxChecked : null]}>
-              {checked ? <Text style={styles.checkmark}>✓</Text> : null}
+              {checked ? <ScaledText style={styles.checkmark}>✓</ScaledText> : null}
             </View>
-            <Text style={[globalStyles.text, styles.itemText, checked ? styles.itemTextChecked : null]}>{itemText}</Text>
+            <ScaledText style={[globalStyles.text, styles.itemText, checked ? styles.itemTextChecked : null]}>{itemText}</ScaledText>
           </Pressable>
         );
       })}

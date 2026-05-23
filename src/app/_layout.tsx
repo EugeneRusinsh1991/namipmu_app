@@ -2,54 +2,57 @@ import { Stack } from 'expo-router';
 import { SafeAreaView, StyleSheet, View } from 'react-native';
 import Footer from '../components/Footer';
 import { LanguageProvider } from '../context/LanguageContext';
+import { TextSizeProvider } from '../context/TextSizeContext';
 import { globalStyles } from '../styles/globalStyles';
 import { colors } from '../styles/theme';
 
 export default function Layout() {
   return (
-    <LanguageProvider>
-      <SafeAreaView style={styles.safeArea}>
-        <View style={styles.pageWrapper}>
-          <View style={styles.content}>
-            <Stack
-              screenOptions={{
-                contentStyle: [globalStyles.appBackground, styles.stackContent],
-              }}
-              style={styles.stack}
-            >
-              {/* Главная страница */}
-              <Stack.Screen
-                name="index"
-                options={{
-                  title: 'Навчання',
-                  headerShown: true,
+    <TextSizeProvider>
+      <LanguageProvider>
+        <SafeAreaView style={styles.safeArea}>
+          <View style={styles.pageWrapper}>
+            <View style={styles.content}>
+              <Stack
+                screenOptions={{
+                  contentStyle: [globalStyles.appBackground, styles.stackContent],
                 }}
-              />
+                style={styles.stack}
+              >
+                {/* Главная страница */}
+                <Stack.Screen
+                  name="index"
+                  options={{
+                    title: 'Навчання',
+                    headerShown: true,
+                  }}
+                />
 
-              {/* Сторінка Шкіра */}
-              <Stack.Screen
-                name="skin"
-                options={{
-                  title: 'Кожа',
-                  headerShown: true,
-                }}
-              />
+                {/* Сторінка Шкіра */}
+                <Stack.Screen
+                  name="skin"
+                  options={{
+                    title: 'Кожа',
+                    headerShown: true,
+                  }}
+                />
 
-              {/* Сторінка Пігмент */}
-              <Stack.Screen
-                name="pigment"
-                options={{
-                  title: 'Пігмент',
-                  headerShown: true,
-                }}
-              />
-            </Stack>
+                {/* Сторінка Пігмент */}
+                <Stack.Screen
+                  name="pigment"
+                  options={{
+                    title: 'Пігмент',
+                    headerShown: true,
+                  }}
+                />
+              </Stack>
+            </View>
+
+            <Footer />
           </View>
-
-          <Footer />
-        </View>
-      </SafeAreaView>
-    </LanguageProvider>
+        </SafeAreaView>
+      </LanguageProvider>
+    </TextSizeProvider>
   );
 }
 

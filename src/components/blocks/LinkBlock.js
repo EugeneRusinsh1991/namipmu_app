@@ -1,7 +1,7 @@
 import { Link } from 'expo-router';
-import { Text } from 'react-native';
 import { globalStyles } from '../../styles/globalStyles';
 import { getLocalized } from '../../utils/i18n';
+import ScaledText from '../ScaledText';
 
 export function LinkBlock({ item, lang, heroOverlapStyle }) {
   if (!item.href) return null;
@@ -11,7 +11,7 @@ export function LinkBlock({ item, lang, heroOverlapStyle }) {
 
   return (
     <Link href={normalizedHref} style={heroOverlapStyle}>
-      <Text style={globalStyles.textLink}>{text}</Text>
+      <ScaledText style={globalStyles.textLink}>{text}</ScaledText>
     </Link>
   );
 }

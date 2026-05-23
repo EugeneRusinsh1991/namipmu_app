@@ -7,6 +7,7 @@ import { globalStyles } from '../styles/globalStyles';
 import { HeroBlock } from './blocks';
 import ContentRenderer from './ContentRenderer';
 import PageLanguageButton from './HeaderLanguageSwitcher';
+import HeaderTextSizeControls from './HeaderTextSizeControls';
 import ProgressBar from './ProgressBar';
 
 interface ContentPageProps {
@@ -40,9 +41,10 @@ export default function ContentPage({ title, contentModule }: ContentPageProps) 
         onScroll={handleScroll}
         scrollEventThrottle={16}
       >
-        {/* Hero section with fixed language button */}
+        {/* Hero section with fixed language and font controls */}
         <View style={{ position: 'relative' }}>
           <HeroBlock content={contentModule} lang={lang} />
+          <HeaderTextSizeControls />
           <PageLanguageButton />
         </View>
         

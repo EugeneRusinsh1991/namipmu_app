@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { globalStyles } from '../../styles/globalStyles';
 import { colors } from '../../styles/theme';
 import { getLocalized } from '../../utils/i18n';
+import ScaledText from '../ScaledText';
 
 export function TimerBlock({ item, lang }) {
   const defaultSeconds = Number.isFinite(item.seconds) && item.seconds > 0 ? item.seconds : 180;
@@ -75,15 +76,15 @@ export function TimerBlock({ item, lang }) {
   return (
     <View style={styles.card}>
       <View style={styles.headerRow}>
-        <Text style={globalStyles.subtitle}>{title}</Text>
-        <Text style={styles.icon}>⏱️</Text>
+        <ScaledText style={globalStyles.subtitle}>{title}</ScaledText>
+        <ScaledText style={styles.icon}>⏱️</ScaledText>
       </View>
 
       <View style={styles.timerWrap}>
         <View style={styles.ring}>
           <Animated.View style={[styles.innerFill, progressStyle]} />
           <View style={styles.timeLabelWrap} pointerEvents="none">
-            <Text style={[globalStyles.title, styles.timeLabelOverride]}>{formatTime(remaining)}</Text>
+            <ScaledText style={[globalStyles.title, styles.timeLabelOverride]}>{formatTime(remaining)}</ScaledText>
           </View>
         </View>
       </View>
@@ -94,13 +95,13 @@ export function TimerBlock({ item, lang }) {
           onPress={toggleRun}
           style={[styles.btn, isRunning ? styles.btnPause : styles.btnStart]}
         >
-          <Text style={[globalStyles.text, styles.btnTextOverride]}>
+          <ScaledText style={[globalStyles.text, styles.btnTextOverride]}>
             {isRunning ? 'Пауза' : 'Старт'}
-          </Text>
+          </ScaledText>
         </TouchableOpacity>
 
         <TouchableOpacity activeOpacity={0.8} onPress={reset} style={[styles.btn, styles.btnReset]}>
-          <Text style={[globalStyles.text, styles.btnTextOverride]}>Скинути</Text>
+          <ScaledText style={[globalStyles.text, styles.btnTextOverride]}>Скинути</ScaledText>
         </TouchableOpacity>
       </View>
     </View>

@@ -1,7 +1,8 @@
 import { useMemo, useState } from 'react';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { globalStyles } from '../../styles/globalStyles';
 import { getLocalized } from '../../utils/i18n';
+import ScaledText from '../ScaledText';
 
 export function QuizBlock({ item, lang, heroOverlapStyle }) {
   const questions = Array.isArray(item.questions) ? item.questions : [];
@@ -51,29 +52,29 @@ export function QuizBlock({ item, lang, heroOverlapStyle }) {
   if (!questions.length) {
     return (
       <View style={[globalStyles.quizContainer, heroOverlapStyle]}>
-        {title ? <Text style={globalStyles.title}>{title}</Text> : null}
-        {description ? <Text style={globalStyles.text}>{description}</Text> : null}
-        <Text style={globalStyles.quizEmpty}>
+        {title ? <ScaledText style={globalStyles.title}>{title}</ScaledText> : null}
+        {description ? <ScaledText style={globalStyles.text}>{description}</ScaledText> : null}
+        <ScaledText style={globalStyles.quizEmpty}>
           {getLocalized(item.title, lang, '') ? 'Quiz content is not available.' : 'Quiz not found.'}
-        </Text>
+        </ScaledText>
       </View>
     );
   }
 
   return (
     <View style={[globalStyles.quizContainer, heroOverlapStyle]}>
-      {title ? <Text style={globalStyles.title}>{title}</Text> : null}
-      {description ? <Text style={globalStyles.text}>{description}</Text> : null}
-      <Text style={globalStyles.quizDescription}>{progressText}</Text>
+      {title ? <ScaledText style={globalStyles.title}>{title}</ScaledText> : null}
+      {description ? <ScaledText style={globalStyles.text}>{description}</ScaledText> : null}
+      <ScaledText style={globalStyles.quizDescription}>{progressText}</ScaledText>
 
       {finished ? (
         <View style={globalStyles.quizQuestionBlock}>
-          <Text style={globalStyles.subtitle}>{getLocalized(item.title, lang, 'Quiz complete')}</Text>
-          <Text style={globalStyles.text}>{`Score: ${score} / ${questions.length}`}</Text>
+          <ScaledText style={globalStyles.subtitle}>{getLocalized(item.title, lang, 'Quiz complete')}</ScaledText>
+          <ScaledText style={globalStyles.text}>{`Score: ${score} / ${questions.length}`}</ScaledText>
         </View>
       ) : (
         <View style={globalStyles.quizQuestionBlock}>
-          <Text style={globalStyles.subtitle}>{`${currentIndex + 1}. ${getLocalized(currentQuestion.question, lang, '')}`}</Text>
+          <ScaledText style={globalStyles.subtitle}>{`${currentIndex + 1}. ${getLocalized(currentQuestion.question, lang, '')}`}</ScaledText>
           {(currentQuestion.options || []).map(option => {
             const optionText = getLocalized(option.text, lang, '');
             const isSelected = String(option.value) === String(selectedOption);
@@ -91,17 +92,17 @@ export function QuizBlock({ item, lang, heroOverlapStyle }) {
                   showWrong ? globalStyles.quizOptionWrong : null,
                 ]}
               >
-                <Text style={globalStyles.text}>{optionText}</Text>
+                <ScaledText style={globalStyles.text}>{optionText}</ScaledText>
               </Pressable>
             );
           })}
 
           {isAnswered ? (
-            <Text style={[globalStyles.text, { marginTop: 12 }]}> 
+            <ScaledText style={[globalStyles.text, { marginTop: 12 }]}> 
               {String(selectedOption).trim() === correctAnswer
                 ? lang === 'eng' ? 'Correct' : 'Правильно'
                 : lang === 'eng' ? 'Incorrect' : 'Неправильно'}
-            </Text>
+            </ScaledText>
           ) : null}
 
           <Pressable
@@ -112,7 +113,7 @@ export function QuizBlock({ item, lang, heroOverlapStyle }) {
             ]}
             disabled={!isAnswered}
           >
-            <Text style={globalStyles.quizSubmitText}>{currentIndex + 1 >= questions.length ? (finished ? 'Finished' : lang === 'eng' ? 'Finish' : 'Закончить') : (lang === 'eng' ? 'Next' : 'Далее')}</Text>
+            <ScaledText style={globalStyles.quizSubmitText}>{currentIndex + 1 >= questions.length ? (finished ? 'Finished' : lang === 'eng' ? 'Finish' : 'Закончить') : (lang === 'eng' ? 'Next' : 'Далее')}</ScaledText>
           </Pressable>
         </View>
       )}

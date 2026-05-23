@@ -1,14 +1,14 @@
-import { Text } from 'react-native';
 import { globalStyles } from '../../styles/globalStyles';
 import { getLocalized } from '../../utils/i18n';
+import ScaledText from '../ScaledText';
 
 function LocalizedTextBlock({ item, lang, heroOverlapStyle, style }) {
   const text = getLocalized(item.text, lang, '');
 
   return (
-    <Text style={[style, heroOverlapStyle]}>
+    <ScaledText style={[style, heroOverlapStyle]}>
       {text}
-    </Text>
+    </ScaledText>
   );
 }
 
