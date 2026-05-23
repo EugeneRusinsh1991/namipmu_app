@@ -68,6 +68,17 @@ export type QuizBlock = ContentBlockBase<'quiz'> & {
   questions?: QuizQuestion[];
 };
 
+export type ChecklistItem = {
+  text: LocalizedText;
+};
+
+export type ChecklistBlock = ContentBlockBase<'checklist'> & {
+  title?: LocalizedText;
+  description?: LocalizedText;
+  href?: string;
+  items?: ChecklistItem[];
+};
+
 export type VideoBlock = ContentBlockBase<'video'> & {
   url?: string;
 };
@@ -94,6 +105,7 @@ export type ContentBlock =
   | LinkBlock
   | SpacerDividerBlock
   | QuizBlock
+  | ChecklistBlock
   | VideoBlock
   | TimerBlock
   | LanguageSwitcherBlock

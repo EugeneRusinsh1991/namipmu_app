@@ -22,6 +22,8 @@ const typeMap = {
   videocontainer: 'video',
   spacer: 'spacerDivider',
   spacerdivider: 'spacerDivider',
+  checklist: 'checklist',
+  чеклист: 'checklist',
   таймер: 'timer',
   timer: 'timer',
 };
@@ -94,6 +96,15 @@ const contentHandlers = {
       title: parseLocalizedText(row),
       href: row.href ? String(row.href).trim() : undefined,
       questions: [],
+    };
+  },
+
+  checklist(row) {
+    return {
+      title: parseLocalizedText(row),
+      description: parseLocalizedText(row, 'sub'),
+      href: row.href ? String(row.href).trim() : undefined,
+      items: [],
     };
   },
 

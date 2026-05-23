@@ -1,4 +1,5 @@
 import { CardBlock } from './CardBlock';
+import { ChecklistBlock } from './ChecklistBlock';
 import { GifBlock, ImageBlock } from './ImageBlock';
 import { LanguageSwitcherBlock } from './LanguageSwitcherBlock';
 import { LinkBlock } from './LinkBlock';
@@ -24,6 +25,7 @@ export const blockRegistry = {
   timer: TimerBlock,
   link: LinkBlock,
   quiz: QuizBlock,
+  checklist: ChecklistBlock,
   spacerDivider: SpacerDivider,
   card: CardBlock,
   cardBig: CardBlock,

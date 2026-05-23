@@ -97,6 +97,42 @@ function parseQuizSheet(workbook, sheetName) {
   };
 }
 
+function parseChecklistSheet(workbook, sheetName) {
+  const actualSheetName = findSheetName(workbook, sheetName);
+  if (!actualSheetName) {
+    return { items: [] };
+  }
+
+  const rows = getSheetRows(workbook, actualSheetName) || [];
+  const items = [];
+  let checklistTitle = undefined;
+  let checklistDescription = undefined;
+
+  for (const row of rows.filter(row => row.id && row.type)) {
+    const normalizedType = normalizeFieldName(String(row.type));
+
+    if ((normalizedType === 'title' || normalizedType === 'checklisttitle') && !checklistTitle) {
+      checklistTitle = parseLocalizedText(row);
+      continue;
+    }
+
+    if ((normalizedType === 'text' || normalizedType === 'description' || normalizedType === 'subtitle') && !checklistDescription) {
+      checklistDescription = parseLocalizedText(row);
+      continue;
+    }
+
+    if (['item', 'checkitem', 'checklistitem'].includes(normalizedType)) {
+      items.push({ text: parseLocalizedText(row) });
+    }
+  }
+
+  return {
+    title: checklistTitle,
+    description: checklistDescription,
+    items,
+  };
+}
+
 function parseContent(rows, workbook) {
   const filteredRows = rows.filter(row => row.id && row.type);
   const content = [];
@@ -130,6 +166,13 @@ function parseContent(rows, workbook) {
       if (quizData.title && !item.title) item.title = quizData.title;
       if (quizData.description) item.description = quizData.description;
       item.questions = quizData.questions || [];
+    }
+
+    if (item.type === 'checklist' && item.href) {
+      const checklistData = parseChecklistSheet(workbook, item.href);
+      if (checklistData.title && !item.title) item.title = checklistData.title;
+      if (checklistData.description) item.description = checklistData.description;
+      item.items = checklistData.items || [];
     }
 
     content.push(item);

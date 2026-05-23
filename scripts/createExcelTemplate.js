@@ -177,6 +177,15 @@ const indexData = [
   }),
   createTemplateRow({
     id: 16,
+    type: 'checklist',
+    ukr: 'Список задач',
+    rus: 'Список задач',
+    eng: 'Checklist',
+    ger: 'Checkliste',
+    href: 'checklist1',
+  }),
+  createTemplateRow({
+    id: 17,
     type: 'timer',
     ukr: '',
     rus: '',
@@ -322,6 +331,79 @@ quizSheet['!cols'] = [
 ];
 
 xlsx.utils.book_append_sheet(workbook, quizSheet, 'quiz1');
+
+const checklistData = [
+  createTemplateRow({
+    id: 1,
+    type: 'title',
+    ukr: 'Чеклист підготовки',
+    rus: 'Чеклист подготовки',
+    eng: 'Preparation checklist',
+    ger: 'Vorbereitungs-Checkliste',
+  }),
+  createTemplateRow({
+    id: 2,
+    type: 'text',
+    ukr: 'Выполните эти пункты перед началом занятия.',
+    rus: 'Выполните эти пункты перед началом занятия.',
+    eng: 'Complete these steps before you start.',
+    ger: 'Führen Sie diese Schritte vor dem Start aus.',
+  }),
+  createTemplateRow({
+    id: 3,
+    type: 'item',
+    ukr: 'Проверить оборудование',
+    rus: 'Проверить оборудование',
+    eng: 'Check the equipment',
+    ger: 'Geräte prüfen',
+  }),
+  createTemplateRow({
+    id: 4,
+    type: 'item',
+    ukr: 'Подготовить рабочее место',
+    rus: 'Подготовить рабочее место',
+    eng: 'Prepare the workspace',
+    ger: 'Arbeitsplatz vorbereiten',
+  }),
+  createTemplateRow({
+    id: 5,
+    type: 'item',
+    ukr: 'Прочитать технику выполнения',
+    rus: 'Прочитать технику выполнения',
+    eng: 'Read the procedure',
+    ger: 'Verfahren lesen',
+  }),
+  createTemplateRow({
+    id: 6,
+    type: 'item',
+    ukr: 'Собрать необходимые материалы',
+    rus: 'Собрать необходимые материалы',
+    eng: 'Gather the required materials',
+    ger: 'Benötigte Materialien sammeln',
+  }),
+  createTemplateRow({
+    id: 7,
+    type: 'item',
+    ukr: 'Проверить план урока',
+    rus: 'Проверить план урока',
+    eng: 'Review the lesson plan',
+    ger: 'Lehrplan überprüfen',
+  }),
+];
+
+const checklistSheet = xlsx.utils.json_to_sheet(checklistData, {
+  header: ['id', 'type', 'ukr', 'rus', 'eng', 'ger'],
+});
+checklistSheet['!cols'] = [
+  { wch: 5 },
+  { wch: 18 },
+  { wch: 35 },
+  { wch: 35 },
+  { wch: 35 },
+  { wch: 35 },
+];
+
+xlsx.utils.book_append_sheet(workbook, checklistSheet, 'checklist1');
 
 const outputPath = path.join(__dirname, '../src/content/content_TEMPLATE.xlsx');
 xlsx.writeFile(workbook, outputPath);
