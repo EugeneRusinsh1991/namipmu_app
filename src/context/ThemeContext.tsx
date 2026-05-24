@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { Appearance } from 'react-native';
 let AsyncStorage;
 try {
@@ -8,61 +8,58 @@ try {
   AsyncStorage = null;
 }
 
-import * as themeModule from '../styles/theme';
-import { darkColors, lightColors } from '../styles/tokens/colors';
-const componentDefaultsModule = require('../styles/componentDefaults');
+import { getComponentSpecs } from '../styles/design-system/components';
+import { getTheme, lightTheme } from '../styles/design-system/theme';
+import { getTypography } from '../styles/design-system/typography';
 
 const THEME_KEY = '@app:theme';
 
-const ThemeContext = createContext({
+export interface ThemeContextValue {
+  theme: 'light' | 'dark';
+  isDark: boolean;
+  toggleTheme: () => Promise<void>;
+  
+  // Design System exports
+  colors: any;
+  typography: any;
+  componentStyles: any;
+  
+  // Legacy support
+  components?: any;
+}
+
+const ThemeContext = createContext<ThemeContextValue>({
   theme: 'light',
-  colors: lightColors,
   isDark: false,
-  toggleTheme: () => {},
-  componentStyles: componentDefaultsModule.componentStyles,
+  toggleTheme: async () => {},
+  colors: lightTheme,
+  typography: getTypography(lightTheme, 1),
+  componentStyles: getComponentSpecs(lightTheme),
 });
 
-export const ThemeProvider = ({ children }) => {
-  const [theme, setTheme] = useState('light');
-  const [colors, setColors] = useState(lightColors);
-  const [componentStyles, setComponentStyles] = useState(componentDefaultsModule.componentStyles);
+export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const [fontScale, setFontScale] = useState(1);
 
   useEffect(() => {
     (async () => {
       try {
-        let saved = null;
+        let saved: string | null = null;
         if (AsyncStorage) saved = await AsyncStorage.getItem(THEME_KEY);
         const system = Appearance.getColorScheme();
-        const initial = saved || system || 'light';
+        const initial = (saved || system || 'light') as 'light' | 'dark';
         applyTheme(initial);
       } catch (e) {
-        applyTheme(Appearance.getColorScheme() || 'light');
+        const system = Appearance.getColorScheme();
+        applyTheme((system || 'light') as 'light' | 'dark');
       }
     })();
   }, []);
 
-  function applyTheme(name) {
+  function applyTheme(name: 'light' | 'dark') {
     const n = name === 'dark' ? 'dark' : 'light';
-    const newColors = n === 'dark' ? darkColors : lightColors;
     console.log('[ThemeContext] applyTheme ->', n);
     setTheme(n);
-    setColors(newColors);
-    // sync global theme module exports so legacy static imports update
-    try {
-      if (themeModule && themeModule.colors && typeof themeModule.colors === 'object') {
-        Object.keys(themeModule.colors).forEach(k => delete themeModule.colors[k]);
-        Object.keys(newColors).forEach(k => { themeModule.colors[k] = newColors[k]; });
-      }
-    } catch (err) {
-      console.warn('[ThemeContext] failed to sync themeModule.colors', err);
-    }
-
-    // create reactive component styles
-    if (typeof componentDefaultsModule.createComponentStyles === 'function') {
-      setComponentStyles(componentDefaultsModule.createComponentStyles(newColors));
-    } else if (componentDefaultsModule.componentStyles) {
-      setComponentStyles(componentDefaultsModule.componentStyles);
-    }
   }
 
   const toggleTheme = async () => {
@@ -76,13 +73,43 @@ export const ThemeProvider = ({ children }) => {
     }
   };
 
+  // Memoized design system computed from current theme
+  const designSystem = useMemo(() => {
+    const isDark = theme === 'dark';
+    const colors = getTheme(isDark);
+    const typography = getTypography(colors, fontScale);
+    const componentStyles = getComponentSpecs(colors);
+
+    return {
+      colors,
+      typography,
+      componentStyles,
+    };
+  }, [theme, fontScale]);
+
+  const value: ThemeContextValue = {
+    theme,
+    isDark: theme === 'dark',
+    toggleTheme,
+    colors: designSystem.colors,
+    typography: designSystem.typography,
+    componentStyles: designSystem.componentStyles,
+    components: designSystem.componentStyles,
+  };
+
   return (
-    <ThemeContext.Provider value={{ theme, colors, isDark: theme === 'dark', toggleTheme, componentStyles }}>
+    <ThemeContext.Provider value={value}>
       {children}
     </ThemeContext.Provider>
   );
 };
 
-export const useTheme = () => useContext(ThemeContext);
+export const useTheme = () => {
+  const context = useContext(ThemeContext);
+  if (!context) {
+    throw new Error('useTheme must be used within ThemeProvider');
+  }
+  return context;
+};
 
 export default ThemeContext;

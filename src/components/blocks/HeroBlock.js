@@ -1,7 +1,6 @@
 import { LinearGradient } from 'expo-linear-gradient';
-import { Platform, View, useWindowDimensions } from 'react-native';
+import { Platform, StyleSheet, View, useWindowDimensions } from 'react-native';
 import { useTheme } from '../../context/ThemeContext';
-import { globalStyles } from '../../styles/globalStyles';
 import { getLocalizedAsset } from '../../utils/i18n';
 import ImageWithFallback from '../ImageWithFallback';
 
@@ -23,14 +22,52 @@ export function HeroBlock({ content, lang = 'ru' }) {
   
   if (!heroItem) return null;
 
+  const { colors } = useTheme();
   const heroImageSrc = getLocalizedAsset(heroItem.image, lang);
   const safeHeroSrc = isLikelyValidMedia(heroImageSrc) ? heroImageSrc : require('../../../assets/images/error.jpg');
   
   const { width: windowWidth } = useWindowDimensions();
-  const { colors } = useTheme();
+
+  const styles = StyleSheet.create({
+    heroImage: {
+      width: Platform.OS === 'web' ? '100vw' : windowWidth,
+      height: Platform.select({
+        web: 250,
+        default: 200,
+      }),
+      position: 'relative',
+      marginBottom: Platform.select({
+        web: -40,
+        default: -30,
+      }),
+      zIndex: 0,
+      overflow: 'hidden',
+      alignSelf: 'center',
+    },
+    heroImageBackground: {
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      top: 0,
+      bottom: 0,
+      width: '100%',
+      height: '100%',
+      resizeMode: 'cover',
+    },
+    heroGradient: {
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      bottom: 0,
+      height: Platform.select({
+        web: 120,
+        default: 80,
+      }),
+    },
+  });
 
   const wrapperStyle = {
-    ...globalStyles.heroImage,
+    ...styles.heroImage,
     width: Platform.OS === 'web' ? '100vw' : windowWidth,
     alignSelf: 'center',
     position: 'relative',
@@ -39,7 +76,7 @@ export function HeroBlock({ content, lang = 'ru' }) {
 
   const requestedHeight = Number(heroItem.height);
   if (Number.isFinite(requestedHeight)) {
-    const styleHeight = Number(globalStyles.heroImage?.height) || undefined;
+    const styleHeight = styles.heroImage.height || undefined;
     wrapperStyle.height = styleHeight ? Math.min(requestedHeight, styleHeight) : requestedHeight;
   }
 
@@ -47,12 +84,12 @@ export function HeroBlock({ content, lang = 'ru' }) {
     <View style={wrapperStyle}>
       <ImageWithFallback
         source={safeHeroSrc}
-        style={globalStyles.heroImageBackground}
+        style={styles.heroImageBackground}
         resizeMode={'cover'}
       />
       <LinearGradient
         colors={['transparent', colors.backgroundLight]}
-        style={globalStyles.heroGradient}
+        style={styles.heroGradient}
       />
     </View>
   );

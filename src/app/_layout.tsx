@@ -4,7 +4,6 @@ import Footer from '../components/Footer';
 import { LanguageProvider } from '../context/LanguageContext';
 import { TextSizeProvider } from '../context/TextSizeContext';
 import { ThemeProvider, useTheme } from '../context/ThemeContext';
-import { globalStyles } from '../styles/globalStyles';
 
 function LayoutContent() {
   const { colors } = useTheme();
@@ -15,7 +14,7 @@ function LayoutContent() {
         <View style={styles.content}>
           <Stack
             screenOptions={{
-              contentStyle: [globalStyles.appBackground, { flex: 1, backgroundColor: colors.backgroundLight }],
+              contentStyle: [{ flex: 1, backgroundColor: colors.backgroundLight }],
             }}
             style={styles.stack}
           >

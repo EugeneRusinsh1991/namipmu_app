@@ -4,7 +4,6 @@ import { ScrollView, StyleSheet, View, type NativeScrollEvent, type NativeSynthe
 import type { ContentBlock } from '../content/types';
 import { useLanguage } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
-import { globalStyles } from '../styles/globalStyles';
 import { HeroBlock } from './blocks/HeroBlock';
 import ContentRenderer from './ContentRenderer';
 import PageLanguageButton from './HeaderLanguageSwitcher';
@@ -39,6 +38,14 @@ export default function ContentPage({ title, contentModule }: ContentPageProps) 
     }
   };
 
+  const containerStyle = StyleSheet.create({
+    container: {
+      paddingHorizontal: 30,
+      maxWidth: 600,
+      marginHorizontal: 'auto',
+    },
+  });
+
   return (
     <>
       <Stack.Screen options={{ title }} />
@@ -60,7 +67,7 @@ export default function ContentPage({ title, contentModule }: ContentPageProps) 
         </View>
         
         {/* Content below */}
-        <View style={(globalStyles as any).container}>
+        <View style={containerStyle.container}>
           <ContentRenderer content={contentModule} lang={lang} />
         </View>
       </ScrollView>

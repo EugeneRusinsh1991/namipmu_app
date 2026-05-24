@@ -1,4 +1,4 @@
-import { globalStyles } from '../../styles/globalStyles';
+import { useTheme } from '../../context/ThemeContext';
 import { getLocalized } from '../../utils/i18n';
 import ScaledText from '../ScaledText';
 
@@ -13,18 +13,22 @@ function LocalizedTextBlock({ item, lang, heroOverlapStyle, style }) {
 }
 
 export function TitleBlock(props) {
-  return <LocalizedTextBlock {...props} style={globalStyles.title} />;
+  const { typography } = useTheme();
+  return <LocalizedTextBlock {...props} style={typography.title} />;
 }
 
 export function EyebrowBlock(props) {
-  return <LocalizedTextBlock {...props} style={globalStyles.eyebrow} />;
+  const { typography } = useTheme();
+  return <LocalizedTextBlock {...props} style={typography.eyebrow} />;
 }
 
 export function SubtitleBlock(props) {
-  return <LocalizedTextBlock {...props} style={globalStyles.subtitle} />;
+  const { typography } = useTheme();
+  return <LocalizedTextBlock {...props} style={typography.subtitle} />;
 }
 
 export function TextContentBlock(props) {
-  return <LocalizedTextBlock {...props} style={globalStyles.text} />;
+  const { typography } = useTheme();
+  return <LocalizedTextBlock {...props} style={typography.text} />;
 }
 

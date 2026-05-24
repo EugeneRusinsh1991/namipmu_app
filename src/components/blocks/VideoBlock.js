@@ -1,5 +1,5 @@
 import { Platform, StyleSheet, Text, View } from 'react-native';
-import { globalStyles } from '../../styles/globalStyles';
+import { useTheme } from '../../context/ThemeContext';
 import { getLocalizedAsset } from '../../utils/i18n';
 
 const RICKROLL_VIDEO_ID = 'dQw4w9WgXcQ';
@@ -36,6 +36,8 @@ function createHtmlVideoPage(videoUrl) {
 }
 
 export function VideoBlock({ item, lang, heroOverlapStyle }) {
+  const { colors } = useTheme();
+
   try {
     const WebViewModule = isWeb ? null : require('react-native-webview');
     const WebView = WebViewModule?.WebView ?? WebViewModule?.default?.WebView ?? WebViewModule?.default ?? WebViewModule ?? null;
@@ -48,6 +50,35 @@ export function VideoBlock({ item, lang, heroOverlapStyle }) {
     const embedUrl = getYoutubeEmbedUrl(sourceText);
     const remoteVideoUrl = sourceText && isHttpUrl(sourceText) ? sourceText : null;
     const canRenderExpoVideo = !!(Video && assetSource);
+
+    const dynamicStyles = StyleSheet.create({
+      container: {
+        height: 220,
+        borderRadius: 10,
+        overflow: 'hidden',
+        width: '100%',
+        maxWidth: 600,
+        alignSelf: 'center',
+        backgroundColor: '#000',
+      },
+      video: {
+        flex: 1,
+      },
+      webview: {
+        flex: 1,
+      },
+      fallbackContainer: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 24,
+      },
+      fallbackText: {
+        color: colors.white,
+        fontSize: 14,
+        textAlign: 'center',
+      },
+    });
 
     if (typeof __DEV__ !== 'undefined' && __DEV__) {
       console.log('VideoBlock render', {
@@ -65,12 +96,12 @@ export function VideoBlock({ item, lang, heroOverlapStyle }) {
 
     if (canRenderExpoVideo) {
       return (
-        <View style={[styles.container, heroOverlapStyle]}>
+        <View style={[dynamicStyles.container, heroOverlapStyle]}>
           <Video
             source={assetSource}
             useNativeControls
             resizeMode="contain"
-            style={styles.video}
+            style={dynamicStyles.video}
           />
         </View>
       );
@@ -80,20 +111,20 @@ export function VideoBlock({ item, lang, heroOverlapStyle }) {
 
     if (embedUrl) {
       return (
-        <View style={[styles.container, heroOverlapStyle]}>
+        <View style={[dynamicStyles.container, heroOverlapStyle]}>
           {isWeb ? (
             <iframe
-              style={styles.webview}
+              style={dynamicStyles.webview}
               src={embedUrl}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
               title="YouTube video"
             />
           ) : webviewAvailable ? (
-            <WebView style={styles.webview} source={{ uri: embedUrl }} />
+            <WebView style={dynamicStyles.webview} source={{ uri: embedUrl }} />
           ) : (
-            <View style={styles.fallbackContainer}>
-              <Text style={styles.fallbackText}>Видеоплеер недоступен</Text>
+            <View style={dynamicStyles.fallbackContainer}>
+              <Text style={dynamicStyles.fallbackText}>Видеоплеер недоступен</Text>
             </View>
           )}
         </View>
@@ -102,14 +133,14 @@ export function VideoBlock({ item, lang, heroOverlapStyle }) {
 
     if (remoteVideoUrl) {
       return (
-        <View style={[styles.container, heroOverlapStyle]}>
+        <View style={[dynamicStyles.container, heroOverlapStyle]}>
           {isWeb ? (
-            <video style={styles.webview} controls src={remoteVideoUrl} />
+            <video style={dynamicStyles.webview} controls src={remoteVideoUrl} />
           ) : webviewAvailable ? (
-            <WebView style={styles.webview} source={{ html: createHtmlVideoPage(remoteVideoUrl) }} />
+            <WebView style={dynamicStyles.webview} source={{ html: createHtmlVideoPage(remoteVideoUrl) }} />
           ) : (
-            <View style={styles.fallbackContainer}>
-              <Text style={styles.fallbackText}>Видео недоступно</Text>
+            <View style={dynamicStyles.fallbackContainer}>
+              <Text style={dynamicStyles.fallbackText}>Видео недоступно</Text>
             </View>
           )}
         </View>
@@ -117,57 +148,54 @@ export function VideoBlock({ item, lang, heroOverlapStyle }) {
     }
 
     return (
-      <View style={[styles.container, heroOverlapStyle]}>
+      <View style={[dynamicStyles.container, heroOverlapStyle]}>
         {isWeb || !embedUrl ? (
           <iframe
-            style={styles.webview}
+            style={dynamicStyles.webview}
             src={RICKROLL_EMBED_URL}
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
             title="Rickroll video"
           />
         ) : webviewAvailable ? (
-          <WebView style={styles.webview} source={{ uri: RICKROLL_EMBED_URL }} />
+          <WebView style={dynamicStyles.webview} source={{ uri: RICKROLL_EMBED_URL }} />
         ) : (
-          <View style={styles.fallbackContainer}>
-            <Text style={styles.fallbackText}>Видео недоступно</Text>
+          <View style={dynamicStyles.fallbackContainer}>
+            <Text style={dynamicStyles.fallbackText}>Видео недоступно</Text>
           </View>
         )}
       </View>
     );
   } catch (err) {
+    const { colors } = useTheme();
+    const fallbackStyles = StyleSheet.create({
+      container: {
+        height: 220,
+        borderRadius: 10,
+        overflow: 'hidden',
+        width: '100%',
+      },
+      fallbackContainer: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 24,
+        backgroundColor: '#000',
+      },
+      fallbackText: {
+        color: colors.white,
+        fontSize: 14,
+        textAlign: 'center',
+      },
+    });
+
     console.error('VideoBlock error', err, { item, lang });
     return (
-      <View style={[styles.container, heroOverlapStyle]}>
-        <View style={styles.fallbackContainer}>
-          <Text style={styles.fallbackText}>Ошибка воспроизведения видео</Text>
+      <View style={[fallbackStyles.container, heroOverlapStyle]}>
+        <View style={fallbackStyles.fallbackContainer}>
+          <Text style={fallbackStyles.fallbackText}>Ошибка воспроизведения видео</Text>
         </View>
       </View>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    ...(globalStyles.videoContainer || { height: 220, width: '100%' }),
-    backgroundColor: '#000',
-    overflow: 'hidden',
-  },
-  video: {
-    flex: 1,
-  },
-  webview: {
-    flex: 1,
-  },
-  fallbackContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 24,
-  },
-  fallbackText: {
-    color: '#fff',
-    fontSize: 14,
-    textAlign: 'center',
-  },
-});
