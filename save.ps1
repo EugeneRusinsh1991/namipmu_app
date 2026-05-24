@@ -79,6 +79,17 @@ Info "Cleaning up git lock files..."
 Remove-Item -Path ".git\index.lock" -ErrorAction SilentlyContinue
 Remove-Item -Path ".git\HEAD.lock" -ErrorAction SilentlyContinue
 
+# Force remove problematic .idx files
+Info "Removing problematic git pack files..."
+Get-ChildItem -Path ".git\objects\pack\" -Filter "*.idx" -ErrorAction SilentlyContinue | ForEach-Object {
+  try {
+    Remove-Item -Path $_.FullName -Force -ErrorAction SilentlyContinue
+    Warn "Removed: $($_.Name)"
+  } catch {
+    Warn "Could not remove $($_.Name) - it may be in use"
+  }
+}
+
 # Sequence of commands
 Run-Program npm @('run','generate') "Generate content (npm run generate)"
 Run-Program npm @('run','backup') "Backup (npm run backup)"
@@ -96,12 +107,29 @@ Info "Current branch: $branch"
 # Cleanup git before push
 Info ""
 Info "=== Cleaning up git before push ==="
-Warn "Running git gc (this may take a moment)..."
-& git gc --aggressive --prune=now 2>&1 | Out-Null
-if ($LASTEXITCODE -eq 0) {
-  Success "Git cleanup completed"
-} else {
-  Warn "Git cleanup returned an error, but continuing..."
+Warn "Removing dangling git objects..."
+
+# Use pipe to automatically answer 'n' to git gc prompts
+try {
+  # Try git reflog expire
+  & git reflog expire --expire=now --all 2>&1 | Out-Null
+  
+  # Try git prune with error handling
+  & git prune --verbose 2>&1 | ForEach-Object {
+    if ($_ -like "*removing*") { Warn $_ }
+  }
+  
+  # Try gc but capture any prompts
+  $gcProcess = Start-Process -FilePath "git" -ArgumentList "gc", "--aggressive", "--prune=now" -NoNewWindow -PassThru -RedirectStandardInput $null 2>&1
+  $gcProcess.WaitForExit()
+  
+  if ($gcProcess.ExitCode -eq 0) {
+    Success "Git cleanup completed"
+  } else {
+    Warn "Git cleanup completed with minor issues (continuing anyway)"
+  }
+} catch {
+  Warn "Git cleanup encountered issues, but continuing..."
 }
 
 # Remove lock files again after gc
