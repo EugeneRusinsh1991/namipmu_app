@@ -70,7 +70,45 @@ Run-Program npm @('run','generate') "Generate content (npm run generate)"
 Run-Program npm @('run','backup') "Backup (npm run backup)"
 Run-Program git @('add','.') "Staging changes (git add .)"
 Run-Program git @('commit','-m',$Message) "Committing (git commit)"
-Run-Program git @('push') "Pushing to remote (git push)"
+
+# Get current branch name
+$branch = & git rev-parse --abbrev-ref HEAD 2>$null
+if ($LASTEXITCODE -ne 0) {
+  Err "Failed to get current branch"
+  exit 1
+}
+Info "Current branch: $branch"
+
+# Check if branch has tracking information
+$trackingBranch = & git rev-parse --abbrev-ref "$branch@{upstream}" 2>$null
+if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($trackingBranch)) {
+  Warn "Branch '$branch' has no tracking branch set."
+  Info "Setting upstream to 'origin/$branch'..."
+  & git branch -u "origin/$branch" $branch 2>&1 | Out-Null
+  if ($LASTEXITCODE -ne 0) {
+    Warn "Could not set upstream automatically. Will attempt push with explicit remote..."
+  }
+}
+
+# Attempt push with better error handling
+Info ""
+Info "=== Pushing to remote (git push) ==="
+Info "> git push --set-upstream origin $branch"
+
+& git push --set-upstream origin $branch 2>&1 | Tee-Object -Variable pushOutput | Out-Host
+
+if ($LASTEXITCODE -ne 0) {
+  Err "Git push failed with exit code $($LASTEXITCODE)"
+  Info ""
+  Info "Common solutions:"
+  Info "1. Check if remote has changes: git fetch origin"
+  Info "2. Pull latest changes: git pull origin $branch"
+  Info "3. Check authentication: git remote -v"
+  Info "4. Try manual push: git push origin $branch -v"
+  exit 1
+} else {
+  Success "OK"
+}
 
 Success "Push completed successfully"
 exit 0
