@@ -1,7 +1,7 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import { Platform, View, useWindowDimensions } from 'react-native';
+import { useTheme } from '../../context/ThemeContext';
 import { globalStyles } from '../../styles/globalStyles';
-import { colors } from '../../styles/theme';
 import { getLocalizedAsset } from '../../utils/i18n';
 import ImageWithFallback from '../ImageWithFallback';
 
@@ -27,6 +27,8 @@ export function HeroBlock({ content, lang = 'ru' }) {
   const safeHeroSrc = isLikelyValidMedia(heroImageSrc) ? heroImageSrc : require('../../../assets/images/error.jpg');
   
   const { width: windowWidth } = useWindowDimensions();
+  const { colors } = useTheme();
+
   const wrapperStyle = {
     ...globalStyles.heroImage,
     width: Platform.OS === 'web' ? '100vw' : windowWidth,

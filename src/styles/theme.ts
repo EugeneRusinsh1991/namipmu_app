@@ -1,7 +1,8 @@
 import tokens from './tokens';
+import { lightColors } from './tokens/colors';
 
-// Backwards-compatible exports for existing code
-export const colors = tokens.colors;
+// Backwards-compatible exports for existing code (light defaults)
+export const colors = lightColors || tokens.colors;
 // Backwards-compatible spacing map (common keys used across the codebase)
 export const spacing = {
   xs: tokens.spacing.xs ?? tokens.spacing.s ?? 4,
@@ -32,5 +33,18 @@ export const fonts = {
   main: tokens.typography.families.main,
   accent: tokens.typography.families.heading,
 };
+
+export function getTheme(mode = 'light') {
+  const isDark = mode === 'dark';
+  const colorsObj = isDark ? require('./tokens/colors').darkColors : require('./tokens/colors').lightColors;
+  return {
+    colors: colorsObj,
+    spacing: { ...spacing },
+    radius: tokens.borderRadius,
+    layout,
+    typography,
+    fonts,
+  };
+}
 
 export default { colors, spacing, radius, layout, typography, fonts };

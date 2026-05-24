@@ -11,7 +11,7 @@ export const primitives = {
   gray500: '#9B9087',
 };
 
-export const colors = {
+export const lightColors = {
   // primitives
   ...primitives,
 
@@ -38,4 +38,28 @@ export const colors = {
   primary: primitives.pink600,
 };
 
-export default colors;
+export const darkColors = {
+  ...primitives,
+  backgroundLight: '#1A1C1E', // Мягкий темно-серый (Slate 900)
+  secondarySurface: '#2D2F31', // Поверхности второго уровня
+  cardBackground: '#2D2F31', // Карточки заметно светлее фона
+  border: '#3F4143', // Границы видны, но не режут глаз
+  textPrimary: '#E3E2E6', // Светло-серый (почти белый) для заголовков
+  bodyText: '#C7C6CA', // Мягкий текст, который не "слепит" в темноте
+  secondaryText: '#919194', // Вспомогательный текст
+  accent: primitives.pink600,
+  accentHover: '#B14F65',
+  softAccent: '#352329', // Темный приглушенный розовый
+  inputBackground: '#161B22',
+  inputBorder: '#30363D',
+  placeholder: '#484F58',
+  success: '#8D9B7A',
+  warning: '#C4875A',
+  danger: '#B85C5C',
+  white: '#E3E2E6', // Теперь текст "eyebrow" будет виден!
+  overlay: 'rgba(0, 0, 0, 0.8)',
+  muted: '#919194',
+  primary: primitives.pink600,
+};
+
+export default lightColors;

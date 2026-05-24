@@ -1,5 +1,6 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useTextSize } from '../context/TextSizeContext';
+import { useTheme } from '../context/ThemeContext';
 import { colors } from '../styles/theme';
 
 export default function HeaderTextSizeControls() {
@@ -8,25 +9,34 @@ export default function HeaderTextSizeControls() {
     decreaseFontSize,
     increaseFontSize,
   } = useTextSize();
+  const { colors: themeColors } = useTheme();
 
   return (
     <View style={styles.container}>
       <Pressable
         onPress={decreaseFontSize}
-        style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}
+        style={({ pressed }) => [
+          styles.button,
+          { backgroundColor: themeColors.white, borderColor: themeColors.border },
+          pressed && styles.buttonPressed,
+        ]}
         accessibilityLabel="Уменьшить шрифт"
       >
-        <Text style={styles.buttonText}>A-</Text>
+        <Text style={[styles.buttonText, { color: themeColors.textPrimary }]}>A-</Text>
       </Pressable>
-      <View style={styles.labelContainer}>
-        <Text style={styles.label}>{Math.round(fontScale * 100)}%</Text>
+      <View style={[styles.labelContainer, { backgroundColor: themeColors.white, borderColor: themeColors.border }]}>
+        <Text style={[styles.label, { color: themeColors.textPrimary }]}>{Math.round(fontScale * 100)}%</Text>
       </View>
       <Pressable
         onPress={increaseFontSize}
-        style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}
+        style={({ pressed }) => [
+          styles.button,
+          { backgroundColor: themeColors.white, borderColor: themeColors.border },
+          pressed && styles.buttonPressed,
+        ]}
         accessibilityLabel="Увеличить шрифт"
       >
-        <Text style={styles.buttonText}>A+</Text>
+        <Text style={[styles.buttonText, { color: themeColors.textPrimary }]}>A+</Text>
       </Pressable>
     </View>
   );

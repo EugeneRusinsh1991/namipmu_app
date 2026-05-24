@@ -1,3 +1,4 @@
+import { Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import {
   Modal,
@@ -7,6 +8,7 @@ import {
   View,
 } from 'react-native';
 import { useLanguage } from '../context/LanguageContext';
+import { useTheme } from '../context/ThemeContext';
 import { colors, radius } from '../styles/theme';
 
 type LanguageOption = {
@@ -24,10 +26,24 @@ const LANGUAGE_OPTIONS: LanguageOption[] = [
 
 export default function PageLanguageButton() {
   const { lang, setLang } = useLanguage();
+  const { theme, toggleTheme, colors: themeColors } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
 
   const currentLanguage = LANGUAGE_OPTIONS.find((opt) => opt.value === lang);
   const currentAbbr = currentLanguage?.abbr || 'UA';
+
+  // dynamic styles derived from theme colors
+  const dynamicButtonStyle = {
+    backgroundColor: themeColors?.white || colors.white,
+    borderColor: themeColors?.border || colors.border,
+  };
+
+  const dynamicDropdownStyle = {
+    backgroundColor: themeColors?.white || colors.white,
+    borderColor: themeColors?.border || colors.border,
+  };
+
+  const dynamicTextColor = { color: themeColors?.textPrimary || colors.textPrimary };
 
   const handleSelectLanguage = (value: string) => {
     setLang(value);
@@ -36,16 +52,30 @@ export default function PageLanguageButton() {
 
   return (
     <>
-      {/* Button positioned absolute inside page */}
-      <Pressable
-        style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}
-        onPress={() => setIsOpen(!isOpen)}
-        accessibilityRole="button"
-        accessibilityLabel={`Язык: ${currentLanguage?.label}`}
-      >
-        <Text style={styles.buttonText}>{currentAbbr}</Text>
-        <Text style={styles.arrow}>▼</Text>
-      </Pressable>
+      <View style={{ flexDirection: 'row', gap: 8, alignItems: 'center' }}>
+        <Pressable
+          style={({ pressed }) => [styles.button, dynamicButtonStyle, pressed && styles.buttonPressed]}
+          onPress={() => setIsOpen(!isOpen)}
+          accessibilityRole="button"
+          accessibilityLabel={`Язык: ${currentLanguage?.label}`}
+        >
+          <Text style={[styles.buttonText, dynamicTextColor]}>{currentAbbr}</Text>
+          <Text style={[styles.arrow, dynamicTextColor]}>▼</Text>
+        </Pressable>
+
+        <Pressable
+          onPress={() => toggleTheme()}
+          accessibilityRole="button"
+          accessibilityLabel={`Переключить тему`}
+          style={({ pressed }) => [styles.iconButton, { backgroundColor: themeColors?.white || colors.white }, pressed && { opacity: 0.7 }]}
+        >
+          <Ionicons
+            name={theme === 'dark' ? 'sunny' : 'moon'}
+            size={18}
+            color={themeColors?.accent || colors.accent}
+          />
+        </Pressable>
+      </View>
 
       {/* Dropdown menu */}
       <Modal
@@ -58,7 +88,7 @@ export default function PageLanguageButton() {
           style={styles.overlay}
           onPress={() => setIsOpen(false)}
         >
-          <View style={styles.dropdownContainer}>
+          <View style={[styles.dropdownContainer, dynamicDropdownStyle]}>
             {LANGUAGE_OPTIONS.map((option) => {
               const isActive = option.value === lang;
               return (
@@ -66,7 +96,7 @@ export default function PageLanguageButton() {
                   key={option.value}
                   style={({ pressed }) => [
                     styles.option,
-                    isActive && styles.optionActive,
+                    isActive && { backgroundColor: themeColors?.cardBackground || colors.cardBackground },
                     pressed && styles.optionPressed,
                   ]}
                   onPress={() => handleSelectLanguage(option.value)}
@@ -74,11 +104,12 @@ export default function PageLanguageButton() {
                   accessibilityState={{ selected: isActive }}
                 >
                   <View style={styles.optionContent}>
-                    <Text style={styles.optionCode}>{option.abbr}</Text>
+                    <Text style={[styles.optionCode, { color: themeColors?.textPrimary || colors.textPrimary }]}>{option.abbr}</Text>
                     <Text
                       style={[
                         styles.optionText,
-                        isActive && styles.optionTextActive,
+                        { color: themeColors?.textPrimary || colors.textPrimary },
+                        isActive && { color: themeColors?.primary || colors.primary },
                       ]}
                     >
                       {option.label}
@@ -102,9 +133,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: radius.md,
-    backgroundColor: colors.white,
     borderWidth: 1,
-    borderColor: colors.border,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.12,
@@ -113,15 +142,12 @@ const styles = StyleSheet.create({
   },
   buttonPressed: {
     opacity: 0.7,
-    backgroundColor: colors.cardBackground,
   },
   buttonText: {
-    color: colors.textPrimary,
     fontSize: 13,
     fontWeight: '600',
   },
   arrow: {
-    color: colors.textPrimary,
     fontSize: 10,
     marginLeft: 2,
   },
@@ -177,5 +203,12 @@ const styles = StyleSheet.create({
   optionTextActive: {
     color: colors.primary,
     fontWeight: '600',
+  },
+  iconButton: {
+    padding: 6,
+    borderRadius: radius.round,
+    backgroundColor: colors.white,
+    borderWidth: 1,
+    borderColor: colors.border,
   },
 });

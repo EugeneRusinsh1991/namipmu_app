@@ -8,7 +8,8 @@ import {
   type TextStyle,
   type ViewStyle,
 } from 'react-native';
-import { colors, radius, spacing } from '../styles/theme';
+import { useTheme } from '../context/ThemeContext';
+import { radius, spacing } from '../styles/theme';
 
 type LanguageOption = {
   value: string;
@@ -37,6 +38,7 @@ export default function LanguageSwitcher({
   style,
   optionTextStyle,
 }: LanguageSwitcherProps) {
+  const { colors } = useTheme();
   const containerStyle = StyleSheet.flatten([styles.root, style]);
 
   return (
@@ -55,6 +57,7 @@ export default function LanguageSwitcher({
                 !isLast && styles.optionSpacing,
                 isActive && styles.optionActive,
                 pressed && styles.optionPressed,
+                { backgroundColor: isActive ? colors.cardBackground : colors.white, borderColor: colors.border },
               ])
             }
             accessibilityRole="button"
@@ -66,6 +69,7 @@ export default function LanguageSwitcher({
                 styles.optionLabel,
                 isActive && styles.optionLabelActive,
                 optionTextStyle,
+                { color: isActive ? colors.textPrimary : colors.secondaryText },
               ])}
             >
               {option.label}
@@ -80,12 +84,10 @@ export default function LanguageSwitcher({
 const styles = StyleSheet.create({
   root: {
     flexDirection: 'row',
-    backgroundColor: colors.backgroundLight,
     borderRadius: radius.round,
     padding: spacing.xs / 2,
     alignSelf: 'center',
     borderWidth: 1,
-    borderColor: colors.backgroundLight,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.08,
@@ -98,7 +100,6 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 18,
     borderRadius: 999,
-    backgroundColor: 'rgba(255,255,255,0.94)',
     borderWidth: 0,
     alignItems: 'center',
     justifyContent: 'center',
@@ -107,10 +108,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   optionActive: {
-    backgroundColor: colors.softAccent,
     borderWidth: 1,
-    borderColor: colors.accent,
-    shadowColor: colors.accent,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 6,
@@ -123,11 +121,9 @@ const styles = StyleSheet.create({
   optionLabel: {
     //fontSize: typography.fontSizeSm,
     lineHeight: 20,
-    color: colors.secondaryText,
     fontWeight: '600',
   },
   optionLabelActive: {
-    color: colors.textPrimary,
     fontWeight: '600',
   },
 });

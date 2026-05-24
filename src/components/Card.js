@@ -1,7 +1,8 @@
 import { Link } from 'expo-router';
 import { Pressable, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { useLanguage } from '../context/LanguageContext';
-import { colors, layout, radius, spacing, typography } from '../styles/theme';
+import { useTheme } from '../context/ThemeContext';
+import { layout, radius, spacing, typography } from '../styles/theme';
 import { getLocalized, getLocalizedAsset } from '../utils/i18n';
 import ImageWithFallback from './ImageWithFallback';
 const componentDefaults = require('../styles/componentDefaults').componentStyles;
@@ -9,6 +10,7 @@ const componentDefaults = require('../styles/componentDefaults').componentStyles
 export default function Card({ image, title, description, href, size = 'big', inGrid = false, gap }) {
   const { lang } = useLanguage();
   const { width: windowWidth } = useWindowDimensions();
+  const { colors: themeColors, componentStyles } = useTheme();
 
   // Compute available content width inside page container
   const availableWidth = windowWidth - layout.containerPadding * 2;
@@ -59,13 +61,16 @@ export default function Card({ image, title, description, href, size = 'big', in
   const dynamicCardStyle = {
     ...styles.card,
     width: config.cardWidth,
+    backgroundColor: themeColors.cardBackground,
+    borderColor: themeColors.border,
+    shadowColor: themeColors.textPrimary,
   };
 
   const dynamicImageStyle = {
     ...styles.image,
     width: config.cardWidth,
     height: config.imageHeight,
-    borderRadius: componentDefaults?.image?.borderRadius,
+    borderRadius: componentStyles?.image?.borderRadius,
   };
 
   const dynamicContentStyle = {
@@ -78,12 +83,14 @@ export default function Card({ image, title, description, href, size = 'big', in
     ...styles.title,
     fontSize: config.titleFontSize,
     marginBottom: config.titleMarginBottom,
+    color: themeColors.textPrimary,
   };
 
   const dynamicDescriptionStyle = {
     ...styles.description,
     fontSize: config.descriptionFontSize,
     lineHeight: config.descriptionLineHeight,
+    color: themeColors.bodyText,
   };
 
   const normalizedHref = typeof href === 'string' ? (href.startsWith('/') ? href : `/${href}`) : undefined;
@@ -121,11 +128,8 @@ const styles = StyleSheet.create({
     borderRadius: radius.md,
     overflow: 'hidden',
     marginBottom: 20,
-    backgroundColor: colors.cardBackground,
     alignSelf: 'center',
     borderWidth: 1,
-    borderColor: colors.border,
-    shadowColor: colors.textPrimary,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
     shadowRadius: 14,
@@ -142,10 +146,8 @@ const styles = StyleSheet.create({
 
   title: {
     fontWeight: '600',
-    color: colors.textPrimary,
   },
 
   description: {
-    color: colors.bodyText,
   },
 });

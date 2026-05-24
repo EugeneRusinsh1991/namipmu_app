@@ -3,8 +3,8 @@ import { useState } from 'react';
 import { ScrollView, StyleSheet, View, type NativeScrollEvent, type NativeSyntheticEvent } from 'react-native';
 import type { ContentBlock } from '../content/types';
 import { useLanguage } from '../context/LanguageContext';
+import { useTheme } from '../context/ThemeContext';
 import { globalStyles } from '../styles/globalStyles';
-import { colors, radius } from '../styles/theme';
 import { HeroBlock } from './blocks/HeroBlock';
 import ContentRenderer from './ContentRenderer';
 import PageLanguageButton from './HeaderLanguageSwitcher';
@@ -18,6 +18,7 @@ interface ContentPageProps {
 
 export default function ContentPage({ title, contentModule }: ContentPageProps) {
   const { lang } = useLanguage();
+  const { colors, componentStyles } = useTheme();
   const [progress, setProgress] = useState(0);
 
   // Runtime check for undefined components
@@ -52,7 +53,7 @@ export default function ContentPage({ title, contentModule }: ContentPageProps) 
         {/* Hero section with fixed language and font controls */}
         <View style={{ position: 'relative' }}>
           <HeroBlock content={contentModule} lang={lang} />
-          <View style={styles.headerControls}>
+          <View style={[styles.headerControls, { backgroundColor: colors.white, borderRadius: componentStyles?.card?.borderRadius, borderColor: colors.border }]}>
             <PageLanguageButton />
             <HeaderTextSizeControls />
           </View>
@@ -76,10 +77,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
-    backgroundColor: colors.white,
-    borderRadius: radius.md,
+    // backgroundColor, borderRadius and borderColor applied dynamically via useTheme()
     borderWidth: 1,
-    borderColor: colors.border,
     padding: 6,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 6 },

@@ -3,63 +3,49 @@ import { SafeAreaView, StyleSheet, View } from 'react-native';
 import Footer from '../components/Footer';
 import { LanguageProvider } from '../context/LanguageContext';
 import { TextSizeProvider } from '../context/TextSizeContext';
+import { ThemeProvider, useTheme } from '../context/ThemeContext';
 import { globalStyles } from '../styles/globalStyles';
-import { colors } from '../styles/theme';
+
+function LayoutContent() {
+  const { colors } = useTheme();
+
+  return (
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.backgroundLight }]}> 
+      <View style={styles.pageWrapper}>
+        <View style={styles.content}>
+          <Stack
+            screenOptions={{
+              contentStyle: [globalStyles.appBackground, { flex: 1, backgroundColor: colors.backgroundLight }],
+            }}
+            style={styles.stack}
+          >
+            <Stack.Screen name="index" options={{ title: 'Навчання', headerShown: true }} />
+            <Stack.Screen name="skin" options={{ title: 'Кожа', headerShown: true }} />
+            <Stack.Screen name="pigment" options={{ title: 'Пігмент', headerShown: true }} />
+          </Stack>
+        </View>
+
+        <Footer />
+      </View>
+    </SafeAreaView>
+  );
+}
 
 export default function Layout() {
   return (
-    <TextSizeProvider>
-      <LanguageProvider>
-        <SafeAreaView style={styles.safeArea}>
-          <View style={styles.pageWrapper}>
-            <View style={styles.content}>
-              <Stack
-                screenOptions={{
-                  contentStyle: [globalStyles.appBackground, styles.stackContent],
-                }}
-                style={styles.stack}
-              >
-                {/* Главная страница */}
-                <Stack.Screen
-                  name="index"
-                  options={{
-                    title: 'Навчання',
-                    headerShown: true,
-                  }}
-                />
-
-                {/* Сторінка Шкіра */}
-                <Stack.Screen
-                  name="skin"
-                  options={{
-                    title: 'Кожа',
-                    headerShown: true,
-                  }}
-                />
-
-                {/* Сторінка Пігмент */}
-                <Stack.Screen
-                  name="pigment"
-                  options={{
-                    title: 'Пігмент',
-                    headerShown: true,
-                  }}
-                />
-              </Stack>
-            </View>
-
-            <Footer />
-          </View>
-        </SafeAreaView>
-      </LanguageProvider>
-    </TextSizeProvider>
+    <ThemeProvider>
+      <TextSizeProvider>
+        <LanguageProvider>
+          <LayoutContent />
+        </LanguageProvider>
+      </TextSizeProvider>
+    </ThemeProvider>
   );
 }
 
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: colors.backgroundLight,
   },
   pageWrapper: {
     flex: 1,
@@ -73,6 +59,5 @@ const styles = StyleSheet.create({
   },
   stackContent: {
     flex: 1,
-    backgroundColor: colors.backgroundLight,
   },
 });

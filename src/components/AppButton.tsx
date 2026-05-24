@@ -1,15 +1,16 @@
 import React from 'react';
 import {
-  Pressable,
-  StyleSheet,
-  Text,
-  type GestureResponderEvent,
-  type PressableProps,
-  type StyleProp,
-  type TextStyle,
-  type ViewStyle,
+    Pressable,
+    StyleSheet,
+    Text,
+    type GestureResponderEvent,
+    type PressableProps,
+    type StyleProp,
+    type TextStyle,
+    type ViewStyle,
 } from 'react-native';
-import { colors, radius } from '../styles/theme';
+import { useTheme } from '../context/ThemeContext';
+import { radius } from '../styles/theme';
 
 type AppButtonVariant = 'primary' | 'secondary' | 'ghost';
 
@@ -33,6 +34,8 @@ export default function AppButton({
   onPress,
   ...props
 }: AppButtonProps) {
+  const { colors } = useTheme();
+
   const buttonStyle = ({ pressed }: { pressed: boolean }) =>
     StyleSheet.flatten([
       styles.button,
@@ -41,6 +44,11 @@ export default function AppButton({
       variant === 'ghost' && styles.ghost,
       pressed && !disabled && styles.pressed,
       disabled && styles.disabled,
+      // dynamic color overrides
+      variant === 'primary' && { backgroundColor: colors.accent },
+      variant === 'secondary' && { borderColor: colors.border },
+      pressed && !disabled && { opacity: 0.85 },
+      { shadowColor: colors.textPrimary },
       style,
     ]);
 
@@ -50,6 +58,10 @@ export default function AppButton({
     variant === 'secondary' && styles.labelSecondary,
     variant === 'ghost' && styles.labelGhost,
     disabled && styles.labelDisabled,
+    // dynamic label colors
+    variant === 'primary' && { color: colors.white },
+    variant !== 'primary' && { color: colors.textPrimary },
+    disabled && { color: colors.secondaryText },
     textStyle,
   ]);
 
@@ -77,19 +89,15 @@ const styles = StyleSheet.create({
     minHeight: 52,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: colors.textPrimary,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
     shadowRadius: 14,
     elevation: 4,
   },
-  primary: {
-    backgroundColor: colors.accent,
-  },
+  primary: {},
   secondary: {
     backgroundColor: 'transparent',
     borderWidth: 1,
-    borderColor: colors.border,
   },
   ghost: {
     backgroundColor: 'transparent',
@@ -105,16 +113,8 @@ const styles = StyleSheet.create({
     lineHeight: 22,
     fontWeight: '700',
   },
-  labelPrimary: {
-    color: '#fff',
-  },
-  labelSecondary: {
-    color: colors.textPrimary,
-  },
-  labelGhost: {
-    color: colors.textPrimary,
-  },
-  labelDisabled: {
-    color: colors.secondaryText,
-  },
+  labelPrimary: {},
+  labelSecondary: {},
+  labelGhost: {},
+  labelDisabled: {},
 });

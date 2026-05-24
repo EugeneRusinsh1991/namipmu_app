@@ -1,5 +1,6 @@
 import React from 'react';
 import { Image, useWindowDimensions, View } from 'react-native';
+import { useTheme } from '../context/ThemeContext';
 import useImageDimensions from '../hooks/useImageDimensions';
 import { layout as layoutTokens } from '../styles/theme';
 import { getResponsiveImageStyle } from '../utils/imageSizing';
@@ -42,11 +43,17 @@ const ResponsiveImage = ({
     || (!isValidUri && !fallbackSource)
     || (uri === failedUri && fallbackSource);
 
+  const { colors } = useTheme();
+
   return (
     <View style={styles.container}>
       <Image
         source={shouldUseFallback ? (fallbackSource || errorImage) : source}
-        style={[styles.image, imageStyle]}
+        style={[
+          styles.image,
+          imageStyle,
+          { borderColor: colors.border, backgroundColor: colors.cardBackground },
+        ]}
         resizeMode={resizeMode}
         onError={handleImageError}
       />

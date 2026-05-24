@@ -1,24 +1,26 @@
 import { StyleSheet, Text, View } from 'react-native';
+import { useTheme } from '../../context/ThemeContext';
 import { globalStyles } from '../../styles/globalStyles';
-import { colors, spacing } from '../../styles/theme';
+import { spacing } from '../../styles/theme';
 import { getLocalized } from '../../utils/i18n';
 
 export function SpacerDivider({ item, lang, heroOverlapStyle }) {
   const title = getLocalized(item.title, lang, '');
   const hasTitle = Boolean(title && String(title).trim());
+  const { colors } = useTheme();
 
   return (
     <View style={[styles.wrapper, heroOverlapStyle]}>
       {hasTitle ? (
         <>
-          <View style={styles.line} />
-          <Text style={[styles.text, globalStyles.spacer]} numberOfLines={2} ellipsizeMode="tail">
+          <View style={[styles.line, { backgroundColor: colors.border }]} />
+          <Text style={[styles.text, globalStyles.spacer, { color: colors.textPrimary }]} numberOfLines={2} ellipsizeMode="tail">
             {title}
           </Text>
-          <View style={styles.line} />
+          <View style={[styles.line, { backgroundColor: colors.border }]} />
         </>
       ) : (
-        <View style={styles.lineFull} />
+        <View style={[styles.lineFull, { backgroundColor: colors.border }]} />
       )}
     </View>
   );
@@ -34,16 +36,16 @@ const styles = StyleSheet.create({
   line: {
     flex: 1,
     height: StyleSheet.hairlineWidth,
-    backgroundColor: colors.border,
+    backgroundColor: '#d8d0c7',
   },
   lineFull: {
     width: '100%',
     height: StyleSheet.hairlineWidth,
-    backgroundColor: colors.border,
+    backgroundColor: '#d8d0c7',
   },
   text: {
     marginHorizontal: spacing.sm,
-    color: colors.textPrimary,
+    color: '#2b2520',
     textAlign: 'center',
     flexShrink: 1,
     minWidth: 0,
