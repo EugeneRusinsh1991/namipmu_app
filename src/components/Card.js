@@ -4,14 +4,27 @@ import { useLanguage } from '../context/LanguageContext';
 import { colors, layout, radius, spacing, typography } from '../styles/theme';
 import { getLocalized, getLocalizedAsset } from '../utils/i18n';
 import ImageWithFallback from './ImageWithFallback';
+const componentDefaults = require('../styles/componentDefaults').componentStyles;
 
-export default function Card({ image, title, description, href, size = 'big' }) {
+export default function Card({ image, title, description, href, size = 'big', inGrid = false, gap }) {
   const { lang } = useLanguage();
   const { width: windowWidth } = useWindowDimensions();
 
-  // Вычисляем ширину для большой карточки, чтобы она совпадала с шириной контента
+  // Compute available content width inside page container
   const availableWidth = windowWidth - layout.containerPadding * 2;
-  const cardWidthBig = Math.min(availableWidth, layout.maxContentWidth || 600);
+  const maxContent = layout.maxContentWidth || 600;
+
+  // Responsive width when inside a grid
+  let gridCardWidth = null;
+  if (inGrid) {
+    const columns = windowWidth >= 768 ? 3 : 1;
+    const gapSize = typeof gap === 'number' ? gap : spacing.md;
+    const totalGap = gapSize * (columns - 1);
+    gridCardWidth = Math.floor((Math.min(availableWidth, maxContent) - totalGap) / columns);
+  }
+
+  // Вычисляем ширину для большой карточки, чтобы она совпадала с шириной контента
+  const cardWidthBig = gridCardWidth || Math.min(availableWidth, maxContent);
 
   // Конфигурация для разных размеров
   const sizeConfig = {
@@ -52,6 +65,7 @@ export default function Card({ image, title, description, href, size = 'big' }) 
     ...styles.image,
     width: config.cardWidth,
     height: config.imageHeight,
+    borderRadius: componentDefaults?.image?.borderRadius,
   };
 
   const dynamicContentStyle = {

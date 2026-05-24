@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Image } from 'react-native';
+const componentDefaults = require('../styles/componentDefaults').componentStyles;
 
 const errorImage = require('../../assets/images/error.jpg');
 
@@ -64,6 +65,11 @@ const ImageWithFallback = ({
     ...(isPositiveNumber(aspectRatio) && { aspectRatio }),
     ...fallbackStyle,
   };
+
+  // Ensure borderRadius is applied to Image itself (Android needs it on the image)
+  if (!computedStyle.borderRadius) {
+    computedStyle.borderRadius = componentDefaults?.image?.borderRadius;
+  }
 
   const uri = getUriString(source);
   const invalidUri = !source || (typeof uri === 'string' && !isValidUriString(uri));
