@@ -8,6 +8,9 @@ Param(
 #  - Interactive (asks for commit message): .\save.ps1
 #  - Non-interactive (provide message): .\save.ps1 -Message "My commit"
 
+$maxRetries = 3
+$retryCount = 0
+
 function Info($m) { Write-Host $m -ForegroundColor Cyan }
 function Success($m) { Write-Host $m -ForegroundColor Green }
 function Warn($m) { Write-Host $m -ForegroundColor Yellow }
@@ -71,6 +74,17 @@ Run-Program npm @('run','backup') "Backup (npm run backup)"
 Run-Program git @('add','.') "Staging changes (git add .)"
 Run-Program git @('commit','-m',$Message) "Committing (git commit)"
 
+# Cleanup git lock files and temp files before we start
+Info "Cleaning up git lock files..."
+Remove-Item -Path ".git\index.lock" -ErrorAction SilentlyContinue
+Remove-Item -Path ".git\HEAD.lock" -ErrorAction SilentlyContinue
+
+# Sequence of commands
+Run-Program npm @('run','generate') "Generate content (npm run generate)"
+Run-Program npm @('run','backup') "Backup (npm run backup)"
+Run-Program git @('add','.') "Staging changes (git add .)"
+Run-Program git @('commit','-m',$Message) "Committing (git commit)"
+
 # Get current branch name
 $branch = & git rev-parse --abbrev-ref HEAD 2>$null
 if ($LASTEXITCODE -ne 0) {
@@ -78,6 +92,21 @@ if ($LASTEXITCODE -ne 0) {
   exit 1
 }
 Info "Current branch: $branch"
+
+# Cleanup git before push
+Info ""
+Info "=== Cleaning up git before push ==="
+Warn "Running git gc (this may take a moment)..."
+& git gc --aggressive --prune=now 2>&1 | Out-Null
+if ($LASTEXITCODE -eq 0) {
+  Success "Git cleanup completed"
+} else {
+  Warn "Git cleanup returned an error, but continuing..."
+}
+
+# Remove lock files again after gc
+Remove-Item -Path ".git\index.lock" -ErrorAction SilentlyContinue
+Remove-Item -Path ".git\HEAD.lock" -ErrorAction SilentlyContinue
 
 # Check if branch has tracking information
 $trackingBranch = & git rev-parse --abbrev-ref "$branch@{upstream}" 2>$null
@@ -90,25 +119,49 @@ if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($trackingBranch)) {
   }
 }
 
-# Attempt push with better error handling
-Info ""
-Info "=== Pushing to remote (git push) ==="
-Info "> git push --set-upstream origin $branch"
-
-& git push --set-upstream origin $branch 2>&1 | Tee-Object -Variable pushOutput | Out-Host
-
-if ($LASTEXITCODE -ne 0) {
-  Err "Git push failed with exit code $($LASTEXITCODE)"
+# Push with retry logic
+$pushSuccess = $false
+while ($retryCount -lt $maxRetries) {
   Info ""
-  Info "Common solutions:"
-  Info "1. Check if remote has changes: git fetch origin"
-  Info "2. Pull latest changes: git pull origin $branch"
-  Info "3. Check authentication: git remote -v"
-  Info "4. Try manual push: git push origin $branch -v"
-  exit 1
-} else {
-  Success "OK"
+  Info "=== Pushing to remote (attempt $($retryCount + 1)/$maxRetries) ==="
+  Info "> git push --set-upstream origin $branch -v"
+  
+  # Capture both stdout and stderr
+  $pushOutput = & git push --set-upstream origin $branch -v 2>&1
+  $pushExitCode = $LASTEXITCODE
+  
+  # Display output
+  $pushOutput | ForEach-Object { Write-Host $_ }
+  
+  if ($pushExitCode -eq 0) {
+    $pushSuccess = $true
+    Success "OK"
+    break
+  } else {
+    $retryCount++
+    if ($retryCount -lt $maxRetries) {
+      Warn "Push failed (exit code: $pushExitCode). Retrying..."
+      Start-Sleep -Seconds 2
+      
+      # Clean up before retry
+      Remove-Item -Path ".git\index.lock" -ErrorAction SilentlyContinue
+      Info "Attempting fetch from origin..."
+      & git fetch origin 2>&1 | Out-Null
+    }
+  }
 }
 
-Success "Push completed successfully"
-exit 0
+if (-not $pushSuccess) {
+  Err "Git push failed after $maxRetries attempts"
+  Info ""
+  Info "Troubleshooting steps:"
+  Info "1. Check internet connection"
+  Info "2. Verify git credentials: git config --list | findstr user"
+  Info "3. Test remote: git remote -v"
+  Info "4. Try manual push: git push origin $branch -v"
+  Info "5. If locked, remove: Remove-Item '.git\objects\pack\*.idx' -Force"
+  exit 1
+} else {
+  Success "Push completed successfully"
+  exit 0
+}
