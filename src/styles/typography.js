@@ -1,12 +1,13 @@
 import { StyleSheet } from 'react-native';
+import { colors, fonts } from './theme';
 
 export const typographyStyles = StyleSheet.create({
   eyebrow: {
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 0,
-    color: '#ffffff',
-    fontFamily: 'sans-serif', // 'serif' для классического | 'sans-serif' для современного - МЕНЯЙ ТУТ
+    color: colors.white,
+    fontFamily: fonts.main,
     letterSpacing: 1,
     // fontFamily: 'YourCustomFontName', // Раскомментируй и укажи имя загруженного шрифта
     // textTransform: 'uppercase', // 'none' | 'uppercase' | 'lowercase' | 'capitalize'
@@ -19,9 +20,9 @@ export const typographyStyles = StyleSheet.create({
     fontSize: 36,
     fontWeight: 'bold',
     marginBottom: 12,
-    color: '#1A1A1A',
+    color: colors.textPrimary,
     textAlign: 'flex-start',
-    fontFamily: 'serif', // 'serif' для классического | 'sans-serif' для современного - МЕНЯЙ ТУТ
+    fontFamily: fonts.accent,
     // fontFamily: 'YourCustomFontName', // Раскомментируй и укажи имя загруженного шрифта
     // lineHeight: 56,
     // letterSpacing: -1,
@@ -33,9 +34,9 @@ export const typographyStyles = StyleSheet.create({
     fontSize: 26,
     fontWeight: 'bold',
     marginBottom: 12,
-    color: '#1A1A1A',
+    color: colors.textPrimary,
     textAlign: 'flex-start',
-    fontFamily: 'serif', // 'serif' для классического | 'sans-serif' для современного - МЕНЯЙ ТУТ
+    fontFamily: fonts.accent,
     // fontFamily: 'YourCustomFontName', // Раскомментируй и укажи имя загруженного шрифта
     // lineHeight: 36,
     // letterSpacing: 0.5,
@@ -46,8 +47,8 @@ export const typographyStyles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 26, // Свободный межстрочный интервал
     marginBottom: 12,
-    color: '#666666',
-    fontFamily: 'sans-serif', // 'serif' | 'sans-serif' - МЕНЯЙ ТУТ
+    color: colors.bodyText,
+    fontFamily: fonts.main,
     fontWeight: 'normal',
     // fontFamily: 'YourCustomFontName', // Раскомментируй и укажи имя загруженного шрифта
     // lineHeight: 24, // Более плотный интервал
@@ -58,9 +59,9 @@ export const typographyStyles = StyleSheet.create({
   textLink: {
     marginTop: 20,
     fontSize: 16,
-    color: 'blue',
+    color: colors.accent,
     textAlign: 'center',
-    fontFamily: 'sans-serif', // 'serif' | 'sans-serif' - МЕНЯЙ ТУТ
+    fontFamily: fonts.main,
     // fontFamily: 'YourCustomFontName', // Раскомментируй и укажи имя загруженного шрифта
     // textDecorationLine: 'underline', // 'none' | 'underline' | 'line-through'
     // fontWeight: '600',
@@ -70,8 +71,8 @@ export const typographyStyles = StyleSheet.create({
   spacer: {
     fontSize: 32,
     lineHeight: 24,
-    color: '#826cff',
-    fontFamily: 'serif',
+    color: colors.accent,
+    fontFamily: fonts.accent,
     fontWeight: 'bold',
     // fontFamily: 'YourCustomFontName', // Раскомментируй и укажи имя загруженного шрифта
     // marginVertical: 20,

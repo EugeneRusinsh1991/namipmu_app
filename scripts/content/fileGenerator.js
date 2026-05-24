@@ -1,10 +1,11 @@
 const fs = require('fs');
 const path = require('path');
-const { PATHS, PROTECTED_ROUTES } = require('./config');
-const { normalizeFieldName, toPascalCase } = require('./utils');
+const { PATHS } = require('./config');
+const { normalizeSheetName, toPascalCase } = require('./namingStrategy');
+const { createContentFileTemplate, createRouteFileTemplate } = require('./templates');
 const { parseContent } = require('./contentParser');
 const { getSheetRows } = require('./excelReader');
-
+const { validateContentSchema } = require('./schema');
 // Проверка, нужно ли обрабатывать лист (фильтр служебных листов)
 function shouldProcessSheet(sheetName, index, utilitySheetCount = 3) {
   if (index < utilitySheetCount) return false;
@@ -32,21 +33,25 @@ function generateContentFile(workbook, sheetName) {
     return;
   }
 
-  // Нормализуем имя листа
-  const normalizedName = sheetName
-    .trim()
-    .replace(/\s+/g, '')
-    .replace(/^./, c => c.toLowerCase());
+  validateContentSchema(content, sheetName);
 
-  const exportName = normalizedName + 'Content';
-  const fileName = normalizedName + 'Content.js';
+  // Используем единую функцию нормализации
+  const normalizedName = normalizeSheetName(sheetName);
   
-  const jsCode = `// GENERATED FILE: this content is recreated by scripts/generateContent.js\nexport const ${exportName} = ${JSON.stringify(content, null, 2)};\n`;
-  
-  // Заменяем маркеры на настоящий require
-  const fixedCode = jsCode
-    .replace(/"__REQUIRE_START__(.+?)__REQUIRE_END__"/g, "require('$1')");
-  
+  if (!normalizedName) {
+    console.log(`⚠️ Не удалось нормализировать имя листа: "${sheetName}"`);
+    return;
+  }
+
+  const exportName = `${normalizedName}Content`;
+  const fileName = `${normalizedName}Content.js`;
+  const jsCode = createContentFileTemplate(exportName, content);
+
+  const fixedCode = jsCode.replace(/"__REQUIRE_START__(.+?)__REQUIRE_END__"/g, (match, filePath) => {
+    const escapedPath = String(filePath).replace(/\\/g, '\\\\');
+    return `require('${escapedPath}')`;
+  });
+
   // Создаём директорию lessons если она не существует
   if (!fs.existsSync(PATHS.lessonsDir)) {
     fs.mkdirSync(PATHS.lessonsDir, { recursive: true });
@@ -61,11 +66,7 @@ function generateContentFile(workbook, sheetName) {
 
 // Генерирование маршрута приложения
 function generateAppRouteFile(sheetName, exportName) {
-  const normalizedName = sheetName
-    .trim()
-    .replace(/\s+/g, '')
-    .replace(/[^a-zA-Z0-9]/g, '')
-    .replace(/^./, c => c.toLowerCase());
+  const normalizedName = normalizeSheetName(sheetName);
 
   if (!normalizedName || normalizedName === 'index') {
     return;
@@ -77,15 +78,7 @@ function generateAppRouteFile(sheetName, exportName) {
 
   const routePath = path.join(PATHS.appDir, `${normalizedName}.tsx`);
   const componentName = toPascalCase(normalizedName);
-  const routeCode = `// GENERATED FILE: this route is recreated by scripts/generateContent.js
-import ContentPage from '../components/ContentPage';
-import type { ContentBlock } from '../content/types';
-import { ${exportName} } from '../content/lessons/${normalizedName}Content';
-
-export default function ${componentName}() {
-  return <ContentPage title="${componentName}" contentModule={${exportName} as ContentBlock[]} />;
-}
-`;
+  const routeCode = createRouteFileTemplate(componentName, exportName, normalizedName);
 
   if (fs.existsSync(routePath)) {
     console.log(`ℹ️ Route файл перезаписывается: ${normalizedName}.tsx`);

@@ -1,53 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { Image, StyleSheet, useWindowDimensions, View } from 'react-native';
-import { colors, layout as layoutTokens, radius, spacing } from '../styles/theme';
-const errorImage = require('../..//assets/images/error.jpg');
+import React from 'react';
+import { Image, useWindowDimensions, View } from 'react-native';
+import useImageDimensions from '../hooks/useImageDimensions';
+import { layout as layoutTokens } from '../styles/theme';
+import { getResponsiveImageStyle } from '../utils/imageSizing';
+import styles from './ResponsiveImage/styles';
 
-function getUriFromSource(src) {
-  if (!src) return '';
-  if (typeof src === 'number') {
-    try {
-      const resolved = Image.resolveAssetSource(src);
-      return resolved && resolved.uri ? String(resolved.uri) : '';
-    } catch (e) {
-      return '';
-    }
-  }
-  if (typeof src === 'object' && src.uri) return String(src.uri);
-  if (typeof src === 'string') return src;
-  return '';
-}
+const errorImage = require('../../assets/images/error.jpg');
 
-function isLikelyValidUri(uri) {
-  if (!uri) return false;
-  const s = String(uri).trim();
-  if (!s) return false;
-  if (/^https?:\/\//i.test(s)) return true;
-  if (s.includes('images/') || /\.(jpg|jpeg|png|gif|webp|mp4)$/i.test(s)) return true;
-  return false;
-}
-
-/**
- * ResponsiveImage — переиспользуемый компонент для адаптивных изображений
- * 
- * Особенности:
- * - Автоматически определяет aspect ratio из оригинального изображения
- * - Адаптируется к размеру экрана с отступами
- * - На desktop не шире контента (~600px)
- * - Маленькие картинки увеличиваются до minWidth
- * - Большие картинки уменьшаются до доступной ширины
- * - Всегда сохраняет пропорции
- * - Поддерживает локальные и remote изображения
- * 
- * @param {number|object} source - Требуемый источник изображения (require() или { uri })
- * @param {number} aspectRatio - Явно задать aspect ratio (опционально)
- * @param {number} minWidth - Минимальная ширина изображения (default: 100)
- * @param {number} maxWidth - Максимальная ширина изображения (опционально)
- * @param {number} padding - Боковые отступы в px (default: 16)
- * @param {string} resizeMode - 'cover' | 'contain' | 'stretch' (default: 'contain')
- * @param {function} onError - Callback при ошибке загрузки
- * @param {object} fallbackSource - Fallback изображение при ошибке
- */
 const ResponsiveImage = ({
   source,
   aspectRatio,
@@ -59,134 +18,40 @@ const ResponsiveImage = ({
   fallbackSource,
 }) => {
   const windowDimensions = useWindowDimensions();
-  const [imageDimensions, setImageDimensions] = useState(null);
-  const [failedUri, setFailedUri] = useState('');
-  const [useFallback, setUseFallback] = useState(false);
+  const {
+    uri,
+    isValidUri,
+    actualAspectRatio,
+    useFallback,
+    failedUri,
+    handleImageError,
+  } = useImageDimensions(source, onError);
 
-  // Получаем нативные размеры изображения из URI или require
-  useEffect(() => {
-    if (!source) return;
+  const imageStyle = getResponsiveImageStyle({
+    windowWidth: windowDimensions.width,
+    padding,
+    minWidth,
+    maxWidth,
+    layoutMaxContentWidth: layoutTokens.maxContentWidth,
+    explicitAspectRatio: aspectRatio,
+    actualAspectRatio,
+  });
 
-    // Определяем URI в зависимости от типа source
-    let imageUri = null;
-    if (typeof source === 'number') {
-      imageUri = null;
-    } else if (typeof source === 'object' && source.uri) {
-      imageUri = source.uri;
-    } else if (typeof source === 'string') {
-      imageUri = source;
-    }
-
-    if (imageUri) {
-      Image.getSize(
-        imageUri,
-        (width, height) => {
-          setImageDimensions({ source, width, height });
-        },
-        (error) => {
-          console.warn('Failed to get image size:', error);
-        }
-      );
-    }
-  }, [source]);
-
-  // Вычисляем финальные размеры
-  const screenWidth = windowDimensions.width;
-  const horizontalPadding = padding * 2;
-  const availableWidth = screenWidth - horizontalPadding;
-
-  // Ограничиваем контентом (theme.layout.maxContentWidth) для консистентности на всех устройствах
-  const contentMaxWidth = Math.min(availableWidth, layoutTokens.maxContentWidth);
-
-  // Применяем явный maxWidth если передан
-  let finalMaxWidth = contentMaxWidth;
-  if (maxWidth) {
-    finalMaxWidth = Math.min(contentMaxWidth, maxWidth);
-  }
-
-  // Вычисляем финальную ширину: между minWidth и finalMaxWidth
-  let finalWidth = Math.max(minWidth, Math.min(finalMaxWidth, availableWidth));
-
-  // Вычисляем высоту на основе aspect ratio
-  let finalHeight = finalWidth;
-  let computedAspectRatio = aspectRatio;
-
-  let assetAspectRatio = null;
-  if (typeof source === 'number') {
-    try {
-      const resolved = Image.resolveAssetSource(source);
-      if (resolved && resolved.width && resolved.height) {
-        assetAspectRatio = resolved.width / resolved.height;
-      }
-    } catch (error) {
-      console.warn('Failed to resolve asset source:', error);
-    }
-  }
-
-  const actualAspectRatio = assetAspectRatio || (imageDimensions?.source === source ? imageDimensions.width / imageDimensions.height : null);
-
-  if (actualAspectRatio) {
-    const diff = aspectRatio ? Math.abs(actualAspectRatio - aspectRatio) / aspectRatio : 1;
-    if (!aspectRatio || diff > 0.15) {
-      computedAspectRatio = actualAspectRatio;
-    }
-  }
-
-  if (computedAspectRatio) {
-    finalHeight = finalWidth / computedAspectRatio;
-  } else {
-    // Fallback: квадрат, если ничего не известно
-    computedAspectRatio = 1;
-    finalHeight = finalWidth;
-  }
-
-  const handleError = (error) => {
-    try {
-      const uri = typeof source === 'object' && source?.uri ? source.uri : (typeof source === 'string' ? source : '');
-      setFailedUri(uri);
-      setUseFallback(true);
-    } catch (e) {
-      setFailedUri('');
-    }
-    onError?.(error);
-  };
+  const shouldUseFallback = useFallback
+    || !source
+    || (!isValidUri && !fallbackSource)
+    || (uri === failedUri && fallbackSource);
 
   return (
-    <View style={styles.container}> 
+    <View style={styles.container}>
       <Image
-        source={
-          useFallback || !source || (!isLikelyValidUri(getUriFromSource(source)) && !fallbackSource) || (getUriFromSource(source) === failedUri && fallbackSource)
-            ? (fallbackSource || errorImage)
-            : source
-        }
-        style={[
-          styles.image,
-          {
-            width: finalWidth,
-            height: finalHeight,
-            aspectRatio: computedAspectRatio,
-          },
-        ]}
+        source={shouldUseFallback ? (fallbackSource || errorImage) : source}
+        style={[styles.image, imageStyle]}
         resizeMode={resizeMode}
-        onError={handleError}
+        onError={handleImageError}
       />
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginVertical: spacing.md,
-  },
-  image: {
-    alignSelf: 'center',
-    borderRadius: radius.md,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.cardBackground,
-  },
-});
 
 export default ResponsiveImage;

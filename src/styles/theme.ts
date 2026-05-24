@@ -53,4 +53,9 @@ export const typography = {
   fontWeight600: '600',
 };
 
-export default { colors, spacing, radius, layout };
+export const fonts = {
+  main: 'sans-serif',
+  accent: 'serif',
+};
+
+export default { colors, spacing, radius, layout, typography, fonts };
