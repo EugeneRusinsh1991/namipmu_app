@@ -10,7 +10,7 @@ import type { SemanticTokens } from './types';
 export const darkTheme: SemanticTokens = {
   ...sharedTheme,
   surface: {
-    background: palette.neutral900,
+    background: palette.neutral400,
     surfacePrimary: palette.neutral850,
     surfaceSecondary: palette.neutral800,
     surfaceTertiary: palette.neutral750,
