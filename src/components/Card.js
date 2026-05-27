@@ -1,20 +1,38 @@
 import { Link } from 'expo-router';
 import { Pressable, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { useLanguage } from '../context/LanguageContext';
-import { useTheme } from '../context/ThemeContext';
-import { layout, radius, spacing, typography } from '../styles/theme';
+import { useDesignTokens } from '../hooks/useDesignTokens';
+import { CARD_SIZES } from '../styles/content-dimensions';
+import { radius, spacing } from '../styles/theme';
 import { getLocalized, getLocalizedAsset } from '../utils/i18n';
 import ImageWithFallback from './ImageWithFallback';
-const componentDefaults = require('../styles/componentDefaults').componentStyles;
 
+/**
+ * Card Component
+ * 
+ * Карточка с изображением, заголовком и описанием.
+ * Поддерживает два размера: 'big' и 'small'.
+ * Размеры берут из centralized content-dimensions.ts
+ * 
+ * Props:
+ *   - image: локализированное изображение
+ *   - title: локализированный заголовок
+ *   - description: локализированное описание
+ *   - href: ссылка для навигации
+ *   - size: 'big' или 'small'
+ *   - inGrid: если true, карточка используется в сетке
+ *   - gap: промежуток между карточками в сетке
+ */
 export default function Card({ image, title, description, href, size = 'big', inGrid = false, gap }) {
   const { lang } = useLanguage();
   const { width: windowWidth } = useWindowDimensions();
-  const { colors: themeColors, componentStyles } = useTheme();
+  const { tokens, specs } = useDesignTokens();
 
   // Compute available content width inside page container
-  const availableWidth = windowWidth - layout.containerPadding * 2;
-  const maxContent = layout.maxContentWidth || 600;
+  // Используем токены spacing для контейнера
+  const containerPadding = spacing.lg; // 24px
+  const maxContentWidth = 600;
+  const availableWidth = windowWidth - containerPadding * 2;
 
   // Responsive width when inside a grid
   let gridCardWidth = null;
@@ -22,81 +40,61 @@ export default function Card({ image, title, description, href, size = 'big', in
     const columns = windowWidth >= 768 ? 3 : 1;
     const gapSize = typeof gap === 'number' ? gap : spacing.md;
     const totalGap = gapSize * (columns - 1);
-    gridCardWidth = Math.floor((Math.min(availableWidth, maxContent) - totalGap) / columns);
+    gridCardWidth = Math.floor((Math.min(availableWidth, maxContentWidth) - totalGap) / columns);
   }
 
-  // Вычисляем ширину для большой карточки, чтобы она совпадала с шириной контента
-  const cardWidthBig = gridCardWidth || Math.min(availableWidth, maxContent);
+  // Вычисляем ширину для большой карточки
+  const cardWidthBig = gridCardWidth || Math.min(availableWidth, maxContentWidth);
 
-  // Конфигурация для разных размеров
-  const sizeConfig = {
-    big: {
-      cardWidth: cardWidthBig,
-      imageHeight: 150,
-      contentHeight: 110,
-      contentPadding: spacing.lg,
-      titleFontSize: 20,
-      titleMarginBottom: 10,
-      descriptionFontSize: typography.fontSizeSm,
-      descriptionLineHeight: 22,
-    },
-    small: {
-      cardWidth: 190,
-      imageHeight: 110,
-      contentHeight: 70,
-      contentPadding: spacing.sm,
-      titleFontSize: 14,
-      titleMarginBottom: 6,
-      descriptionFontSize: typography.fontSizeSm,
-      descriptionLineHeight: 16,
-    },
-  };
-
-  const config = sizeConfig[size] || sizeConfig.big;
+  // Получаем конфиг размеров из content-dimensions
+  const sizeConfig = size === 'small' ? CARD_SIZES.small : CARD_SIZES.large;
 
   // Получаем картинку в зависимости от языка
   const imageSource = getLocalizedAsset(image, lang);
 
-  // Динамические стили в зависимости от размера
+  // Динамические стили в зависимости от размера и темы
   const dynamicCardStyle = {
     ...styles.card,
-    width: config.cardWidth,
-    backgroundColor: themeColors.cardBackground,
-    borderColor: themeColors.border,
-    shadowColor: themeColors.textPrimary,
+    width: sizeConfig === CARD_SIZES.large ? cardWidthBig : 'auto',
+    backgroundColor: tokens.cardBackground,
+    borderColor: tokens.border,
+    shadowColor: tokens.textPrimary,
+    borderRadius: radius.md,
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
   };
 
   const dynamicImageStyle = {
     ...styles.image,
-    width: config.cardWidth,
-    height: config.imageHeight,
-    borderRadius: componentStyles?.image?.borderRadius,
+    width: sizeConfig === CARD_SIZES.large ? cardWidthBig : sizeConfig.cardWidth,
+    height: sizeConfig.imageHeight,
+    borderRadius: radius.md,
   };
 
   const dynamicContentStyle = {
     ...styles.content,
-    padding: config.contentPadding,
-    height: config.contentHeight,
+    padding: sizeConfig === CARD_SIZES.large ? spacing.lg : spacing.md,
   };
 
   const dynamicTitleStyle = {
     ...styles.title,
-    fontSize: config.titleFontSize,
-    marginBottom: config.titleMarginBottom,
-    color: themeColors.textPrimary,
+    fontSize: sizeConfig.titleFontSize,
+    marginBottom: sizeConfig.titleMarginBottom,
+    color: tokens.textPrimary,
+    fontWeight: '600',
   };
 
   const dynamicDescriptionStyle = {
     ...styles.description,
-    fontSize: config.descriptionFontSize,
-    lineHeight: config.descriptionLineHeight,
-    color: themeColors.bodyText,
+    fontSize: sizeConfig === CARD_SIZES.large ? 14 : 12,
+    lineHeight: sizeConfig === CARD_SIZES.large ? 22 : 16,
+    color: tokens.secondaryText,
   };
-
-  const normalizedHref = typeof href === 'string' ? (href.startsWith('/') ? href : `/${href}`) : undefined;
 
   const safeTitle = getLocalized(title, lang, '');
   const safeDescription = getLocalized(description, lang, '');
+  const normalizedHref = typeof href === 'string' ? (href.startsWith('/') ? href : `/${href}`) : undefined;
 
   const cardInner = (
     <Pressable
@@ -104,10 +102,11 @@ export default function Card({ image, title, description, href, size = 'big', in
       accessibilityRole={normalizedHref ? 'link' : 'button'}
     >
       <ImageWithFallback source={imageSource} style={dynamicImageStyle} />
-
       <View style={dynamicContentStyle}>
-        <Text style={dynamicTitleStyle}>{safeTitle}</Text>
-        {safeDescription !== '' && <Text style={dynamicDescriptionStyle}>{safeDescription}</Text>}
+        <Text style={dynamicTitleStyle} numberOfLines={2}>{safeTitle}</Text>
+        {safeDescription && (
+          <Text style={dynamicDescriptionStyle} numberOfLines={3}>{safeDescription}</Text>
+        )}
       </View>
     </Pressable>
   );
@@ -125,29 +124,21 @@ export default function Card({ image, title, description, href, size = 'big', in
 
 const styles = StyleSheet.create({
   card: {
-    borderRadius: radius.md,
+    borderWidth: 1,
     overflow: 'hidden',
     marginBottom: 20,
     alignSelf: 'center',
-    borderWidth: 1,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 14,
-    elevation: 4,
   },
-
   image: {
     resizeMode: 'cover',
   },
-
   content: {
-    overflow: 'hidden',
+    justifyContent: 'flex-start',
   },
-
   title: {
-    fontWeight: '600',
+    fontFamily: 'serif',
   },
-
   description: {
+    fontFamily: 'sans-serif',
   },
 });

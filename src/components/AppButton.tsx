@@ -9,8 +9,7 @@ import {
     type TextStyle,
     type ViewStyle,
 } from 'react-native';
-import { useTheme } from '../context/ThemeContext';
-import { radius } from '../styles/theme';
+import { useDesignTokens } from '../hooks/useDesignTokens';
 
 type AppButtonVariant = 'primary' | 'secondary' | 'ghost';
 
@@ -24,6 +23,17 @@ type AppButtonProps = {
   onPress?: (event: GestureResponderEvent) => void;
 } & Omit<PressableProps, 'style' | 'children' | 'onPress'>;
 
+/**
+ * AppButton Component
+ * 
+ * Кнопка с поддержкой трех вариантов:
+ * - primary: основная кнопка с accent цветом
+ * - secondary: вторичная кнопка с border
+ * - ghost: кнопка без фона
+ * 
+ * Все размеры, цвета и стили берут из дизайн-системы через useDesignTokens.
+ * Это позволяет менять внешний вид кнопок по всему приложению через изменение одного токена.
+ */
 export default function AppButton({
   title,
   variant = 'primary',
@@ -34,34 +44,77 @@ export default function AppButton({
   onPress,
   ...props
 }: AppButtonProps) {
-  const { colors } = useTheme();
-
+  const { tokens, specs } = useDesignTokens();
+  
+  // Получаем спецификацию для текущего варианта кнопки
+  const variantSpecs = specs.button[variant];
+  
+  // Динамические стили для кнопки (зависят от состояния и варианта)
   const buttonStyle = ({ pressed }: { pressed: boolean }) =>
     StyleSheet.flatten([
-      styles.button,
-      variant === 'primary' && styles.primary,
-      variant === 'secondary' && styles.secondary,
-      variant === 'ghost' && styles.ghost,
-      pressed && !disabled && styles.pressed,
-      disabled && styles.disabled,
-      // dynamic color overrides
-      variant === 'primary' && { backgroundColor: colors.accent },
-      variant === 'secondary' && { borderColor: colors.border },
-      pressed && !disabled && { opacity: 0.85 },
-      { shadowColor: colors.textPrimary },
+      // Базовые размеры из спецификации
+      {
+        height: variantSpecs.height,
+        paddingHorizontal: variantSpecs.paddingHorizontal,
+        paddingVertical: variantSpecs.paddingVertical,
+        borderRadius: variantSpecs.borderRadius,
+        alignItems: 'center',
+        justifyContent: 'center',
+      },
+      
+      // Специфичные для primary варианта
+      variant === 'primary' && {
+        backgroundColor: disabled ? tokens.surface.disabled : variantSpecs.backgroundColor,
+        shadowColor: tokens.text.primary,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.1,
+        shadowRadius: 14,
+        elevation: variantSpecs.shadowElevation || 4,
+      },
+      
+      // Специфичные для secondary варианта
+      variant === 'secondary' && {
+        backgroundColor: variantSpecs.backgroundColor,
+        borderWidth: variantSpecs.borderWidth,
+        borderColor: disabled ? tokens.surface.disabled : variantSpecs.borderColor,
+      },
+      
+      // Специфичные для ghost варианта
+      variant === 'ghost' && {
+        backgroundColor: variantSpecs.backgroundColor,
+      },
+      
+      // Pressed состояние
+      pressed && !disabled && {
+        opacity: 0.85,
+      },
+      
+      // Disabled состояние
+      disabled && {
+        opacity: specs.button.disabled.opacity,
+      },
+      
+      // Пользовательский стиль (может переопределить любой из выше)
       style,
     ]);
 
+  // Динамические стили для текста
   const labelStyle = StyleSheet.flatten([
-    styles.label,
-    variant === 'primary' && styles.labelPrimary,
-    variant === 'secondary' && styles.labelSecondary,
-    variant === 'ghost' && styles.labelGhost,
-    disabled && styles.labelDisabled,
-    // dynamic label colors
-    variant === 'primary' && { color: colors.white },
-    variant !== 'primary' && { color: colors.textPrimary },
-    disabled && { color: colors.secondaryText },
+    {
+      fontSize: variantSpecs.fontSize,
+      fontWeight: variantSpecs.fontWeight,
+      lineHeight: variantSpecs.lineHeight,
+    },
+    
+    // Цвет текста в зависимости от варианта
+    variant === 'primary' && {
+      color: disabled ? tokens.text.disabled : variantSpecs.textColor,
+    },
+    variant !== 'primary' && {
+      color: disabled ? tokens.text.disabled : variantSpecs.textColor,
+    },
+    
+    // Пользовательский текстовый стиль
     textStyle,
   ]);
 
@@ -80,41 +133,3 @@ export default function AppButton({
     </Pressable>
   );
 }
-
-const styles = StyleSheet.create({
-  button: {
-    borderRadius: radius.lg,
-    paddingVertical: 14,
-    paddingHorizontal: 24,
-    minHeight: 52,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 14,
-    elevation: 4,
-  },
-  primary: {},
-  secondary: {
-    backgroundColor: 'transparent',
-    borderWidth: 1,
-  },
-  ghost: {
-    backgroundColor: 'transparent',
-  },
-  pressed: {
-    opacity: 0.8,
-  },
-  disabled: {
-    opacity: 0.55,
-  },
-  label: {
-    fontSize: 15,
-    lineHeight: 22,
-    fontWeight: '700',
-  },
-  labelPrimary: {},
-  labelSecondary: {},
-  labelGhost: {},
-  labelDisabled: {},
-});

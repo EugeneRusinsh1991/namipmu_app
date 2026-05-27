@@ -1,297 +1,385 @@
 /**
  * Design System - Component Specifications
  * 
- * Спецификации для CARD, QUIZ, CHECKLIST, Button и других компонентов.
- * Радиусы, тени, внутренние отступы — всё в одном месте.
+ * Полные спецификации для всех компонентов UI.
+ * Каждая спецификация определяет размеры, отступы, цвета, тени и border-radius.
+ * 
+ * Использует токены из theme.ts для консистентности.
  */
 
-import { StyleSheet } from 'react-native';
 import type { SemanticTokens } from './theme';
-import { typographyScale } from './typography';
 
-export interface ComponentSpacing {
-  xs: number;
-  sm: number;
-  md: number;
-  lg: number;
-  xl: number;
+/**
+ * BUTTON COMPONENT SPECIFICATIONS
+ * Размеры, padding, colors для всех вариантов кнопок
+ */
+export interface ButtonSpecs {
+  primary: {
+    height: number;
+    paddingHorizontal: number;
+    paddingVertical: number;
+    borderRadius: number;
+    backgroundColor: string;
+    textColor: string;
+    fontSize: number;
+    fontWeight: string;
+    lineHeight: number;
+    shadowElevation: number;
+  };
+  secondary: {
+    height: number;
+    paddingHorizontal: number;
+    paddingVertical: number;
+    borderRadius: number;
+    backgroundColor: string;
+    borderWidth: number;
+    borderColor: string;
+    textColor: string;
+    fontSize: number;
+    fontWeight: string;
+  };
+  ghost: {
+    height: number;
+    paddingHorizontal: number;
+    paddingVertical: number;
+    borderRadius: number;
+    backgroundColor: string;
+    textColor: string;
+    fontSize: number;
+    fontWeight: string;
+  };
+  disabled: {
+    opacity: number;
+  };
 }
 
-export interface ComponentRadius {
-  sm: number;
-  md: number;
-  lg: number;
-  xl: number;
-  round: number;
+/**
+ * CARD COMPONENT SPECIFICATIONS
+ * Размеры контента, padding, border-radius для карточек
+ */
+export interface CardSpecs {
+  large: {
+    borderRadius: number;
+    padding: number;
+    shadowElevation: number;
+    backgroundColor: string;
+    borderColor: string;
+    imageSizeConfig: {
+      height: number;
+      contentHeight: number;
+    };
+  };
+  small: {
+    borderRadius: number;
+    padding: number;
+    shadowElevation: number;
+    backgroundColor: string;
+    borderColor: string;
+    imageSizeConfig: {
+      height: number;
+      contentHeight: number;
+    };
+  };
 }
 
-export interface ComponentShadow {
-  elevation: number;
-  shadowColor: string;
-  shadowOpacity: number;
-  shadowRadius: number;
-  shadowOffset: { width: number; height: number };
+/**
+ * INPUT COMPONENT SPECIFICATIONS
+ * Размеры, padding, border для input элементов
+ */
+export interface InputSpecs {
+  height: number;
+  paddingHorizontal: number;
+  paddingVertical: number;
+  borderRadius: number;
+  borderWidth: number;
+  backgroundColor: string;
+  borderColor: string;
+  placeholderColor: string;
+  textColor: string;
+  fontSize: number;
+  fontWeight: string;
+  focusBorderColor: string;
 }
 
+/**
+ * QUIZ COMPONENT SPECIFICATIONS
+ * Размеры для вопросов и ответов
+ */
+export interface QuizSpecs {
+  padding: number;
+  marginVertical: number;
+  borderRadius: number;
+  backgroundColor: string;
+  borderColor: string;
+  borderWidth: number;
+  answerPadding: number;
+  answerMargin: number;
+  answerBorderRadius: number;
+  selectedBgColor: string;
+  selectedBorderColor: string;
+  correctBgColor: string;
+  correctBorderColor: string;
+  wrongBgColor: string;
+  wrongBorderColor: string;
+}
+
+/**
+ * CHECKLIST COMPONENT SPECIFICATIONS
+ */
+export interface ChecklistSpecs {
+  padding: number;
+  marginVertical: number;
+  borderRadius: number;
+  backgroundColor: string;
+  itemPadding: number;
+  itemMarginBottom: number;
+  itemBorderRadius: number;
+  itemBgColor: string;
+  itemBorderColor: string;
+  checkboxSize: number;
+  checkboxBorderRadius: number;
+  checkboxBorderWidth: number;
+  itemTextColor: string;
+  itemCheckedTextColor: string;
+}
+
+/**
+ * TIMER COMPONENT SPECIFICATIONS
+ */
+export interface TimerSpecs {
+  padding: number;
+  marginVertical: number;
+  borderRadius: number;
+  backgroundColor: string;
+  borderColor: string;
+  displayFontSize: number;
+  displayFontWeight: string;
+  displayColor: string;
+  buttonPadding: number;
+  buttonBorderRadius: number;
+}
+
+/**
+ * IMAGE COMPONENT SPECIFICATIONS
+ * Размеры для различных типов изображений
+ */
+export interface ImageSpecs {
+  hero: {
+    height: number;
+    marginBottom: number;
+  };
+  card: {
+    height: number;
+    borderRadius: number;
+  };
+  square: {
+    width: number;
+    height: number;
+  };
+  video: {
+    height: number;
+    borderRadius: number;
+  };
+}
+
+/**
+ * ПОЛНАЯ СПЕЦИФИКАЦИЯ КОМПОНЕНТОВ
+ */
 export interface ComponentSpecifications {
-  spacing: ComponentSpacing;
-  radius: ComponentRadius;
-  shadows: {
-    sm: ComponentShadow;
-    md: ComponentShadow;
-    lg: ComponentShadow;
-  };
-  
-  // Component-specific styles
-  card: any;
-  button: any;
-  input: any;
-  quiz: any;
-  checklist: any;
-  timer: any;
-  image: any;
+  button: ButtonSpecs;
+  card: CardSpecs;
+  input: InputSpecs;
+  quiz: QuizSpecs;
+  checklist: ChecklistSpecs;
+  timer: TimerSpecs;
+  image: ImageSpecs;
 }
 
-export function getComponentSpecs(colors: SemanticTokens): ComponentSpecifications {
-  const spacing: ComponentSpacing = {
-    xs: 4,
-    sm: 8,
-    md: 16,
-    lg: 24,
-    xl: 32,
-  };
-  
-  const radius: ComponentRadius = {
-    sm: 8,
-    md: 12,
-    lg: 20,
-    xl: 24,
-    round: 999,
-  };
-  
-  const shadows = {
-    sm: {
-      elevation: 2,
-      shadowColor: colors.textPrimary,
-      shadowOpacity: 0.05,
-      shadowRadius: 4,
-      shadowOffset: { width: 0, height: 2 },
-    },
-    md: {
-      elevation: 3,
-      shadowColor: colors.textPrimary,
-      shadowOpacity: 0.08,
-      shadowRadius: 12,
-      shadowOffset: { width: 0, height: 6 },
-    },
-    lg: {
-      elevation: 5,
-      shadowColor: colors.textPrimary,
-      shadowOpacity: 0.12,
-      shadowRadius: 20,
-      shadowOffset: { width: 0, height: 10 },
-    },
-  };
-  
+/**
+ * Генерирует полные спецификации компонентов на основе токенов темы
+ */
+export function getComponentSpecs(tokens: SemanticTokens): ComponentSpecifications {
   return {
-    spacing,
-    radius,
-    shadows,
-    
-    // CARD component
-    card: StyleSheet.create({
-      container: {
-        borderRadius: radius.lg,
-        borderWidth: 1,
-        borderColor: colors.cardBorder,
-        backgroundColor: colors.cardBackground,
-        padding: spacing.lg,
-        ...shadows.md,
-      },
-      compact: {
-        borderRadius: radius.md,
-        borderWidth: 1,
-        borderColor: colors.cardBorder,
-        backgroundColor: colors.cardBackground,
-        padding: spacing.md,
-        ...shadows.sm,
-      },
-    }),
-    
-    // BUTTON component
-    button: StyleSheet.create({
+    // ===== BUTTON SPECIFICATIONS =====
+    button: {
       primary: {
-        borderRadius: radius.md,
-        padding: spacing.md,
-        backgroundColor: colors.accent,
-        borderWidth: 0,
-        justifyContent: 'center',
-        alignItems: 'center',
+        // Размеры кнопки
+        height: 52,                                           // Высота кнопки
+        paddingHorizontal: tokens.spacing.lg,                 // 24px горизонтальный отступ
+        paddingVertical: tokens.spacing.md,                   // 16px вертикальный отступ (вычитается из height)
+        borderRadius: tokens.borders.radiusMd,                // 12px закругление
+        
+        // Цвета
+        backgroundColor: tokens.interactive.accent,           // Основной accent color (розовый)
+        textColor: tokens.text.onAccent,                      // Белый текст на accent фоне
+        
+        // Типография
+        fontSize: tokens.typography.fontSizeMd,               // 16px размер шрифта
+        fontWeight: tokens.typography.fontWeightSemibold,     // 600 вес
+        lineHeight: tokens.typography.lineHeightNormal,       // 1.5
+        
+        // Тень
+        shadowElevation: tokens.shadows.md.elevation,         // Средняя тень для глубины
       },
       secondary: {
-        borderRadius: radius.md,
-        padding: spacing.md,
-        backgroundColor: colors.surfaceDefault,
-        borderWidth: 1,
-        borderColor: colors.borderDefault,
-        justifyContent: 'center',
-        alignItems: 'center',
+        height: 52,
+        paddingHorizontal: tokens.spacing.lg,
+        paddingVertical: tokens.spacing.md,
+        borderRadius: tokens.borders.radiusMd,
+        backgroundColor: tokens.surface.surfacePrimary,       // Прозрачный фон (surface default)
+        borderWidth: tokens.borders.widthBase,                // 1px граница
+        borderColor: tokens.interactive.border,               // Серая граница
+        textColor: tokens.text.primary,                       // Темный текст
+        fontSize: tokens.typography.fontSizeMd,
+        fontWeight: tokens.typography.fontWeightSemibold,
+      },
+      ghost: {
+        height: 52,
+        paddingHorizontal: tokens.spacing.lg,
+        paddingVertical: tokens.spacing.md,
+        borderRadius: tokens.borders.radiusMd,
+        backgroundColor: 'transparent',                        // Без фона
+        textColor: tokens.interactive.accent,                 // Цветной текст
+        fontSize: tokens.typography.fontSizeMd,
+        fontWeight: tokens.typography.fontWeightSemibold,
       },
       disabled: {
-        opacity: 0.5,
+        opacity: 0.55,                                        // Пониженная opacity для отключенных кнопок
       },
-    }),
-    
-    // INPUT component
-    input: StyleSheet.create({
-      container: {
-        borderRadius: radius.md,
-        borderWidth: 1,
-        borderColor: colors.inputBorder,
-        backgroundColor: colors.inputBackground,
-        paddingHorizontal: spacing.md,
-        paddingVertical: spacing.sm,
-        color: colors.textPrimary,
+    },
+
+    // ===== CARD SPECIFICATIONS =====
+    card: {
+      large: {
+        // Размеры
+        borderRadius: tokens.borders.radiusMd,                // 12px закругление карточки
+        padding: tokens.spacing.lg,                           // 24px внутренний отступ
+        
+        // Цвета
+        backgroundColor: tokens.surface.surfaceSecondary,     // Серый фон для карточки
+        borderColor: tokens.interactive.border,               // Граница
+        shadowElevation: tokens.shadows.md.elevation,         // Средняя тень
+        
+        // Размеры контента внутри карточки
+        imageSizeConfig: {
+          height: 150,                                        // Высота изображения в карточке
+          contentHeight: 110,                                 // Высота контентной части
+        },
       },
-      placeholder: {
-        color: colors.inputPlaceholder,
+      small: {
+        borderRadius: tokens.borders.radiusMd,
+        padding: tokens.spacing.md,                           // 16px отступ (меньше)
+        backgroundColor: tokens.surface.surfaceSecondary,
+        borderColor: tokens.interactive.border,
+        shadowElevation: tokens.shadows.sm.elevation,         // Маленькая тень
+        
+        imageSizeConfig: {
+          height: 110,                                        // Меньшая высота для small карточки
+          contentHeight: 70,
+        },
       },
-    }),
-    
-    // QUIZ component
-    quiz: StyleSheet.create({
-      container: {
-        borderRadius: radius.lg,
-        padding: spacing.lg,
-        marginVertical: spacing.md,
-        backgroundColor: colors.cardBackground,
-        borderWidth: 1,
-        borderColor: colors.cardBorder,
+    },
+
+    // ===== INPUT SPECIFICATIONS =====
+    input: {
+      height: 48,                                             // Стандартная высота input
+      paddingHorizontal: tokens.spacing.md,                   // 16px горизонтальный отступ
+      paddingVertical: tokens.spacing.sm,                     // 8px вертикальный отступ
+      borderRadius: tokens.borders.radiusSm,                  // 8px закругление (меньше чем button)
+      borderWidth: tokens.borders.widthBase,                  // 1px граница
+      backgroundColor: tokens.surface.surfacePrimary,         // Белый/светлый фон
+      borderColor: tokens.interactive.inputBorder,            // Специальный цвет границы input
+      placeholderColor: tokens.text.tertiary,                 // Светлый серый для placeholder
+      textColor: tokens.text.primary,                         // Основной цвет текста
+      fontSize: tokens.typography.fontSizeMd,                 // 16px
+      fontWeight: tokens.typography.fontWeightRegular,        // 400 вес
+      focusBorderColor: tokens.interactive.accent,            // Accent цвет когда активен
+    },
+
+    // ===== QUIZ SPECIFICATIONS =====
+    quiz: {
+      // Контейнер вопроса
+      padding: tokens.spacing.lg,
+      marginVertical: tokens.spacing.md,
+      borderRadius: tokens.borders.radiusLg,                  // 20px для визуального разделения
+      backgroundColor: tokens.surface.surfaceSecondary,
+      borderColor: tokens.interactive.border,
+      borderWidth: tokens.borders.widthBase,
+      
+      // Ответы
+      answerPadding: tokens.spacing.md,
+      answerMargin: tokens.spacing.sm,
+      answerBorderRadius: tokens.borders.radiusMd,
+      
+      // Цвета для разных состояний ответов
+      selectedBgColor: tokens.interactive.accentLight,        // Светлый accent для выбранного ответа
+      selectedBorderColor: tokens.interactive.accent,         // Основной accent для границы
+      correctBgColor: tokens.text.success,
+      correctBorderColor: tokens.text.success,
+      wrongBgColor: tokens.text.danger,
+      wrongBorderColor: tokens.text.danger,
+    },
+
+    // ===== CHECKLIST SPECIFICATIONS =====
+    checklist: {
+      // Контейнер
+      padding: tokens.spacing.lg,
+      marginVertical: tokens.spacing.md,
+      borderRadius: tokens.borders.radiusLg,
+      backgroundColor: tokens.surface.surfaceSecondary,
+      
+      // Item
+      itemPadding: tokens.spacing.md,
+      itemMarginBottom: tokens.spacing.md,
+      itemBorderRadius: tokens.borders.radiusMd,
+      itemBgColor: tokens.surface.surfacePrimary,
+      itemBorderColor: tokens.interactive.border,
+      
+      // Checkbox
+      checkboxSize: 24,                                       // 24x24 квадрат
+      checkboxBorderRadius: tokens.borders.radiusSm,          // 8px закругление
+      checkboxBorderWidth: tokens.borders.widthBase,
+      
+      // Текст
+      itemTextColor: tokens.text.secondary,
+      itemCheckedTextColor: tokens.text.tertiary,             // Более мягкий когда checked
+    },
+
+    // ===== TIMER SPECIFICATIONS =====
+    timer: {
+      padding: tokens.spacing.lg,
+      marginVertical: tokens.spacing.md,
+      borderRadius: tokens.borders.radiusLg,
+      backgroundColor: tokens.surface.surfaceSecondary,
+      borderColor: tokens.interactive.border,
+      
+      displayFontSize: tokens.typography.fontSizeXxl,        // 36px для отсчета
+      displayFontWeight: tokens.typography.fontWeightBold,   // Жирный
+      displayColor: tokens.text.primary,
+      
+      buttonPadding: tokens.spacing.md,
+      buttonBorderRadius: tokens.borders.radiusMd,
+    },
+
+    // ===== IMAGE SPECIFICATIONS =====
+    image: {
+      hero: {
+        height: 200,                                          // Высота hero image (может быть переопределена Platform.select)
+        marginBottom: -30,                                    // Отрицательный margin для overlap эффекта
       },
-      question: {
-        color: colors.textPrimary,
-        fontSize: typographyScale.fontSizeMd,
-        fontWeight: typographyScale.fontWeightSemibold,
-        marginBottom: spacing.md,
+      card: {
+        height: 150,                                          // Высота изображения в карточке
+        borderRadius: tokens.borders.radiusMd,
       },
-      answer: {
-        borderRadius: radius.md,
-        padding: spacing.md,
-        marginVertical: spacing.sm,
-        borderWidth: 1,
-        borderColor: colors.borderDefault,
-        backgroundColor: colors.surfaceDefault,
+      square: {
+        width: 300,                                           // Квадратное изображение 300x300
+        height: 300,
       },
-      answerText: {
-        color: colors.bodyText,
-        fontSize: typographyScale.fontSizeMd,
+      video: {
+        height: 220,                                          // Высота video container
+        borderRadius: tokens.borders.radiusMd,
       },
-      answerSelected: {
-        borderColor: colors.accent,
-        backgroundColor: colors.accentLight,
-      },
-      answerCorrect: {
-        borderColor: colors.success,
-        backgroundColor: colors.success,
-        opacity: 0.1,
-      },
-      answerWrong: {
-        borderColor: colors.danger,
-        backgroundColor: colors.danger,
-        opacity: 0.1,
-      },
-    }),
-    
-    // CHECKLIST component
-    checklist: StyleSheet.create({
-      container: {
-        borderRadius: radius.lg,
-        padding: spacing.lg,
-        marginVertical: spacing.md,
-        backgroundColor: colors.cardBackground,
-      },
-      item: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingVertical: spacing.md,
-        paddingHorizontal: spacing.md,
-        borderRadius: radius.md,
-        backgroundColor: colors.surfaceDefault,
-        borderWidth: 1,
-        borderColor: colors.cardBorder,
-        marginBottom: spacing.md,
-      },
-      itemChecked: {
-        backgroundColor: colors.accentLight,
-        borderColor: colors.accent,
-      },
-      checkbox: {
-        width: 24,
-        height: 24,
-        borderRadius: 6,
-        borderWidth: 1,
-        borderColor: colors.cardBorder,
-        marginRight: spacing.md,
-        justifyContent: 'center',
-        alignItems: 'center',
-      },
-      checkboxChecked: {
-        backgroundColor: colors.success,
-        borderColor: colors.success,
-      },
-      itemText: {
-        flex: 1,
-        color: colors.bodyText,
-        fontSize: typographyScale.fontSizeMd,
-      },
-      itemTextChecked: {
-        color: colors.textTertiary,
-        textDecorationLine: 'line-through',
-      },
-    }),
-    
-    // TIMER component
-    timer: StyleSheet.create({
-      container: {
-        borderRadius: radius.lg,
-        padding: spacing.lg,
-        marginVertical: spacing.md,
-        backgroundColor: colors.cardBackground,
-        borderWidth: 1,
-        borderColor: colors.cardBorder,
-        ...shadows.md,
-      },
-      display: {
-        fontSize: typographyScale.fontSizeXxl,
-        fontWeight: typographyScale.fontWeightBold,
-        color: colors.textPrimary,
-        textAlign: 'center',
-      },
-      button: {
-        borderRadius: radius.md,
-        padding: spacing.md,
-        marginVertical: spacing.sm,
-        backgroundColor: colors.accentLight,
-        borderWidth: 1,
-        borderColor: colors.accent,
-      },
-      buttonActive: {
-        backgroundColor: colors.accent,
-      },
-    }),
-    
-    // IMAGE component
-    image: StyleSheet.create({
-      container: {
-        borderRadius: radius.lg,
-        overflow: 'hidden',
-        borderWidth: 1,
-        borderColor: colors.cardBorder,
-      },
-      image: {
-        borderRadius: radius.lg,
-      },
-    }),
+    },
   };
 }
 

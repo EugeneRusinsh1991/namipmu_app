@@ -1,19 +1,58 @@
 import { StyleSheet } from 'react-native';
-import { colors, layout as layoutTokens } from './theme';
+import { SPACING } from './content-dimensions';
 
+/**
+ * Layout Styles
+ * 
+ * Основные стили для макета приложения.
+ * Используют токены из content-dimensions для консистентности.
+ */
 export const layoutStyles = StyleSheet.create({
+  /**
+   * Основной фон приложения
+   * Используется обычно с динамическим backgroundColor из темы
+   */
   appBackground: {
     flex: 1,
-    backgroundColor: colors.backgroundLight,
+    // backgroundColor будет установлена динамически через контекст темы
   },
 
+  /**
+   * Основной контейнер для контента
+   * Имеет padding и maxWidth для правильного отображения на больших экранах
+   */
   container: {
     flex: 1,
-    padding: layoutTokens.containerPadding,
-    maxWidth: layoutTokens.maxWidth,
+    padding: SPACING.lg,        // 24px padding со всех сторон
+    maxWidth: 600,              // Максимальная ширина контента
     alignSelf: 'center',
     width: '100%',
     position: 'relative',
     zIndex: 1,
+  },
+
+  /**
+   * Альтернативный контейнер с меньшим padding
+   */
+  containerCompact: {
+    flex: 1,
+    padding: SPACING.md,        // 16px padding (меньше)
+    maxWidth: 600,
+    alignSelf: 'center',
+    width: '100%',
+  },
+
+  /**
+   * Контейнер для вертикального spacing между элементами
+   */
+  spacer: {
+    marginVertical: SPACING.md,
+  },
+
+  /**
+   * Контейнер для горизонтального spacing между элементами
+   */
+  spacerHorizontal: {
+    marginHorizontal: SPACING.md,
   },
 });
