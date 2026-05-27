@@ -11,6 +11,7 @@ try {
 import { getComponentSpecs } from '../styles/design-system/components';
 import { getTheme, lightTheme } from '../styles/design-system/theme';
 import { getTypography } from '../styles/design-system/typography';
+import { LanguageProvider } from './LanguageContext';
 
 const THEME_KEY = '@app:theme';
 
@@ -99,7 +100,9 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <ThemeContext.Provider value={value}>
-      {children}
+      <LanguageProvider>
+        {children}
+      </LanguageProvider>
     </ThemeContext.Provider>
   );
 };

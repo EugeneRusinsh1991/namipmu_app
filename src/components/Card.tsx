@@ -39,6 +39,9 @@ interface CardProps {
   
   /** Промежуток между карточками в сетке */
   gap?: number;
+
+  /** Язык (опционально, приоритет над контекстом) */
+  lang?: string;
 }
 
 /**
@@ -82,9 +85,11 @@ export default function Card({
   href, 
   size = 'big', 
   inGrid = false, 
-  gap 
+  gap,
+  lang: propLang
 }: CardProps): ReactNode {
-  const { lang } = useLanguage();
+  const { lang: contextLang } = useLanguage();
+  const activeLang = propLang || contextLang || 'ru';
   const { width: windowWidth } = useWindowDimensions();
   const { tokens } = useDesignTokens();
 
@@ -112,7 +117,7 @@ export default function Card({
   }, [windowWidth, inGrid, gap, size]);
 
   // Получаем картинку в зависимости от языка
-  const imageSource = getLocalizedAsset(image, lang);
+  const imageSource = getLocalizedAsset(image, activeLang);
 
   // Динамические стили в зависимости от размера и темы
   const dynamicCardStyle: ViewStyle = {
@@ -154,8 +159,8 @@ export default function Card({
     color: tokens.secondaryText,
   };
 
-  const safeTitle: string = getLocalized(title, lang, '');
-  const safeDescription: string = getLocalized(description, lang, '');
+  const safeTitle: string = getLocalized(title, activeLang, '');
+  const safeDescription: string = getLocalized(description, activeLang, '');
   const normalizedHref: string | undefined = typeof href === 'string' ? (href.startsWith('/') ? href : `/${href}`) : undefined;
 
   const cardInner: ReactNode = (

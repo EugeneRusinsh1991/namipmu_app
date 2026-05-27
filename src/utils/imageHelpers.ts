@@ -40,7 +40,8 @@ export function isLikelyValidUri(uri: any): boolean {
 
   const s = String(uri).trim();
   if (!s) return false;
-  if (/^https?:\/\//i.test(s)) return true;
-  if (s.includes('images/') || /\.(jpg|jpeg|png|gif|webp|mp4)$/i.test(s)) return true;
+  if (/^(https?|file|data):/i.test(s)) return true;
+  if (s.includes('images/') || s.includes('assets/') || /\.(jpg|jpeg|png|gif|webp|mp4)(\?.*)?$/i.test(s)) return true;
+
   return false;
 }

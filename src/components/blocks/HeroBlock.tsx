@@ -15,22 +15,6 @@ interface HeroBlockProps {
 }
 
 /**
- * Проверяет, является ли источник валидным медиа файлом
- */
-function isLikelyValidMedia(src: any): boolean {
-  if (!src) return false;
-  if (typeof src === 'number') return true;
-  if (typeof src === 'object' && src.uri) {
-    return /^(https?:|file:|data:)/i.test(String(src.uri)) || String(src.uri).includes('images/') || /\.(jpg|jpeg|png|gif|webp|mp4)$/i.test(String(src.uri));
-  }
-  if (typeof src === 'string') {
-    const s = String(src).trim();
-    return /^(https?:|file:|data:)/i.test(s) || s.includes('images/') || /\.(jpg|jpeg|png|gif|webp|mp4)$/i.test(s);
-  }
-  return false;
-}
-
-/**
  * Block компонент для hero изображения
  * Отображает полноширинное изображение с градиентом в начале контента
  */
@@ -41,7 +25,6 @@ export const HeroBlock: FC<HeroBlockProps> = ({ content, lang = 'ru' }) => {
 
   const { colors } = useTheme();
   const heroImageSrc = getLocalizedAsset(heroItem.image, lang);
-  const safeHeroSrc = isLikelyValidMedia(heroImageSrc) ? heroImageSrc : require('../../../assets/images/error.jpg');
   
   const { width: windowWidth } = useWindowDimensions();
 
@@ -100,7 +83,7 @@ export const HeroBlock: FC<HeroBlockProps> = ({ content, lang = 'ru' }) => {
   return (
     <View style={wrapperStyle}>
       <ImageWithFallback
-        source={safeHeroSrc}
+        source={heroImageSrc}
         style={styles.heroImageBackground}
         resizeMode="cover"
       />

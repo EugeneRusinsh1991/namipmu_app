@@ -14,14 +14,10 @@ export const colors = lightColors || tokens.colors;
  */
 // Backwards-compatible spacing map (common keys used across the codebase)
 export const spacing = {
-  xs: tokens.spacing.xs ?? tokens.spacing.s ?? 4,
-  sm: tokens.spacing.s ?? tokens.spacing.xs ?? 8,
-  md: tokens.spacing.m ?? tokens.spacing.sm ?? 16,
-  lg: tokens.spacing.l ?? tokens.spacing.m ?? 24,
-  xl: tokens.spacing.xl ?? tokens.spacing.l ?? 32,
-  xxl: tokens.spacing.xxl ?? 64,
-  // keep original raw values for layouts
   ...tokens.spacing,
+  sm: tokens.spacing.s,
+  md: tokens.spacing.m,
+  lg: tokens.spacing.l,
 };
 
 /**

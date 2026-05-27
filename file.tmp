@@ -78,9 +78,11 @@ specs.image.video = { height, borderRadius }
 ```
 
 ### 4. **Слой 4: Константы контента**
-📁 `src/styles/content-dimensions.ts`
 
-Централизованные размеры для скриптов и компонентов:
+### 1.4. Уровень 4: Константы Размеров Контента
+**Файл:** `src/styles/content-dimensions.ts`
+
+Здесь собраны централизованные константы размеров, которые используются как в компонентах, так и в скриптах генерации контента. Это помогает поддерживать единый визуальный ритм и размеры по всему приложению.
 
 ```typescript
 CARD_SIZES = {
@@ -190,24 +192,9 @@ const squareCenteredImage = {
 };
 ```
 
-## 🔄 Переключение между темами
+---
 
-```typescript
-function ThemeSwitcher() {
-  const { theme, isDark, toggleTheme } = useDesignTokens();
-  
-  return (
-    <Pressable onPress={toggleTheme}>
-      <Text>{isDark ? '☀️ Светлая' : '🌙 Темная'}</Text>
-    </Pressable>
-  );
-}
-```
-
-Когда вы нажимаете кнопку:
-1. `ThemeContext` обновляет состояние
-2. `useDesignTokens()` возвращает новые токены
-3. Все компоненты перерендериваются с новыми цветами ✨
+## 7. Добавление Новых Токенов и Спецификаций
 
 ## 📊 Добавление новых токенов
 
@@ -263,10 +250,12 @@ export function getComponentSpecs(tokens: SemanticTokens): ComponentSpecificatio
 ```
 
 ## ✅ Чек-лист: Как менять дизайн в одном месте
+---
 
-Сценарий: **"Нужно сделать все кнопки больше"**
+## 8. Чек-лист: Как Быстро Изменить Дизайн (Сценарии)
 
-1. Откройте `src/styles/design-system/components.ts`
+### Сценарий 1: "Все кнопки должны быть на 10px выше"
+1.  Откройте файл: `src/styles/design-system/components.ts`
 2. Найдите `specs.button.primary.height`
 3. Измените значение (например, с 52 на 56)
 4. Все кнопки в приложении изменятся! 🎉

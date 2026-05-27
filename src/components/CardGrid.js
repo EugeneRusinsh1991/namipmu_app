@@ -24,6 +24,7 @@ export default function CardGrid({ items = [], lang = 'ru', gap = spacing.md, he
               href={item.href}
               size={size}
               inGrid={true}
+              lang={lang}
               gap={gap}
             />
           </View>

@@ -1,9 +1,7 @@
 import { Link } from 'expo-router';
 import { Pressable, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { useLanguage } from '../context/LanguageContext';
-import { useDesignTokens } from '../hooks/useDesignTokens';
 import { CARD_SIZES } from '../styles/content-dimensions';
-import { radius, spacing } from '../styles/theme';
 import { getLocalized, getLocalizedAsset } from '../utils/i18n';
 import ImageWithFallback from './ImageWithFallback';
 
@@ -26,11 +24,11 @@ import ImageWithFallback from './ImageWithFallback';
 export default function Card({ image, title, description, href, size = 'big', inGrid = false, gap }) {
   const { lang } = useLanguage();
   const { width: windowWidth } = useWindowDimensions();
-  const { tokens, specs } = useDesignTokens();
+  const { tokens, specs } = useDesignTokens(); // Перемещено сюда для использования в dynamicCardStyle
 
   // Compute available content width inside page container
   // Используем токены spacing для контейнера
-  const containerPadding = spacing.lg; // 24px
+  const containerPadding = tokens.spacing.lg; // 24px
   const maxContentWidth = 600;
   const availableWidth = windowWidth - containerPadding * 2;
 
@@ -56,20 +54,18 @@ export default function Card({ image, title, description, href, size = 'big', in
   const dynamicCardStyle = {
     ...styles.card,
     width: sizeConfig === CARD_SIZES.large ? cardWidthBig : 'auto',
-    backgroundColor: tokens.cardBackground,
-    borderColor: tokens.border,
-    shadowColor: tokens.textPrimary,
-    borderRadius: radius.md,
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
+    backgroundColor: specs.card[size].backgroundColor,
+    borderRadius: specs.card[size].borderRadius,
+    ...tokens.shadows.md, // Применяем полную тень из дизайн-системы
   };
 
+  // Радиус изображения должен соответствовать радиусу карточки
+  // или быть определен в specs.image.card.borderRadius
   const dynamicImageStyle = {
     ...styles.image,
     width: sizeConfig === CARD_SIZES.large ? cardWidthBig : sizeConfig.cardWidth,
     height: sizeConfig.imageHeight,
-    borderRadius: radius.md,
+    borderRadius: specs.card[size].borderRadius,
   };
 
   const dynamicContentStyle = {
@@ -124,7 +120,7 @@ export default function Card({ image, title, description, href, size = 'big', in
 
 const styles = StyleSheet.create({
   card: {
-    borderWidth: 1,
+    // borderWidth: 1, // Удаляем жестко заданную границу
     overflow: 'hidden',
     marginBottom: 20,
     alignSelf: 'center',
