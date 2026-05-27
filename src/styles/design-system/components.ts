@@ -227,7 +227,7 @@ export function getComponentSpecs(tokens: SemanticTokens): ComponentSpecificatio
         paddingVertical: tokens.spacing.md,
         borderRadius: tokens.borders.radiusMd,
         backgroundColor: tokens.surface.surfacePrimary,       // Прозрачный фон (surface default)
-        borderWidth: tokens.borders.widthBase,                // 1px граница
+        borderWidth: 0,                                       // Граница убрана
         borderColor: tokens.interactive.border,               // Серая граница
         textColor: tokens.text.primary,                       // Темный текст
         fontSize: tokens.typography.fontSizeMd,
@@ -286,7 +286,7 @@ export function getComponentSpecs(tokens: SemanticTokens): ComponentSpecificatio
       paddingHorizontal: tokens.spacing.md,                   // 16px горизонтальный отступ
       paddingVertical: tokens.spacing.sm,                     // 8px вертикальный отступ
       borderRadius: tokens.borders.radiusSm,                  // 8px закругление (меньше чем button)
-      borderWidth: tokens.borders.widthBase,                  // 1px граница
+      borderWidth: 0,                                         // Граница убрана
       backgroundColor: tokens.surface.surfacePrimary,         // Белый/светлый фон
       borderColor: tokens.interactive.inputBorder,            // Специальный цвет границы input
       placeholderColor: tokens.text.tertiary,                 // Светлый серый для placeholder
@@ -304,7 +304,7 @@ export function getComponentSpecs(tokens: SemanticTokens): ComponentSpecificatio
       borderRadius: tokens.borders.radiusLg,                  // 20px для визуального разделения
       backgroundColor: tokens.surface.surfaceSecondary,
       borderColor: tokens.interactive.border,
-      borderWidth: tokens.borders.widthBase,
+      borderWidth: 0,                                         // Граница убрана
       
       // Ответы
       answerPadding: tokens.spacing.md,
@@ -338,7 +338,7 @@ export function getComponentSpecs(tokens: SemanticTokens): ComponentSpecificatio
       // Checkbox
       checkboxSize: 24,                                       // 24x24 квадрат
       checkboxBorderRadius: tokens.borders.radiusSm,          // 8px закругление
-      checkboxBorderWidth: tokens.borders.widthBase,
+      checkboxBorderWidth: 0,                                 // Граница чекбокса убрана
       
       // Текст
       itemTextColor: tokens.text.secondary,

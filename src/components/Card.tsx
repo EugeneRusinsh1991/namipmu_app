@@ -192,7 +192,7 @@ export default function Card({
 
 const styles = StyleSheet.create({
   card: {
-    borderWidth: 1,
+    borderWidth: 0,
     overflow: 'hidden',
     marginBottom: 20,
     alignSelf: 'center',
