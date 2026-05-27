@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   Pressable,
   StyleSheet,
@@ -50,7 +50,7 @@ export default function AppButton({
   const variantSpecs = specs.button[variant];
   
   // Динамические стили для кнопки (зависят от состояния и варианта)
-  const buttonStyle = ({ pressed }: { pressed: boolean }) =>
+  const buttonStyle = useMemo(() => ({ pressed }: { pressed: boolean }) =>
     StyleSheet.flatten([
       // Базовые размеры из спецификации
       {
@@ -96,27 +96,19 @@ export default function AppButton({
       
       // Пользовательский стиль (может переопределить любой из выше)
       style,
-    ]);
+    ]), [variant, variantSpecs, tokens, disabled, style, specs.button.disabled.opacity]);
 
   // Динамические стили для текста
-  const labelStyle = StyleSheet.flatten([
+  const labelStyle = useMemo(() => StyleSheet.flatten([
     {
       fontSize: variantSpecs.fontSize,
       fontWeight: variantSpecs.fontWeight,
       lineHeight: variantSpecs.lineHeight,
-    },
-    
-    // Цвет текста в зависимости от варианта
-    variant === 'primary' && {
+      // Упрощенная логика цвета: берем из спецификации варианта
       color: disabled ? tokens.text.disabled : variantSpecs.textColor,
     },
-    variant !== 'primary' && {
-      color: disabled ? tokens.text.disabled : variantSpecs.textColor,
-    },
-    
-    // Пользовательский текстовый стиль
     textStyle,
-  ]);
+  ]), [variantSpecs, tokens.text.disabled, disabled, textStyle]);
 
   return (
     <Pressable
@@ -125,7 +117,7 @@ export default function AppButton({
       style={buttonStyle}
       accessibilityRole="button"
       accessibilityState={{ disabled }}
-      accessibilityLabel={accessibilityLabel ?? title}
+      accessibilityLabel={accessibilityLabel ?? (typeof title === 'string' ? title : undefined)}
       android_ripple={{ color: 'rgba(0,0,0,0.08)' }}
       {...props}
     >

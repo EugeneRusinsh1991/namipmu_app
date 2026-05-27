@@ -1,5 +1,5 @@
 import { Link } from 'expo-router';
-import type { ReactNode } from 'react';
+import React, { useMemo, type ReactNode } from 'react';
 import { Pressable, StyleSheet, Text, TextStyle, useWindowDimensions, View, ViewStyle } from 'react-native';
 import { useLanguage } from '../context/LanguageContext';
 import { useDesignTokens } from '../hooks/useDesignTokens';
@@ -42,6 +42,14 @@ interface CardProps {
 }
 
 /**
+ * Интерфейс для конфигурации картинки (добавлен для избежания any)
+ */
+interface ImageSizeConfig {
+  height: number;
+  contentHeight: number;
+}
+
+/**
  * Тип для конфигурации размера карточки
  */
 type CardSizeConfig = typeof CARD_SIZES.large | typeof CARD_SIZES.small;
@@ -80,26 +88,28 @@ export default function Card({
   const { width: windowWidth } = useWindowDimensions();
   const { tokens } = useDesignTokens();
 
-  // Compute available content width inside page container
-  // Используем токены spacing для контейнера
-  const containerPadding: number = spacing.lg; // 24px
-  const maxContentWidth: number = 600;
-  const availableWidth: number = windowWidth - containerPadding * 2;
+  // Мемоизируем расчеты размеров
+  const { cardWidth, sizeConfig } = useMemo(() => {
+    const containerPadding = spacing.lg;
+    const maxContentWidth = 600;
+    const availableWidth = windowWidth - containerPadding * 2;
+    
+    let gridWidth: number | null = null;
+    if (inGrid) {
+      const columns = windowWidth >= 768 ? 3 : 1;
+      const gapSize = typeof gap === 'number' ? gap : spacing.md;
+      const totalGap = gapSize * (columns - 1);
+      gridWidth = Math.floor((Math.min(availableWidth, maxContentWidth) - totalGap) / columns);
+    }
 
-  // Responsive width when inside a grid
-  let gridCardWidth: number | null = null;
-  if (inGrid) {
-    const columns: number = windowWidth >= 768 ? 3 : 1;
-    const gapSize: number = typeof gap === 'number' ? gap : spacing.md;
-    const totalGap: number = gapSize * (columns - 1);
-    gridCardWidth = Math.floor((Math.min(availableWidth, maxContentWidth) - totalGap) / columns);
-  }
+    const finalSizeConfig = size === 'small' ? CARD_SIZES.small : CARD_SIZES.large;
+    const finalWidth = gridWidth || Math.min(availableWidth, maxContentWidth);
 
-  // Вычисляем ширину для большой карточки
-  const cardWidthBig: number = gridCardWidth || Math.min(availableWidth, maxContentWidth);
-
-  // Получаем конфиг размеров из content-dimensions
-  const sizeConfig: CardSizeConfig = size === 'small' ? CARD_SIZES.small : CARD_SIZES.large;
+    return {
+      cardWidth: size === 'small' ? 'auto' : finalWidth,
+      sizeConfig: finalSizeConfig
+    };
+  }, [windowWidth, inGrid, gap, size]);
 
   // Получаем картинку в зависимости от языка
   const imageSource = getLocalizedAsset(image, lang);
@@ -107,7 +117,7 @@ export default function Card({
   // Динамические стили в зависимости от размера и темы
   const dynamicCardStyle: ViewStyle = {
     ...styles.card,
-    width: sizeConfig === CARD_SIZES.large ? cardWidthBig : 'auto',
+    width: cardWidth as any,
     backgroundColor: tokens.cardBackground,
     borderColor: tokens.border,
     shadowColor: tokens.textPrimary,
@@ -119,7 +129,7 @@ export default function Card({
 
   const dynamicImageStyle: ViewStyle = {
     ...styles.image,
-    width: sizeConfig === CARD_SIZES.large ? cardWidthBig : (sizeConfig as any).cardWidth,
+    width: size === 'big' ? (cardWidth as number) : (sizeConfig as any).cardWidth,
     height: sizeConfig.imageHeight,
     borderRadius: radius.md,
   };
@@ -152,6 +162,7 @@ export default function Card({
     <Pressable
       style={dynamicCardStyle}
       accessibilityRole={normalizedHref ? 'link' : 'button'}
+      accessibilityLabel={safeTitle}
     >
       <ImageWithFallback source={imageSource} style={dynamicImageStyle} />
       <View style={dynamicContentStyle}>
