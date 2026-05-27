@@ -2,6 +2,10 @@ import colors from './colors';
 import spacing from './spacing';
 import typography from './typography';
 
+/**
+ * @deprecated Use tokens from `useDesignTokens()` hook or `src/styles/design-system/theme.ts` instead.
+ * This is a legacy tokens object for backwards compatibility. Use design-system for semantic tokens.
+ */
 export const tokens = {
   colors,
   spacing,
@@ -25,4 +29,8 @@ export const tokens = {
   },
 };
 
+/**
+ * @deprecated Use tokens from `useDesignTokens()` hook or `src/styles/design-system/theme.ts` instead.
+ * This is a legacy default export for backwards compatibility. Use design-system instead.
+ */
 export default tokens;

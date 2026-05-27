@@ -1,4 +1,9 @@
 // Palette primitives and semantic roles
+
+/**
+ * @deprecated Use palette from `src/styles/design-system/palette.ts` instead.
+ * These are legacy primitive colors for backwards compatibility.
+ */
 export const primitives = {
   blue500: '#208AEF',
   pink600: '#C45C73',
@@ -11,6 +16,10 @@ export const primitives = {
   gray500: '#9B9087',
 };
 
+/**
+ * @deprecated Use semantic tokens from `src/styles/design-system/theme.ts` instead.
+ * This is a legacy light color palette for backwards compatibility.
+ */
 export const lightColors = {
   // primitives
   ...primitives,
@@ -38,6 +47,10 @@ export const lightColors = {
   primary: primitives.pink600,
 };
 
+/**
+ * @deprecated Use semantic tokens from `src/styles/design-system/theme.ts` instead.
+ * This is a legacy dark color palette for backwards compatibility.
+ */
 export const darkColors = {
   ...primitives,
   backgroundLight: '#1A1C1E', // Мягкий темно-серый (Slate 900)
@@ -62,4 +75,8 @@ export const darkColors = {
   primary: primitives.pink600,
 };
 
+/**
+ * @deprecated Use semantic tokens from `src/styles/design-system/theme.ts` instead.
+ * This is a legacy default export for backwards compatibility. Defaults to lightColors.
+ */
 export default lightColors;

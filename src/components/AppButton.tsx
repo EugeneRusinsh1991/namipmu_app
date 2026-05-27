@@ -1,13 +1,13 @@
 import React from 'react';
 import {
-    Pressable,
-    StyleSheet,
-    Text,
-    type GestureResponderEvent,
-    type PressableProps,
-    type StyleProp,
-    type TextStyle,
-    type ViewStyle,
+  Pressable,
+  StyleSheet,
+  Text,
+  type GestureResponderEvent,
+  type PressableProps,
+  type StyleProp,
+  type TextStyle,
+  type ViewStyle,
 } from 'react-native';
 import { useDesignTokens } from '../hooks/useDesignTokens';
 

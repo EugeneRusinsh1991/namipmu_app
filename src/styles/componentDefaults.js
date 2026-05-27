@@ -1,5 +1,9 @@
 const tokens = require('./tokens').tokens || require('./tokens').default;
 
+/**
+ * @deprecated Use component specifications from `src/styles/design-system/components.ts` instead.
+ * This is a legacy function for backwards compatibility.
+ */
 function createComponentStyles(colorsOrTokens) {
   // Accept either colors object or tokens object
   const isTokens = colorsOrTokens && colorsOrTokens.colors;
@@ -19,8 +23,16 @@ function createComponentStyles(colorsOrTokens) {
 }
 
 // Backwards-compatible default
+/**
+ * @deprecated Use component specifications from `src/styles/design-system/components.ts` instead.
+ * This is a legacy object for backwards compatibility.
+ */
 const componentStyles = createComponentStyles(tokens);
 
+/**
+ * @deprecated Use component specifications from `src/styles/design-system/components.ts` instead.
+ * These are legacy exports for backwards compatibility.
+ */
 module.exports = {
   createComponentStyles,
   componentStyles,

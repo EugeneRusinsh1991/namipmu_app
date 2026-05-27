@@ -1,3 +1,7 @@
+/**
+ * @deprecated Use spacing tokens from `src/styles/design-system/theme.ts` instead.
+ * This is a legacy spacing scale for backwards compatibility.
+ */
 export const spacing = {
   xs: 4,
   s: 8,
@@ -11,4 +15,8 @@ export const spacing = {
   maxWidth: 800,
 };
 
+/**
+ * @deprecated Use spacing tokens from `src/styles/design-system/theme.ts` instead.
+ * This is a legacy default export for backwards compatibility.
+ */
 export default spacing;
