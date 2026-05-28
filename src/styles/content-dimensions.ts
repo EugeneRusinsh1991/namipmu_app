@@ -41,9 +41,10 @@ export const IMAGE_SIZES = {
   hero: {
     height: 200,
     marginBottom: -30, // Отрицательный margin для overlap эффекта
-    // Platform.select будет применён при использовании:
-    // Web: 250px height, -40px marginBottom
-    // Mobile: 200px height, -30px marginBottom
+    webHeight: 250,
+    webMarginBottom: -40,
+    webGradientHeight: 120,
+    defaultGradientHeight: 80,
   },
   
   /** Карточка - изображение внутри карточки */
@@ -172,6 +173,10 @@ export const SHADOWS = {
 /**
  * Экспортируем все размеры как единый объект для удобства
  */
+export const LAYOUT = {
+  contentMaxWidth: 600,
+} as const;
+
 export const CONTENT_DIMENSIONS = {
   cards: CARD_SIZES,
   images: IMAGE_SIZES,
@@ -179,6 +184,7 @@ export const CONTENT_DIMENSIONS = {
   spacing: SPACING,
   borderRadius: BORDER_RADIUS,
   shadows: SHADOWS,
+  layout: LAYOUT,
 } as const;
 
 export default CONTENT_DIMENSIONS;

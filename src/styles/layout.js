@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { SPACING } from './content-dimensions';
+import { LAYOUT, SPACING } from './content-dimensions';
 
 /**
  * Layout Styles
@@ -23,8 +23,8 @@ export const layoutStyles = StyleSheet.create({
    */
   container: {
     flex: 1,
-    padding: SPACING.lg,        // 24px padding со всех сторон
-    maxWidth: 600,              // Максимальная ширина контента
+    padding: SPACING.lg,
+    maxWidth: LAYOUT.contentMaxWidth,
     alignSelf: 'center',
     width: '100%',
     position: 'relative',
@@ -36,8 +36,8 @@ export const layoutStyles = StyleSheet.create({
    */
   containerCompact: {
     flex: 1,
-    padding: SPACING.md,        // 16px padding (меньше)
-    maxWidth: 600,
+    padding: SPACING.md,
+    maxWidth: LAYOUT.contentMaxWidth,
     alignSelf: 'center',
     width: '100%',
   },

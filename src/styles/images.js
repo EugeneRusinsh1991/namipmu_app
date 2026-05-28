@@ -1,5 +1,5 @@
 import { Platform, StyleSheet } from 'react-native';
-import { IMAGE_SIZES } from './content-dimensions';
+import { IMAGE_SIZES, LAYOUT } from './content-dimensions';
 
 /**
  * Image Styles
@@ -39,13 +39,13 @@ export const imageStyles = StyleSheet.create({
   heroImage: {
     width: '100%',
     height: Platform.select({
-      web: 250,                              // Веб: чуть выше
-      default: IMAGE_SIZES.hero.height,      // Мобильные: 200px
+      web: IMAGE_SIZES.hero.webHeight,
+      default: IMAGE_SIZES.hero.height,
     }),
     position: 'relative',
     marginBottom: Platform.select({
-      web: -40,                              // Веб: больший overlap
-      default: IMAGE_SIZES.hero.marginBottom, // Мобильные: -30px
+      web: IMAGE_SIZES.hero.webMarginBottom,
+      default: IMAGE_SIZES.hero.marginBottom,
     }),
     zIndex: 0,
     overflow: 'hidden',
@@ -74,8 +74,8 @@ export const imageStyles = StyleSheet.create({
     right: 0,
     bottom: 0,
     height: Platform.select({
-      web: 120,    // Веб: выше градиента
-      default: 80, // Мобильные: нормальный градиент
+      web: IMAGE_SIZES.hero.webGradientHeight,
+      default: IMAGE_SIZES.hero.defaultGradientHeight,
     }),
   },
 
@@ -88,7 +88,7 @@ export const imageStyles = StyleSheet.create({
     borderRadius: IMAGE_SIZES.video.borderRadius,
     overflow: IMAGE_SIZES.video.overflow,
     width: '100%',
-    maxWidth: 600, // Можно получить из tokens если нужно
+    maxWidth: LAYOUT.contentMaxWidth,
     alignSelf: 'center',
   },
 });
