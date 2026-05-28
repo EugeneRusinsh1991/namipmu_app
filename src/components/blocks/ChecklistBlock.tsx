@@ -29,7 +29,7 @@ export const ChecklistBlock: FC<ChecklistBlockProps> = ({ item, lang, heroOverla
   const items = Array.isArray(item.items) ? item.items : [];
   const [checkedItems, setCheckedItems] = useState<Record<number, boolean>>({});
   const { colors, typography } = useTheme();
-  const { tokens } = useDesignTokens();
+  const { tokens, specs } = useDesignTokens();
 
   const handleToggle = (index: number) => {
     setCheckedItems(prev => ({
@@ -41,8 +41,6 @@ export const ChecklistBlock: FC<ChecklistBlockProps> = ({ item, lang, heroOverla
   const title = getLocalized(item.title, lang, 'Checklist');
   const description = getLocalized(item.description, lang, '');
   const doneCount = items.filter((_, index) => checkedItems[index]).length;
-
-  const { specs } = useDesignTokens();
 
   const dynamicStyles = StyleSheet.create({
     container: {

@@ -35,9 +35,9 @@ export function ChecklistBlock({ item, lang, heroOverlapStyle }) {
       borderColor: colors.cardBorder,
     },
     progressLabel: {
-      fontSize: 14,
+      fontSize: tokens.typography.fontSizeSm,
       marginBottom: 12,
-      color: colors.textTertiary,
+      color: tokens.text.tertiary,
     },
     itemRow: {
       flexDirection: 'row',
@@ -71,13 +71,13 @@ export function ChecklistBlock({ item, lang, heroOverlapStyle }) {
       opacity: 0.2,
     },
     checkmark: {
-      color: colors.success,
-      fontSize: 14,
+      color: tokens.text.success,
+      fontSize: tokens.typography.fontSizeSm,
       lineHeight: 18,
     },
     itemText: {
       flex: 1,
-      fontSize: 16,
+      fontSize: tokens.typography.fontSizeMd,
       color: specs.checklist.itemTextColor,
     },
     itemTextChecked: {

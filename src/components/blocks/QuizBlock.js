@@ -62,9 +62,9 @@ export function QuizBlock({ item, lang, heroOverlapStyle }) {
       borderColor: specs.quiz.borderColor,
     },
     quizDescription: {
-      fontSize: 14,
+      fontSize: tokens.typography.fontSizeSm,
       marginBottom: 12,
-      color: colors.textTertiary,
+      color: tokens.text.tertiary,
       marginTop: 8,
     },
     quizQuestionBlock: {
@@ -101,13 +101,13 @@ export function QuizBlock({ item, lang, heroOverlapStyle }) {
       justifyContent: 'center',
     },
     quizSubmitText: {
-      color: colors.white,
-      fontWeight: '700',
-      fontSize: 16,
+      color: tokens.text.onAccent,
+      fontWeight: tokens.typography.fontWeightBold,
+      fontSize: tokens.typography.fontSizeMd,
     },
     quizEmpty: {
-      color: colors.textTertiary,
-      fontSize: 14,
+      color: tokens.text.tertiary,
+      fontSize: tokens.typography.fontSizeSm,
       marginTop: 8,
     },
   });

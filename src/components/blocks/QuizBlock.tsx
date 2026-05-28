@@ -47,7 +47,7 @@ export const QuizBlock: FC<QuizBlockProps> = ({ item, lang, heroOverlapStyle }) 
   const [score, setScore] = useState(0);
   const [finished, setFinished] = useState(false);
   const { colors, typography } = useTheme();
-  const { tokens } = useDesignTokens();
+  const { tokens, specs } = useDesignTokens();
 
   const title = getLocalized(item.title, lang, '');
   const description = getLocalized(item.description, lang, '');
@@ -87,8 +87,6 @@ export const QuizBlock: FC<QuizBlockProps> = ({ item, lang, heroOverlapStyle }) 
     setSelectedOption(null);
     setIsAnswered(false);
   };
-
-  const { specs } = useDesignTokens();
 
   const dynamicStyles = StyleSheet.create({
     quizContainer: {

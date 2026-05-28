@@ -83,7 +83,7 @@ export function TimerBlock({ item, lang }) {
       backgroundColor: specs.timer.backgroundColor,
       borderColor: specs.timer.borderColor,
       borderWidth: 1,
-      shadowColor: colors.textPrimary,
+      shadowColor: tokens.text.primary,
       shadowOpacity: 0.08,
       shadowRadius: 12,
       shadowOffset: { width: 0, height: 6 },
