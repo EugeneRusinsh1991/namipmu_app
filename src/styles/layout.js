@@ -1,58 +1,43 @@
 import { StyleSheet } from 'react-native';
-import { LAYOUT, SPACING } from './content-dimensions';
 
 /**
- * Layout Styles
- * 
- * Основные стили для макета приложения.
- * Используют токены из content-dimensions для консистентности.
+ * @typedef {import('./design-system/theme').SemanticTokens} SemanticTokens
  */
-export const layoutStyles = StyleSheet.create({
-  /**
-   * Основной фон приложения
-   * Используется обычно с динамическим backgroundColor из темы
-   */
-  appBackground: {
-    flex: 1,
-    // backgroundColor будет установлена динамически через контекст темы
-  },
 
-  /**
-   * Основной контейнер для контента
-   * Имеет padding и maxWidth для правильного отображения на больших экранах
-   */
-  container: {
-    flex: 1,
-    padding: SPACING.lg,
-    maxWidth: LAYOUT.contentMaxWidth,
-    alignSelf: 'center',
-    width: '100%',
-    position: 'relative',
-    zIndex: 1,
-  },
+/**
+ * @param {SemanticTokens} tokens
+ */
+export function getLayoutStyles(tokens) {
+  return StyleSheet.create({
+    appBackground: {
+      flex: 1,
+      // backgroundColor будет установлен динамически через контекст темы
+    },
 
-  /**
-   * Альтернативный контейнер с меньшим padding
-   */
-  containerCompact: {
-    flex: 1,
-    padding: SPACING.md,
-    maxWidth: LAYOUT.contentMaxWidth,
-    alignSelf: 'center',
-    width: '100%',
-  },
+    container: {
+      flex: 1,
+      padding: tokens.spacing.lg,
+      maxWidth: tokens.layout.contentMaxWidth,
+      alignSelf: 'center',
+      width: '100%',
+      position: 'relative',
+      zIndex: 1, // TODO: Вынести в токены zIndex при их появлении рядом с этим свойством.
+    },
 
-  /**
-   * Контейнер для вертикального spacing между элементами
-   */
-  spacer: {
-    marginVertical: SPACING.md,
-  },
+    containerCompact: {
+      flex: 1,
+      padding: tokens.spacing.md,
+      maxWidth: tokens.layout.contentMaxWidth,
+      alignSelf: 'center',
+      width: '100%',
+    },
 
-  /**
-   * Контейнер для горизонтального spacing между элементами
-   */
-  spacerHorizontal: {
-    marginHorizontal: SPACING.md,
-  },
-});
+    spacer: {
+      marginVertical: tokens.spacing.md,
+    },
+
+    spacerHorizontal: {
+      marginHorizontal: tokens.spacing.md,
+    },
+  });
+}

@@ -43,7 +43,7 @@ const indexData = [
     rus: 'images/hero.jpg',
     eng: 'images/hero.jpg',
     ger: 'images/hero.jpg',
-    meta: 'w=1200;h=520;resizeMode=cover',
+    meta: 'resizeMode=cover',
   }),
   createTemplateRow({
     id: 2,
@@ -96,7 +96,7 @@ const indexData = [
     rus: 'images/example.jpg',
     eng: 'images/example.jpg',
     ger: 'images/example.jpg',
-    meta: 'w=600;h=400;resizeMode=contain',
+    meta: 'resizeMode=contain',
   }),
   createTemplateRow({
     id: 7,
@@ -105,7 +105,7 @@ const indexData = [
     rus: 'images/animation.gif',
     eng: 'images/animation.gif',
     ger: 'images/animation.gif',
-    meta: 'w=400;h=225;resizeMode=contain',
+    meta: 'resizeMode=contain',
   }),
   createTemplateRow({
     id: 8,

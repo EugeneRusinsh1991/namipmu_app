@@ -1,9 +1,10 @@
 import { Stack } from 'expo-router';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { ScrollView, StyleSheet, View, type NativeScrollEvent, type NativeSyntheticEvent } from 'react-native';
 import type { ContentBlock } from '../content/types';
 import { useLanguage } from '../context/LanguageContext';
-import { useTheme } from '../context/ThemeContext';
+import useDesignTokens from '../hooks/useDesignTokens';
+import { getLayoutStyles } from '../styles/layout';
 import { HeroBlock } from './blocks/HeroBlock';
 import ContentRenderer from './ContentRenderer';
 import PageLanguageButton from './HeaderLanguageSwitcher';
@@ -17,8 +18,11 @@ interface ContentPageProps {
 
 export default function ContentPage({ title, contentModule }: ContentPageProps) {
   const { lang } = useLanguage();
-  const { colors, componentStyles } = useTheme();
+  const { tokens, specs, isDark } = useDesignTokens();
   const [progress, setProgress] = useState(0);
+  const layoutStyles = useMemo(() => getLayoutStyles(tokens), [tokens, isDark]);
+
+  void specs;
 
   // Runtime check for undefined components
   if (!HeroBlock || !ContentRenderer || !ProgressBar || !HeaderTextSizeControls || !PageLanguageButton) {
@@ -38,13 +42,31 @@ export default function ContentPage({ title, contentModule }: ContentPageProps) 
     }
   };
 
-  const containerStyle = StyleSheet.create({
-    container: {
-      paddingHorizontal: 30,
-      maxWidth: 600,
-      marginHorizontal: 'auto',
-    },
-  });
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        headerControls: {
+          position: 'absolute',
+          top: tokens.spacing.xl,
+          right: tokens.spacing.lg,
+          zIndex: 200,
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: tokens.spacing.sm,
+          borderWidth: 1,
+          padding: tokens.spacing.sm,
+          backgroundColor: tokens.surface.surfacePrimary,
+          borderColor: tokens.interactive.border,
+          borderRadius: specs.card.large.borderRadius,
+          shadowColor: tokens.shadows.md.shadowColor,
+          shadowOffset: tokens.shadows.md.shadowOffset,
+          shadowOpacity: tokens.shadows.md.shadowOpacity,
+          shadowRadius: tokens.shadows.md.shadowRadius,
+          elevation: tokens.shadows.md.elevation,
+        },
+      }),
+    [tokens, specs, isDark]
+  );
 
   return (
     <>
@@ -53,44 +75,24 @@ export default function ContentPage({ title, contentModule }: ContentPageProps) 
       <ProgressBar progress={progress} />
       
       <ScrollView 
-        contentContainerStyle={{ flexGrow: 1, paddingBottom: 120 }}
+        contentContainerStyle={{ flexGrow: 1, paddingBottom: tokens.spacing.xxl * 2 }}
         onScroll={handleScroll}
         scrollEventThrottle={16}
       >
         {/* Hero section with fixed language and font controls */}
         <View style={{ position: 'relative' }}>
           <HeroBlock content={contentModule} lang={lang} />
-          <View style={[styles.headerControls, { backgroundColor: colors.white, borderRadius: componentStyles?.card?.borderRadius, borderColor: colors.border }]}>
+          <View style={styles.headerControls}> 
             <PageLanguageButton />
             <HeaderTextSizeControls />
           </View>
         </View>
         
         {/* Content below */}
-        <View style={containerStyle.container}>
+        <View style={layoutStyles.container}>
           <ContentRenderer content={contentModule} lang={lang} />
         </View>
       </ScrollView>
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  headerControls: {
-    position: 'absolute',
-    top: 30,
-    right: 24,
-    zIndex: 200,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    // backgroundColor, borderRadius and borderColor applied dynamically via useTheme()
-    borderWidth: 1,
-    padding: 6,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.12,
-    shadowRadius: 10,
-    elevation: 6,
-  },
-});

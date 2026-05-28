@@ -157,9 +157,7 @@ export const TimerBlock: FC<TimerBlockProps> = ({ item, lang }) => {
           borderRadius: (innerSize - 16) / 2,
         },
         timeLabel: {
-          fontSize: specs.timer.displayFontSize,
-          fontWeight: specs.timer.displayFontWeight,
-          fontFamily: tokens.typography.fontFamilyHeading,
+          ...tokens.typography.heading1,
           color: tokens.text.primary,
           textAlign: 'center' as const,
         },

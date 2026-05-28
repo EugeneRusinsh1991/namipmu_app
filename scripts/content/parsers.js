@@ -25,7 +25,7 @@ function requireTypeScript(filePath) {
   return moduleWrapper.exports;
 }
 
-const { IMAGE_SIZES, COMPONENT_SIZES } = requireTypeScript('../../src/styles/content-dimensions.ts');
+const { IMAGE_SIZES, COMPONENT_SIZES, LAYOUT } = requireTypeScript('../../src/styles/content-dimensions.ts');
 
 const LANGUAGE_ALIASES = {
   ua: ['ukr', 'ua'],
@@ -227,13 +227,20 @@ function parseVideoPair(row, sheetName, bases = ['video']) {
 function getDefaultImageSizing(type) {
   switch (type) {
     case 'heroImage':
-      return { height: IMAGE_SIZES.hero.height };
+      return {
+        width: LAYOUT.contentMaxWidth,
+        height: IMAGE_SIZES.hero.height,
+      };
     case 'gif':
     case 'video':
-      return { height: IMAGE_SIZES.video.height };
+      return {
+        height: IMAGE_SIZES.video.height,
+      };
     case 'image':
     default:
-      return { height: IMAGE_SIZES.card.height };
+      return {
+        height: IMAGE_SIZES.card.height,
+      };
   }
 }
 

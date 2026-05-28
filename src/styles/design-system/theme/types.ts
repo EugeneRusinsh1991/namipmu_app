@@ -103,6 +103,10 @@ export interface SpacingTokens {
   xxl: number;
 }
 
+export interface LayoutTokens {
+  contentMaxWidth: number;
+}
+
 export interface SemanticTokens {
   surface: SurfaceTokens;
   text: TextTokens;
@@ -111,6 +115,7 @@ export interface SemanticTokens {
   shadows: ShadowTokens;
   typography: TypographyTokens;
   spacing: SpacingTokens;
+  layout: LayoutTokens;
   backgroundLight: string;
   surfaceDefault: string;
   surfaceSecondary: string;

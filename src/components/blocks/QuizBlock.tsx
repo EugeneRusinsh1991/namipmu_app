@@ -134,13 +134,13 @@ export const QuizBlock: FC<QuizBlockProps> = ({ item, lang, heroOverlapStyle }) 
         backgroundColor: tokens.interactive.accentLight,
       },
       quizOptionCorrect: {
-        borderColor: tokens.success,
-        backgroundColor: tokens.success,
+        borderColor: tokens.text.success,
+        backgroundColor: tokens.text.success,
         opacity: 0.08,
       },
       quizOptionWrong: {
-        borderColor: tokens.danger,
-        backgroundColor: tokens.danger,
+        borderColor: tokens.text.danger,
+        backgroundColor: tokens.text.danger,
         opacity: 0.08,
       },
       quizOptionText: {
@@ -148,10 +148,10 @@ export const QuizBlock: FC<QuizBlockProps> = ({ item, lang, heroOverlapStyle }) 
         fontSize: tokens.typography.fontSizeMd,
       },
       quizOptionTextCorrect: {
-        color: tokens.success,
+        color: tokens.text.success,
       },
       quizOptionTextWrong: {
-        color: tokens.danger,
+        color: tokens.text.danger,
       },
       quizSubmitButton: {
         borderRadius: specs.quiz.answerBorderRadius,

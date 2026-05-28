@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { Platform, StyleSheet, Text, View } from 'react-native';
-import { useTheme } from '../../context/ThemeContext';
+import { useDesignTokens } from '../../hooks/useDesignTokens';
 import { getLocalizedAsset } from '../../utils/i18n';
 
 const RICKROLL_VIDEO_ID = 'dQw4w9WgXcQ';
@@ -45,15 +45,15 @@ function isHttpUrl(source: any): boolean {
 /**
  * Создает HTML страницу для встраивания видео
  */
-function createHtmlVideoPage(videoUrl: string): string {
+function createHtmlVideoPage(videoUrl: string, backgroundColor: string): string {
   return `<!DOCTYPE html>
 <html>
   <head>
     <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0" />
-    <style>body{margin:0;background:#000;display:flex;justify-content:center;align-items:center;height:100%;}</style>
+    <style>body{margin:0;background:${backgroundColor};display:flex;justify-content:center;align-items:center;height:100%;}</style>
   </head>
   <body>
-    <video controls autoplay style="width:100%;height:100%;background:#000;" src="${videoUrl}"></video>
+    <video controls autoplay style="width:100%;height:100%;background:${backgroundColor};" src="${videoUrl}"></video>
   </body>
 </html>`;
 }
@@ -63,7 +63,7 @@ function createHtmlVideoPage(videoUrl: string): string {
  * Поддерживает YouTube, удаленные видео и локальные видеофайлы
  */
 export const VideoBlock: FC<VideoBlockProps> = ({ item, lang, heroOverlapStyle }) => {
-  const { colors } = useTheme();
+  const { tokens, specs } = useDesignTokens();
 
   try {
     const WebViewModule = isWeb ? null : require('react-native-webview');
@@ -85,13 +85,13 @@ export const VideoBlock: FC<VideoBlockProps> = ({ item, lang, heroOverlapStyle }
 
     const dynamicStyles = StyleSheet.create({
       container: {
-        height: 220,
-        borderRadius: 10,
+        height: specs.image.video.height,
+        borderRadius: specs.image.video.borderRadius,
         overflow: 'hidden' as any,
         width: '100%',
         maxWidth: 600,
         alignSelf: 'center',
-        backgroundColor: '#000',
+        backgroundColor: tokens.surface.surfacePrimary,
       },
       video: {
         flex: 1,
@@ -178,7 +178,7 @@ export const VideoBlock: FC<VideoBlockProps> = ({ item, lang, heroOverlapStyle }
           ) : webviewAvailable ? (
             React.createElement(WebView, {
               style: dynamicStyles.webview,
-              source: { html: createHtmlVideoPage(remoteVideoUrl) },
+              source: { html: createHtmlVideoPage(remoteVideoUrl, tokens.surface.surfacePrimary) },
             })
           ) : (
             <View style={dynamicStyles.fallbackContainer}>
@@ -212,11 +212,10 @@ export const VideoBlock: FC<VideoBlockProps> = ({ item, lang, heroOverlapStyle }
       </View>
     );
   } catch (err) {
-    const { colors: errorColors } = useTheme();
     const fallbackStyles = StyleSheet.create({
       container: {
-        height: 220,
-        borderRadius: 10,
+        height: specs.image.video.height,
+        borderRadius: specs.image.video.borderRadius,
         overflow: 'hidden' as any,
         width: '100%',
       },
@@ -224,12 +223,12 @@ export const VideoBlock: FC<VideoBlockProps> = ({ item, lang, heroOverlapStyle }
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        padding: 24,
-        backgroundColor: '#000',
+        padding: tokens.spacing.lg,
+        backgroundColor: tokens.surface.surfacePrimary,
       },
       fallbackText: {
-        color: errorColors.white,
-        fontSize: 14,
+        color: tokens.text.primary,
+        fontSize: tokens.typography.fontSizeSm,
         textAlign: 'center',
       },
     });

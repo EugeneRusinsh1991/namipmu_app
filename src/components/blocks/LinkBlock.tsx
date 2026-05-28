@@ -1,7 +1,7 @@
 import { Link } from 'expo-router';
 import React, { FC } from 'react';
 import { StyleSheet } from 'react-native';
-import { useTheme } from '../../context/ThemeContext';
+import { useDesignTokens } from '../../hooks/useDesignTokens';
 import { getLocalized } from '../../utils/i18n';
 import ScaledText from '../ScaledText';
 
@@ -24,7 +24,7 @@ interface LinkBlockProps {
 export const LinkBlock: FC<LinkBlockProps> = ({ item, lang, heroOverlapStyle }) => {
   if (!item.href) return null;
 
-  const { colors } = useTheme();
+  const { tokens } = useDesignTokens();
   const text = getLocalized(item.text, lang, '');
   const normalizedHref = typeof item.href === 'string' 
     ? (item.href.startsWith('/') ? item.href : `/${item.href}`) 
@@ -33,7 +33,7 @@ export const LinkBlock: FC<LinkBlockProps> = ({ item, lang, heroOverlapStyle }) 
 
   return (
     <Link href={normalizedHref} style={flattenedHeroStyle}>
-      <ScaledText style={[{ color: colors.accent }, flattenedHeroStyle]}>
+      <ScaledText style={[{ color: tokens.interactive.accent }, flattenedHeroStyle]}>
         {text}
       </ScaledText>
     </Link>

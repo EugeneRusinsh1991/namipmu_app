@@ -1,7 +1,8 @@
 import { StyleSheet } from 'react-native';
+import { getTheme } from './design-system/theme';
 import { imageStyles } from './images';
 import { languageStyles } from './language';
-import { layoutStyles } from './layout';
+import { getLayoutStyles } from './layout';
 import { listStyles } from './lists';
 import { quizStyles } from './quiz';
 import { typographyStyles } from './typography';
@@ -13,6 +14,9 @@ const unroll = (sheet) => {
   for (const key in sheet) { out[key] = StyleSheet.flatten(sheet[key]); }
   return out;
 };
+
+const defaultTokens = getTheme('light');
+const layoutStyles = getLayoutStyles(defaultTokens);
 
 export const globalStyles = {
   ...unroll(layoutStyles),

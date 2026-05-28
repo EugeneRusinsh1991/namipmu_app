@@ -1,7 +1,7 @@
 import { palette } from '../palette';
 import type { SemanticTokens } from './types';
 
-export const sharedTheme: Pick<SemanticTokens, 'borders' | 'typography' | 'spacing'> = {
+export const sharedTheme: Pick<SemanticTokens, 'borders' | 'typography' | 'spacing' | 'layout'> = {
   borders: {
     radiusSm: 8,
     radiusMd: 12,
@@ -35,6 +35,9 @@ export const sharedTheme: Pick<SemanticTokens, 'borders' | 'typography' | 'spaci
     lg: 24,
     xl: 32,
     xxl: 64,
+  },
+  layout: {
+    contentMaxWidth: 600,
   },
 };
 
