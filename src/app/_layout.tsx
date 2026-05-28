@@ -3,18 +3,19 @@ import { SafeAreaView, StyleSheet, View } from 'react-native';
 import Footer from '../components/Footer';
 import { LanguageProvider } from '../context/LanguageContext';
 import { TextSizeProvider } from '../context/TextSizeContext';
-import { ThemeProvider, useTheme } from '../context/ThemeContext';
+import { ThemeProvider } from '../context/ThemeContext';
+import { useDesignTokens } from '../hooks/useDesignTokens';
 
 function LayoutContent() {
-  const { colors } = useTheme();
+  const { tokens } = useDesignTokens();
 
   return (
-    <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.backgroundLight }]}> 
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: tokens.surface.background }]}> 
       <View style={styles.pageWrapper}>
         <View style={styles.content}>
           <Stack
             screenOptions={{
-              contentStyle: [{ flex: 1, backgroundColor: colors.backgroundLight }],
+              contentStyle: [{ flex: 1, backgroundColor: tokens.surface.background }],
             }}
             style={styles.stack}
           >

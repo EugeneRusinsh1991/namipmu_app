@@ -1,14 +1,15 @@
 import { Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
 import {
-  Modal,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
+    Modal,
+    Pressable,
+    StyleSheet,
+    Text,
+    View,
 } from 'react-native';
 import { useLanguage } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
+import { useDesignTokens } from '../hooks/useDesignTokens';
 import { colors, radius } from '../styles/theme';
 
 type LanguageOption = {
@@ -27,6 +28,7 @@ const LANGUAGE_OPTIONS: LanguageOption[] = [
 export default function PageLanguageButton() {
   const { lang, setLang } = useLanguage();
   const { theme, toggleTheme, colors: themeColors } = useTheme();
+  const { tokens } = useDesignTokens();
   const [isOpen, setIsOpen] = useState(false);
 
   const currentLanguage = LANGUAGE_OPTIONS.find((opt) => opt.value === lang);
@@ -43,7 +45,7 @@ export default function PageLanguageButton() {
     borderColor: themeColors?.border || colors.border,
   };
 
-  const dynamicTextColor = { color: themeColors?.textPrimary || colors.textPrimary };
+  const dynamicTextColor = { color: tokens.text.primary };
 
   const handleSelectLanguage = (value: string) => {
     setLang(value);
@@ -104,11 +106,11 @@ export default function PageLanguageButton() {
                   accessibilityState={{ selected: isActive }}
                 >
                   <View style={styles.optionContent}>
-                    <Text style={[styles.optionCode, { color: themeColors?.textPrimary || colors.textPrimary }]}>{option.abbr}</Text>
+                    <Text style={[styles.optionCode, { color: tokens.text.primary }]}>{option.abbr}</Text>
                     <Text
                       style={[
                         styles.optionText,
-                        { color: themeColors?.textPrimary || colors.textPrimary },
+                        { color: tokens.text.primary },
                         isActive && { color: themeColors?.primary || colors.primary },
                       ]}
                     >
@@ -145,7 +147,6 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 13,
-    fontWeight: '600',
   },
   arrow: {
     fontSize: 10,
@@ -191,18 +192,13 @@ const styles = StyleSheet.create({
   },
   optionCode: {
     fontSize: 12,
-    fontWeight: '600',
-    color: colors.textPrimary,
     minWidth: 30,
   },
   optionText: {
     fontSize: 14,
-    color: colors.textPrimary,
-    fontWeight: '500',
   },
   optionTextActive: {
     color: colors.primary,
-    fontWeight: '600',
   },
   iconButton: {
     padding: 6,

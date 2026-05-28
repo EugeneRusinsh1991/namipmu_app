@@ -1,6 +1,7 @@
 import React, { FC, useMemo, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useTheme } from '../../context/ThemeContext';
+import { useDesignTokens } from '../../hooks/useDesignTokens';
 import { getLocalized } from '../../utils/i18n';
 import ScaledText from '../ScaledText';
 
@@ -46,6 +47,7 @@ export const QuizBlock: FC<QuizBlockProps> = ({ item, lang, heroOverlapStyle }) 
   const [score, setScore] = useState(0);
   const [finished, setFinished] = useState(false);
   const { colors, typography } = useTheme();
+  const { tokens } = useDesignTokens();
 
   const title = getLocalized(item.title, lang, '');
   const description = getLocalized(item.description, lang, '');
@@ -96,9 +98,9 @@ export const QuizBlock: FC<QuizBlockProps> = ({ item, lang, heroOverlapStyle }) 
       borderColor: colors.cardBorder,
     },
     quizDescription: {
-      fontSize: 14,
+      fontSize: tokens.typography.fontSizeSm,
       marginBottom: 12,
-      color: colors.textTertiary,
+      color: tokens.text.tertiary,
       marginTop: 8,
     },
     quizQuestionBlock: {
@@ -135,13 +137,13 @@ export const QuizBlock: FC<QuizBlockProps> = ({ item, lang, heroOverlapStyle }) 
       justifyContent: 'center',
     },
     quizSubmitText: {
-      color: colors.white,
-      fontWeight: '700',
-      fontSize: 16,
+      color: tokens.text.onAccent,
+      fontWeight: tokens.typography.fontWeightBold,
+      fontSize: tokens.typography.fontSizeMd,
     },
     quizEmpty: {
-      color: colors.textTertiary,
-      fontSize: 14,
+      color: tokens.text.tertiary,
+      fontSize: tokens.typography.fontSizeSm,
       marginTop: 8,
     },
   });

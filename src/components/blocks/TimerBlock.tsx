@@ -2,6 +2,7 @@ import React, { FC, useEffect, useRef, useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { useTheme } from '../../context/ThemeContext';
+import { useDesignTokens } from '../../hooks/useDesignTokens';
 import { getLocalized } from '../../utils/i18n';
 import ScaledText from '../ScaledText';
 
@@ -26,6 +27,7 @@ export const TimerBlock: FC<TimerBlockProps> = ({ item, lang }) => {
   const [isRunning, setIsRunning] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const { colors, typography } = useTheme();
+  const { tokens } = useDesignTokens();
 
   // Animated value for smooth progress animation
   const animatedRemaining = useSharedValue(defaultSeconds);
@@ -100,7 +102,7 @@ export const TimerBlock: FC<TimerBlockProps> = ({ item, lang }) => {
       backgroundColor: colors.cardBackground,
       borderColor: colors.cardBorder,
       borderWidth: 1,
-      shadowColor: colors.textPrimary,
+      shadowColor: tokens.text.primary,
       shadowOpacity: 0.08,
       shadowRadius: 12,
       shadowOffset: { width: 0, height: 6 },
@@ -146,8 +148,8 @@ export const TimerBlock: FC<TimerBlockProps> = ({ item, lang }) => {
       borderRadius: (160 - 32) / 2,
     },
     timeLabel: {
-      fontSize: 28,
-      fontWeight: '700',
+      fontSize: tokens.typography.fontSizeXl,
+      fontWeight: tokens.typography.fontWeightBold,
     },
     controls: {
       flexDirection: 'row',
@@ -176,23 +178,23 @@ export const TimerBlock: FC<TimerBlockProps> = ({ item, lang }) => {
       backgroundColor: colors.white,
     },
     btnText: {
-      fontSize: 16,
-      fontWeight: '700',
+      fontSize: tokens.typography.fontSizeMd,
+      fontWeight: tokens.typography.fontWeightBold,
     },
     timeLabelOverride: {
       textAlign: 'center',
       includeFontPadding: false,
     },
     btnTextOverride: {
-      fontWeight: '700',
-      fontSize: 16,
+      fontWeight: tokens.typography.fontWeightBold,
+      fontSize: tokens.typography.fontSizeMd,
     },
   });
 
   return (
     <View style={dynamicStyles.card}>
       <View style={dynamicStyles.headerRow}>
-        <ScaledText style={[typography.subtitle, { color: colors.textPrimary }]}>
+        <ScaledText style={[typography.subtitle, { color: tokens.text.primary }]}> 
           {title}
         </ScaledText>
         <ScaledText style={dynamicStyles.icon}>⏱️</ScaledText>
@@ -206,7 +208,7 @@ export const TimerBlock: FC<TimerBlockProps> = ({ item, lang }) => {
               style={[
                 typography.title,
                 dynamicStyles.timeLabelOverride,
-                { color: colors.textPrimary },
+                { color: tokens.text.primary },
               ]}
             >
               {formatTime(remaining)}
@@ -244,7 +246,7 @@ export const TimerBlock: FC<TimerBlockProps> = ({ item, lang }) => {
             style={[
               typography.text,
               dynamicStyles.btnTextOverride,
-              { color: colors.textPrimary },
+              { color: tokens.text.primary },
             ]}
           >
             Скинути

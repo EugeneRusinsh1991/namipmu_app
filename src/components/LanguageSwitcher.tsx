@@ -1,14 +1,15 @@
 import React from 'react';
 import {
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-  type StyleProp,
-  type TextStyle,
-  type ViewStyle,
+    Pressable,
+    StyleSheet,
+    Text,
+    View,
+    type StyleProp,
+    type TextStyle,
+    type ViewStyle,
 } from 'react-native';
 import { useTheme } from '../context/ThemeContext';
+import { useDesignTokens } from '../hooks/useDesignTokens';
 import { radius, spacing } from '../styles/theme';
 
 type LanguageOption = {
@@ -39,6 +40,7 @@ export default function LanguageSwitcher({
   optionTextStyle,
 }: LanguageSwitcherProps) {
   const { colors } = useTheme();
+  const { tokens } = useDesignTokens();
   const containerStyle = StyleSheet.flatten([styles.root, style]);
 
   return (
@@ -69,7 +71,10 @@ export default function LanguageSwitcher({
                 styles.optionLabel,
                 isActive && styles.optionLabelActive,
                 optionTextStyle,
-                { color: isActive ? colors.textPrimary : colors.secondaryText },
+                {
+                  color: isActive ? tokens.text.primary : tokens.text.tertiary,
+                  fontWeight: tokens.typography.fontWeightSemibold,
+                },
               ])}
             >
               {option.label}
@@ -121,9 +126,7 @@ const styles = StyleSheet.create({
   optionLabel: {
     //fontSize: typography.fontSizeSm,
     lineHeight: 20,
-    fontWeight: '600',
   },
   optionLabelActive: {
-    fontWeight: '600',
   },
 });

@@ -1,18 +1,18 @@
 import { palette } from '../palette';
 import {
-    sharedInteractiveTokens,
-    sharedPaletteTokens,
-    sharedTextTokens,
-    sharedTheme,
+  sharedInteractiveTokens,
+  sharedPaletteTokens,
+  sharedTextTokens,
+  sharedTheme,
 } from './sharedTheme';
 import type { SemanticTokens } from './types';
 
 export const darkTheme: SemanticTokens = {
   ...sharedTheme,
   surface: {
-    background: palette.neutral400,
-    surfacePrimary: palette.neutral850,
-    surfaceSecondary: palette.neutral800,
+    background: palette.neutral650,
+    surfacePrimary: palette.blue900,
+    surfaceSecondary: palette.gray800,
     surfaceTertiary: palette.neutral750,
     overlay: 'rgba(0, 0, 0, 0.8)',
     disabled: palette.neutral800,

@@ -1,6 +1,7 @@
 import React, { FC, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useTheme } from '../../context/ThemeContext';
+import { useDesignTokens } from '../../hooks/useDesignTokens';
 import { getLocalized } from '../../utils/i18n';
 import ScaledText from '../ScaledText';
 
@@ -28,6 +29,7 @@ export const ChecklistBlock: FC<ChecklistBlockProps> = ({ item, lang, heroOverla
   const items = Array.isArray(item.items) ? item.items : [];
   const [checkedItems, setCheckedItems] = useState<Record<number, boolean>>({});
   const { colors, typography } = useTheme();
+  const { tokens } = useDesignTokens();
 
   const handleToggle = (index: number) => {
     setCheckedItems(prev => ({
@@ -53,9 +55,9 @@ export const ChecklistBlock: FC<ChecklistBlockProps> = ({ item, lang, heroOverla
       borderColor: colors.cardBorder,
     },
     progressLabel: {
-      fontSize: 14,
+      fontSize: tokens.typography.fontSizeSm,
       marginBottom: 12,
-      color: colors.textTertiary,
+      color: tokens.text.tertiary,
     },
     itemRow: {
       flexDirection: 'row',
@@ -89,17 +91,17 @@ export const ChecklistBlock: FC<ChecklistBlockProps> = ({ item, lang, heroOverla
       opacity: 0.2,
     },
     checkmark: {
-      color: colors.success,
-      fontSize: 14,
+      color: tokens.text.success,
+      fontSize: tokens.typography.fontSizeSm,
       lineHeight: 18,
     },
     itemText: {
       flex: 1,
-      fontSize: 16,
-      color: colors.bodyText,
+      fontSize: tokens.typography.fontSizeMd,
+      color: tokens.text.secondary,
     },
     itemTextChecked: {
-      color: colors.textTertiary,
+      color: tokens.text.tertiary,
       textDecorationLine: 'line-through',
     },
   });

@@ -53,7 +53,7 @@ export const lightColors = {
  */
 export const darkColors = {
   ...primitives,
-  backgroundLight: '#1A1C1E', // Мягкий темно-серый (Slate 900)
+  backgroundLight: '#5a7591', // Мягкий темно-серый (Slate 900)
   secondarySurface: '#2D2F31', // Поверхности второго уровня
   cardBackground: '#2D2F31', // Карточки заметно светлее фона
   border: '#3F4143', // Границы видны, но не режут глаз

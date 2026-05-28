@@ -1,6 +1,7 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useTextSize } from '../context/TextSizeContext';
 import { useTheme } from '../context/ThemeContext';
+import { useDesignTokens } from '../hooks/useDesignTokens';
 import { colors } from '../styles/theme';
 
 export default function HeaderTextSizeControls() {
@@ -10,6 +11,19 @@ export default function HeaderTextSizeControls() {
     increaseFontSize,
   } = useTextSize();
   const { colors: themeColors } = useTheme();
+  const { tokens } = useDesignTokens();
+
+  const textButtonStyle = {
+    color: tokens.text.primary,
+    fontWeight: tokens.typography.fontWeightBold,
+    fontSize: tokens.typography.fontSizeSm,
+  };
+
+  const labelTextStyle = {
+    color: tokens.text.primary,
+    fontWeight: tokens.typography.fontWeightSemibold,
+    fontSize: tokens.typography.fontSizeSm,
+  };
 
   return (
     <View style={styles.container}>
@@ -22,11 +36,12 @@ export default function HeaderTextSizeControls() {
         ]}
         accessibilityLabel="Уменьшить шрифт"
       >
-        <Text style={[styles.buttonText, { color: themeColors.textPrimary }]}>A-</Text>
+        <Text style={[styles.buttonText, textButtonStyle]}>A-</Text>
       </Pressable>
       <View style={[styles.labelContainer, { backgroundColor: themeColors.white, borderColor: themeColors.border }]}>
-        <Text style={[styles.label, { color: themeColors.textPrimary }]}>{Math.round(fontScale * 100)}%</Text>
+        <Text style={[styles.label, labelTextStyle]}>{Math.round(fontScale * 100)}%</Text>
       </View>
+
       <Pressable
         onPress={increaseFontSize}
         style={({ pressed }) => [
@@ -36,7 +51,7 @@ export default function HeaderTextSizeControls() {
         ]}
         accessibilityLabel="Увеличить шрифт"
       >
-        <Text style={[styles.buttonText, { color: themeColors.textPrimary }]}>A+</Text>
+        <Text style={[styles.buttonText, { color: tokens.text.primary }]}>A+</Text>
       </Pressable>
     </View>
   );
@@ -59,9 +74,6 @@ const styles = StyleSheet.create({
     opacity: 0.75,
   },
   buttonText: {
-    color: colors.textPrimary,
-    fontWeight: '700',
-    fontSize: 14,
   },
   labelContainer: {
     marginHorizontal: 8,
@@ -73,8 +85,5 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
   },
   label: {
-    color: colors.textPrimary,
-    fontWeight: '600',
-    fontSize: 13,
   },
 });

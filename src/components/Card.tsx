@@ -125,7 +125,7 @@ export default function Card({
     width: cardWidth as any,
     backgroundColor: tokens.cardBackground,
     borderColor: tokens.border,
-    shadowColor: tokens.textPrimary,
+    shadowColor: tokens.text.primary,
     borderRadius: radius.md,
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -148,15 +148,15 @@ export default function Card({
     ...styles.title,
     fontSize: sizeConfig.titleFontSize,
     marginBottom: sizeConfig.titleMarginBottom,
-    color: tokens.textPrimary,
-    fontWeight: '600',
+    color: tokens.text.primary,
+    fontWeight: tokens.typography.fontWeightSemibold,
   };
 
   const dynamicDescriptionStyle: TextStyle = {
     ...styles.description,
-    fontSize: sizeConfig === CARD_SIZES.large ? 14 : 12,
+    fontSize: sizeConfig === CARD_SIZES.large ? tokens.typography.fontSizeSm : tokens.typography.fontSizeXs,
     lineHeight: sizeConfig === CARD_SIZES.large ? 22 : 16,
-    color: tokens.secondaryText,
+    color: tokens.text.tertiary,
   };
 
   const safeTitle: string = getLocalized(title, activeLang, '');
