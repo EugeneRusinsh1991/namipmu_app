@@ -27,7 +27,7 @@ export const LinkBlock: FC<LinkBlockProps> = ({ item, lang, heroOverlapStyle }) 
   const { tokens } = useDesignTokens();
   const text = getLocalized(item.text, lang, '');
   const normalizedHref = typeof item.href === 'string' 
-    ? (item.href.startsWith('/') ? item.href : `/${item.href}`) 
+    ? (item.href.startsWith('/') ? item.href : `/${item.href}`)
     : item.href;
   const flattenedHeroStyle = StyleSheet.flatten(heroOverlapStyle);
 
@@ -38,7 +38,7 @@ export const LinkBlock: FC<LinkBlockProps> = ({ item, lang, heroOverlapStyle }) 
   }), [tokens]);
 
   return (
-    <Link href={normalizedHref} style={flattenedHeroStyle}>
+    <Link href={normalizedHref as any} style={flattenedHeroStyle}>
       <ScaledText style={[styles.linkText, flattenedHeroStyle]}>
         {text}
       </ScaledText>

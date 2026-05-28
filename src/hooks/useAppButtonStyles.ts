@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
-import { StyleSheet, type StyleProp, type TextStyle, type ViewStyle } from 'react-native';
+import { StyleSheet, type PressableStateCallbackType, type StyleProp, type TextStyle, type ViewStyle } from 'react-native';
+import type { ButtonSpecs } from '../styles/design-system';
 import { useDesignTokens } from './useDesignTokens';
 
 type AppButtonVariant = 'primary' | 'secondary' | 'ghost';
@@ -15,8 +16,63 @@ export function useAppButtonStyles({ variant, disabled, style, textStyle }: UseA
   const { tokens, specs } = useDesignTokens();
   const variantSpecs = specs.button[variant];
 
-  const buttonStyle = useMemo(() => ({ pressed }: { pressed: boolean }) =>
-    StyleSheet.flatten([
+  const buttonStyle = useMemo< (state: PressableStateCallbackType) => StyleProp<ViewStyle> >(() => {
+    if (variant === 'primary') {
+      const primarySpecs = variantSpecs as ButtonSpecs['primary'];
+      return ({ pressed }: PressableStateCallbackType) => StyleSheet.flatten([
+        {
+          height: primarySpecs.height,
+          paddingHorizontal: primarySpecs.paddingHorizontal,
+          paddingVertical: primarySpecs.paddingVertical,
+          borderRadius: primarySpecs.borderRadius,
+          alignItems: 'center',
+          justifyContent: 'center',
+        },
+        {
+          backgroundColor: disabled ? tokens.surface.disabled : primarySpecs.backgroundColor,
+          shadowColor: tokens.text.primary,
+          shadowOffset: { width: 0, height: 4 },
+          shadowOpacity: 0.1,
+          shadowRadius: 14,
+          elevation: primarySpecs.shadowElevation || 4,
+        },
+        pressed && !disabled && {
+          opacity: 0.85,
+        },
+        disabled && {
+          opacity: specs.button.disabled.opacity,
+        },
+        style,
+      ] as unknown as ViewStyle);
+    }
+
+    if (variant === 'secondary') {
+      const secondarySpecs = variantSpecs as ButtonSpecs['secondary'];
+      return ({ pressed }: PressableStateCallbackType) => StyleSheet.flatten([
+        {
+          height: secondarySpecs.height,
+          paddingHorizontal: secondarySpecs.paddingHorizontal,
+          paddingVertical: secondarySpecs.paddingVertical,
+          borderRadius: secondarySpecs.borderRadius,
+          alignItems: 'center',
+          justifyContent: 'center',
+        },
+        {
+          backgroundColor: secondarySpecs.backgroundColor,
+          borderWidth: secondarySpecs.borderWidth,
+          borderColor: disabled ? tokens.surface.disabled : secondarySpecs.borderColor,
+        },
+        pressed && !disabled && {
+          opacity: 0.85,
+        },
+        disabled && {
+          opacity: specs.button.disabled.opacity,
+        },
+        style,
+      ] as unknown as ViewStyle);
+    }
+
+    return ({ pressed }: PressableStateCallbackType) => StyleSheet.flatten([
       {
         height: variantSpecs.height,
         paddingHorizontal: variantSpecs.paddingHorizontal,
@@ -25,20 +81,7 @@ export function useAppButtonStyles({ variant, disabled, style, textStyle }: UseA
         alignItems: 'center',
         justifyContent: 'center',
       },
-      variant === 'primary' && {
-        backgroundColor: disabled ? tokens.surface.disabled : variantSpecs.backgroundColor,
-        shadowColor: tokens.text.primary,
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.1,
-        shadowRadius: 14,
-        elevation: variantSpecs.shadowElevation || 4,
-      },
-      variant === 'secondary' && {
-        backgroundColor: variantSpecs.backgroundColor,
-        borderWidth: variantSpecs.borderWidth,
-        borderColor: disabled ? tokens.surface.disabled : variantSpecs.borderColor,
-      },
-      variant === 'ghost' && {
+      {
         backgroundColor: variantSpecs.backgroundColor,
       },
       pressed && !disabled && {
@@ -48,18 +91,21 @@ export function useAppButtonStyles({ variant, disabled, style, textStyle }: UseA
         opacity: specs.button.disabled.opacity,
       },
       style,
-    ]),
-  [variant, variantSpecs, tokens, disabled, style, specs.button.disabled.opacity]);
+    ] as unknown as ViewStyle);
+  }, [variant, variantSpecs, tokens, disabled, style, specs.button.disabled.opacity]);
 
-  const labelStyle = useMemo(() => StyleSheet.flatten([
-    {
-      fontSize: variantSpecs.fontSize,
-      fontWeight: variantSpecs.fontWeight,
-      lineHeight: variantSpecs.lineHeight,
-      color: disabled ? tokens.text.disabled : variantSpecs.textColor,
-    },
-    textStyle,
-  ]), [variantSpecs, tokens.text.disabled, disabled, textStyle]);
+  const labelStyle = useMemo(() => {
+    const labelSpecs = variantSpecs as ButtonSpecs['primary'] | ButtonSpecs['secondary'] | ButtonSpecs['ghost'];
+    return StyleSheet.flatten([
+      {
+        fontSize: labelSpecs.fontSize,
+        fontWeight: labelSpecs.fontWeight,
+        lineHeight: labelSpecs.lineHeight,
+        color: disabled ? tokens.text.disabled : labelSpecs.textColor,
+      },
+      textStyle,
+    ]) as TextStyle;
+  }, [variantSpecs, tokens.text.disabled, disabled, textStyle]);
 
   return {
     buttonStyle,

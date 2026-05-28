@@ -1,3 +1,4 @@
+import type { VisualFoundation } from '../foundation';
 import type { SemanticTokens } from '../theme';
 
 export interface ChecklistSpecs {
@@ -17,7 +18,7 @@ export interface ChecklistSpecs {
   itemCheckedTextColor: string;
 }
 
-export function getChecklistSpecs(tokens: SemanticTokens): ChecklistSpecs {
+export function getChecklistSpecs(tokens: SemanticTokens & VisualFoundation): ChecklistSpecs {
   return {
     padding: tokens.spacing.lg,
     marginVertical: tokens.spacing.md,

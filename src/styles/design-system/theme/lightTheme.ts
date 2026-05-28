@@ -33,36 +33,8 @@ export const lightTheme: SemanticTokens = {
     border: palette.neutral400,
     inputBorder: palette.neutral350,
   },
-  shadows: {
-    sm: {
-      elevation: 2,
-      shadowColor: palette.neutral700,
-      shadowOpacity: 0.05,
-      shadowRadius: 4,
-      shadowOffset: { width: 0, height: 2 },
-    },
-    md: {
-      elevation: 3,
-      shadowColor: palette.neutral700,
-      shadowOpacity: 0.08,
-      shadowRadius: 12,
-      shadowOffset: { width: 0, height: 6 },
-    },
-    lg: {
-      elevation: 5,
-      shadowColor: palette.neutral700,
-      shadowOpacity: 0.12,
-      shadowRadius: 20,
-      shadowOffset: { width: 0, height: 10 },
-    },
-    xl: {
-      elevation: 8,
-      shadowColor: palette.neutral700,
-      shadowOpacity: 0.15,
-      shadowRadius: 28,
-      shadowOffset: { width: 0, height: 14 },
-    },
-  },
+  // geometric shadow specs moved to foundation; theme exposes shadowColor
+  shadowColor: palette.neutral700,
   backgroundLight: palette.neutral50,
   surfaceDefault: palette.white,
   surfaceSecondary: palette.neutral200,

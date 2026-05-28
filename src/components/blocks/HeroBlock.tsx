@@ -1,7 +1,7 @@
 import { useDesignTokens } from '@/hooks/useDesignTokens';
 import { LinearGradient } from 'expo-linear-gradient';
 import React, { FC, useMemo } from 'react';
-import { Platform, StyleSheet, View, useWindowDimensions } from 'react-native';
+import { Platform, StyleSheet, View, useWindowDimensions, type ImageStyle, type ViewStyle } from 'react-native';
 import { getLocalizedAsset } from '../../utils/i18n';
 import ImageWithFallback from '../ImageWithFallback';
 
@@ -28,14 +28,20 @@ export const HeroBlock: FC<HeroBlockProps> = ({ content, lang = 'ru' }) => {
 
   const { width: windowWidth } = useWindowDimensions();
 
+  type HeroStyles = {
+    heroImage: ViewStyle;
+    heroImageBackground: ImageStyle;
+    heroGradient: ViewStyle;
+  };
+
   const styles = useMemo(() => {
     const heroHeight = (specs.image.hero as any).height;
     const heroMarginBottom = (specs.image.hero as any).marginBottom || 0;
     const gradientHeight = (specs.image.hero as any).gradientHeight ?? Math.round((heroHeight || 200) * 0.4);
 
-    return StyleSheet.create({
+    return StyleSheet.create<HeroStyles>({
       heroImage: {
-        width: Platform.OS === 'web' ? '100vw' : windowWidth,
+        width: Platform.OS === 'web' ? ('100vw' as unknown as number) : windowWidth,
         height: heroHeight,
         position: 'relative',
         marginBottom: heroMarginBottom,

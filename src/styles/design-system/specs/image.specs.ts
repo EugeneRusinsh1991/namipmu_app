@@ -1,3 +1,4 @@
+import type { VisualFoundation } from '../foundation';
 import type { SemanticTokens } from '../theme';
 
 export interface ImageSpecs {
@@ -19,7 +20,7 @@ export interface ImageSpecs {
   };
 }
 
-export function getImageSpecs(tokens: SemanticTokens): ImageSpecs {
+export function getImageSpecs(tokens: SemanticTokens & VisualFoundation): ImageSpecs {
   return {
     hero: {
       height: 200,

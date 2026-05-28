@@ -1,9 +1,9 @@
 import { palette } from '../palette';
 import {
-  sharedInteractiveTokens,
-  sharedPaletteTokens,
-  sharedTextTokens,
-  sharedTheme,
+    sharedInteractiveTokens,
+    sharedPaletteTokens,
+    sharedTextTokens,
+    sharedTheme,
 } from './sharedTheme';
 import type { SemanticTokens } from './types';
 
@@ -11,7 +11,7 @@ export const darkTheme: SemanticTokens = {
   ...sharedTheme,
   surface: {
     background: palette.neutral650,
-    surfacePrimary: palette.blue900,
+    surfacePrimary: palette.neutral650,
     surfaceSecondary: palette.gray800,
     surfaceTertiary: palette.neutral750,
     overlay: 'rgba(0, 0, 0, 0.8)',
@@ -26,43 +26,15 @@ export const darkTheme: SemanticTokens = {
   },
   interactive: {
     ...sharedInteractiveTokens,
-    accentHover: palette.pink500,
-    accentActive: palette.pink400,
-    accentLight: palette.pink900,
+    accentHover: palette.blue400,
+    accentActive: palette.blue400,
+    accentLight: palette.blue400,
     secondaryHover: palette.blue400,
     border: palette.neutral700,
     inputBorder: palette.neutral750,
   },
-  shadows: {
-    sm: {
-      elevation: 2,
-      shadowColor: palette.black,
-      shadowOpacity: 0.2,
-      shadowRadius: 4,
-      shadowOffset: { width: 0, height: 2 },
-    },
-    md: {
-      elevation: 3,
-      shadowColor: palette.black,
-      shadowOpacity: 0.3,
-      shadowRadius: 12,
-      shadowOffset: { width: 0, height: 6 },
-    },
-    lg: {
-      elevation: 5,
-      shadowColor: palette.black,
-      shadowOpacity: 0.4,
-      shadowRadius: 20,
-      shadowOffset: { width: 0, height: 10 },
-    },
-    xl: {
-      elevation: 8,
-      shadowColor: palette.black,
-      shadowOpacity: 0.5,
-      shadowRadius: 28,
-      shadowOffset: { width: 0, height: 14 },
-    },
-  },
+  // geometric shadow specs moved to foundation; theme exposes shadowColor
+  shadowColor: palette.black,
   backgroundLight: palette.neutral800,
   surfaceDefault: palette.neutral900,
   surfaceSecondary: palette.neutral800,

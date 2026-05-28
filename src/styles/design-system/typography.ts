@@ -2,6 +2,7 @@
  * Design System - Typography
  */
 
+import type { TextStyle } from 'react-native';
 import type { SemanticTokens } from './theme';
 
 export interface TypographyScale {
@@ -16,10 +17,10 @@ export interface TypographyScale {
   lineHeightNormal: number;
   lineHeightRelaxed: number;
   
-  fontWeightRegular: string;
-  fontWeightMedium: string;
-  fontWeightSemibold: string;
-  fontWeightBold: string;
+  fontWeightRegular: TextStyle['fontWeight'];
+  fontWeightMedium: TextStyle['fontWeight'];
+  fontWeightSemibold: TextStyle['fontWeight'];
+  fontWeightBold: TextStyle['fontWeight'];
   
   familyMain: string;
   familyHeading: string;

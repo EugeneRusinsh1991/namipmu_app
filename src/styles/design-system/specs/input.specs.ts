@@ -1,3 +1,5 @@
+import type { TextStyle } from 'react-native';
+import type { VisualFoundation } from '../foundation';
 import type { SemanticTokens } from '../theme';
 
 export interface InputSpecs {
@@ -11,11 +13,11 @@ export interface InputSpecs {
   placeholderColor: string;
   textColor: string;
   fontSize: number;
-  fontWeight: string;
+  fontWeight: TextStyle['fontWeight'];
   focusBorderColor: string;
 }
 
-export function getInputSpecs(tokens: SemanticTokens): InputSpecs {
+export function getInputSpecs(tokens: SemanticTokens & VisualFoundation): InputSpecs {
   return {
     height: 48,
     paddingHorizontal: tokens.spacing.md,
@@ -27,7 +29,7 @@ export function getInputSpecs(tokens: SemanticTokens): InputSpecs {
     placeholderColor: tokens.text.tertiary,
     textColor: tokens.text.primary,
     fontSize: tokens.typography.fontSizeMd,
-    fontWeight: tokens.typography.fontWeightRegular,
+    fontWeight: tokens.typography.fontWeightRegular as TextStyle['fontWeight'],
     focusBorderColor: tokens.interactive.accent,
   };
 }

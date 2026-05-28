@@ -88,11 +88,11 @@ const ImageWithFallback = ({
     };
 
     if (mergedStyle.borderRadius == null) {
-      mergedStyle.borderRadius = specs?.image?.borderRadius ?? tokens.borders.radiusMd;
+      mergedStyle.borderRadius = specs?.image?.card?.borderRadius ?? tokens.borders.radiusMd;
     }
 
     return mergedStyle;
-  }, [style, fallbackStyle, width, height, aspectRatio, specs?.image?.borderRadius, tokens.borders.radiusMd]);
+  }, [style, fallbackStyle, width, height, aspectRatio, specs?.image?.card?.borderRadius, tokens.borders.radiusMd]);
 
   const finalComputedStyle = useMemo<StyleProp<ImageStyle>>(() => {
     const flattenedComputed = StyleSheet.flatten(computedStyle) ?? {};

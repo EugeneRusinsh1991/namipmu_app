@@ -10,15 +10,22 @@ import { palette } from './palette';
 export { palette };
 
 // ===== THEME EXPORTS (Semantic Tokens) =====
+    import type { SemanticTokens } from './theme';
     import { darkTheme, getTheme, lightTheme } from './theme';
-export type {
-    BorderTokens, InteractiveTokens, SemanticTokens, ShadowTokens, SpacingTokens, SurfaceTokens,
-    TextTokens, TypographyTokens
-} from './theme';
+export type { InteractiveTokens, SemanticTokens, SurfaceTokens, TextTokens } from './theme';
 export { darkTheme, getTheme, lightTheme };
 
+// Foundation exports (visual geometry)
+    import type { VisualFoundation } from './foundation';
+    import foundation from './foundation';
+export type { VisualFoundation } from './foundation';
+export { foundation };
+
+    import type { ComponentSpecifications } from './components';
+    import type { TypographyStyles } from './typography';
+
 // ===== COMPONENT SPECIFICATIONS EXPORTS =====
-export { getComponentSpecs } from './components';
+    export { getComponentSpecs } from './components';
 export type {
     ButtonSpecs,
     CardSpecs, ChecklistSpecs, ComponentSpecifications, ImageSpecs, InputSpecs,
@@ -34,7 +41,7 @@ export type { TypographyScale, TypographyStyles } from './typography';
  * Содержит все необходимое для работы UI компонентов
  */
 export interface DesignSystem {
-  tokens: SemanticTokens;
+  tokens: SemanticTokens & VisualFoundation;
   specs: ComponentSpecifications;
   typography: TypographyStyles;
 }
@@ -45,11 +52,14 @@ export interface DesignSystem {
 export function buildDesignSystem(tokens: SemanticTokens, fontScale = 1): DesignSystem {
   const { getTypography } = require('./typography');
   const { getComponentSpecs } = require('./components');
+  const foundationModule = require('./foundation');
+  const foundation = foundationModule && foundationModule.default ? foundationModule.default : foundationModule;
+  const merged = { ...foundation, ...tokens } as SemanticTokens & VisualFoundation;
   
   return {
-    tokens,
-    specs: getComponentSpecs(tokens),
-    typography: getTypography(tokens, fontScale),
+    tokens: merged,
+    specs: getComponentSpecs(merged),
+    typography: getTypography(merged, fontScale),
   };
 }
 

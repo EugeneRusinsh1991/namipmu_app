@@ -22,6 +22,7 @@ import {
     type ComponentSpecifications,
     type SemanticTokens,
 } from '../styles/design-system';
+import foundation, { type VisualFoundation } from '../styles/design-system/foundation';
 import type { TypographyStyles } from '../styles/design-system/typography';
 
 /**
@@ -29,7 +30,7 @@ import type { TypographyStyles } from '../styles/design-system/typography';
  */
 export interface DesignTokensHookReturn {
   /** Семантические токены (цвета, типография, отступы, размеры) */
-  tokens: SemanticTokens & { typography: TypographyStyles };
+  tokens: SemanticTokens & VisualFoundation & { typography: TypographyStyles };
   
   /** Спецификации компонентов (Button, Card, Input, etc.) */
   specs: ComponentSpecifications;
@@ -77,20 +78,49 @@ export function useDesignTokens(): DesignTokensHookReturn {
 
   // Мемоизируем спецификации компонентов, чтобы не пересчитывались каждый раз
   const specs = useMemo(
-    () => getComponentSpecs(themeContext.colors as SemanticTokens),
+    () => {
+      const merged = ({ ...foundation, ...(themeContext.colors as SemanticTokens) } as SemanticTokens & VisualFoundation);
+      // inject shadowColor from theme into geometry shadows
+      const shadowColor = (themeContext.colors as any).shadowColor as string | undefined;
+      // ensure borders.colorDefault is populated from theme borderDefault or interactive.border
+      const borderDefault = (themeContext.colors as any).borderDefault as string | undefined;
+      const interactiveBorder = (themeContext.colors as any).interactive?.border as string | undefined;
+      if (merged.borders) {
+        (merged.borders as any).colorDefault = borderDefault ?? interactiveBorder ?? (merged.borders as any).colorDefault;
+      }
+      if (merged.shadows && shadowColor) {
+        // assign shadowColor for each shadow level
+        (Object.keys(merged.shadows) as Array<keyof typeof merged.shadows>).forEach((k) => {
+          (merged.shadows as any)[k] = {
+            ...((merged.shadows as any)[k] || {}),
+            shadowColor,
+          };
+        });
+      }
+      return getComponentSpecs(merged as any);
+    },
     [themeContext.colors]
   );
 
-  const tokensWithTypography = useMemo(
-    () => ({
-      ...themeContext.colors,
+  const tokensWithTypography = useMemo(() => {
+    const merged = ({ ...foundation, ...(themeContext.colors as SemanticTokens) } as SemanticTokens & VisualFoundation);
+    const shadowColor = (themeContext.colors as any).shadowColor as string | undefined;
+    if (merged.shadows && shadowColor) {
+      (Object.keys(merged.shadows) as Array<keyof typeof merged.shadows>).forEach((k) => {
+        (merged.shadows as any)[k] = {
+          ...((merged.shadows as any)[k] || {}),
+          shadowColor,
+        };
+      });
+    }
+    return {
+      ...merged,
       typography: themeContext.typography,
-    }),
-    [themeContext.colors, themeContext.typography]
-  );
+    };
+  }, [themeContext.colors, themeContext.typography]);
 
   return {
-    tokens: tokensWithTypography as SemanticTokens & { typography: TypographyStyles },
+    tokens: tokensWithTypography as SemanticTokens & VisualFoundation & { typography: TypographyStyles },
     specs,
     theme: themeContext.theme,
     isDark: themeContext.isDark,

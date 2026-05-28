@@ -1,3 +1,4 @@
+import type { VisualFoundation } from '../foundation';
 import type { SemanticTokens } from '../theme';
 
 export interface CardSpecs {
@@ -25,7 +26,7 @@ export interface CardSpecs {
   };
 }
 
-export function getCardSpecs(tokens: SemanticTokens): CardSpecs {
+export function getCardSpecs(tokens: SemanticTokens & VisualFoundation): CardSpecs {
   return {
     large: {
       borderRadius: tokens.borders.radiusMd,

@@ -1,3 +1,5 @@
+import type { TextStyle } from 'react-native';
+import type { VisualFoundation } from '../foundation';
 import type { SemanticTokens } from '../theme';
 
 export interface TimerSpecs {
@@ -8,14 +10,14 @@ export interface TimerSpecs {
   backgroundColor: string;
   borderColor: string;
   displayFontSize: number;
-  displayFontWeight: string;
+  displayFontWeight: TextStyle['fontWeight'];
   displayColor: string;
   buttonPadding: number;
   buttonBorderRadius: number;
   ringSize: number;
 }
 
-export function getTimerSpecs(tokens: SemanticTokens): TimerSpecs {
+export function getTimerSpecs(tokens: SemanticTokens & VisualFoundation): TimerSpecs {
   return {
     containerPadding: tokens.spacing.lg,
     padding: tokens.spacing.lg,
@@ -24,7 +26,7 @@ export function getTimerSpecs(tokens: SemanticTokens): TimerSpecs {
     backgroundColor: tokens.surface.surfaceSecondary,
     borderColor: tokens.interactive.border,
     displayFontSize: tokens.typography.fontSizeXxl,
-    displayFontWeight: tokens.typography.fontWeightBold,
+    displayFontWeight: tokens.typography.fontWeightBold as TextStyle['fontWeight'],
     displayColor: tokens.text.primary,
     buttonPadding: tokens.spacing.md,
     buttonBorderRadius: tokens.borders.radiusMd,

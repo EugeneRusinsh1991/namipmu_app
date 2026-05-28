@@ -1,7 +1,8 @@
 import React, { createContext, useContext, useMemo } from 'react';
 import { useInitializeTheme } from '../hooks/useInitializeTheme';
 import { ComponentSpecifications, getComponentSpecs } from '../styles/design-system/components';
-import { getTheme, lightTheme, SemanticTokens } from '../styles/design-system/theme';
+import foundation from '../styles/design-system/foundation';
+import { getTheme, lightTheme, type SemanticTokens } from '../styles/design-system/theme';
 import { getTypography, TypographyStyles } from '../styles/design-system/typography';
 import { LanguageProvider } from './LanguageContext';
 
@@ -16,13 +17,15 @@ export interface ThemeContextValue {
   componentStyles: ComponentSpecifications;
 }
 
+const defaultMergedTokens = { ...foundation, ...lightTheme } as any;
+
 const ThemeContext = createContext<ThemeContextValue>({
   theme: 'light',
   isDark: false,
   toggleTheme: async () => {},
   colors: lightTheme,
-  typography: getTypography(lightTheme, 1),
-  componentStyles: getComponentSpecs(lightTheme),
+  typography: getTypography({ ...foundation, ...lightTheme } as any, 1),
+  componentStyles: getComponentSpecs(defaultMergedTokens),
 });
 
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
@@ -32,7 +35,20 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
     const isDark = theme === 'dark';
     const colors = getTheme(isDark);
     const typography = getTypography(colors, fontScale);
-    const componentStyles = getComponentSpecs(colors);
+    const mergedTokens = { ...foundation, ...(colors as any) } as any;
+    // inject shadowColor into merged shadows if provided by theme
+    const shadowColor = (colors as any).shadowColor as string | undefined;
+    const borderDefault = (colors as any).borderDefault as string | undefined;
+    const interactiveBorder = (colors as any).interactive?.border as string | undefined;
+    if (mergedTokens.borders) {
+      (mergedTokens.borders as any).colorDefault = borderDefault ?? interactiveBorder ?? (mergedTokens.borders as any).colorDefault;
+    }
+    if (mergedTokens.shadows && shadowColor) {
+      (Object.keys(mergedTokens.shadows) as Array<keyof typeof mergedTokens.shadows>).forEach((k) => {
+        (mergedTokens.shadows as any)[k] = { ...(mergedTokens.shadows as any)[k] || {}, shadowColor };
+      });
+    }
+    const componentStyles = getComponentSpecs(mergedTokens);
 
     return {
       colors,

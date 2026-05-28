@@ -6,14 +6,10 @@
  */
 
 export type {
-  BorderTokens,
-  InteractiveTokens,
-  SemanticTokens,
-  ShadowTokens,
-  SpacingTokens,
-  SurfaceTokens,
-  TextTokens,
-  TypographyTokens
+    InteractiveTokens,
+    SemanticTokens,
+    SurfaceTokens,
+    TextTokens
 } from './theme/types';
 
 import { darkTheme } from './theme/darkTheme';

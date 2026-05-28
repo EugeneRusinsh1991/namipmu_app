@@ -1,0 +1,4 @@
+Lora-Italic
+Poppins-Light
+Poppins-Medium
+Poppins-Regular

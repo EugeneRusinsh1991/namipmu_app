@@ -44,13 +44,14 @@ export const NavigationBlock: FC<NavigationBlockProps> = ({ item, lang, heroOver
 
   const backText = getLocalized(item.backText, lang, 'Назад');
   const nextText = getLocalized(item.nextText, lang, '');
-  const nextHref = item.href || '/';
+  const nextHref = (item.href || '/') as any;
+  const backHref = (item.backHref || '/') as any;
   const backButtonStyle = StyleSheet.flatten(styles.navigationButton);
   const nextButtonStyle = StyleSheet.flatten([styles.navigationButton, styles.primaryButton]);
 
   return (
     <View style={[styles.navigationRow, heroOverlapStyle]}>
-      <Link href={item.backHref || '/'} asChild>
+      <Link href={backHref} asChild>
         <AppButton
           title={backText}
           variant="secondary"

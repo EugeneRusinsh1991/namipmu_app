@@ -1,9 +1,9 @@
 # 📋 Инструкция по восстановлению бекапа
 
 ## Информация о бекапе
-- **Дата создания:** 2026-05-27_17-55-52
+- **Дата создания:** 2026-05-28_15-57-44
 - **Оригинальная папка:** na_mi_pmu
-- **Скопировано:** src, assets, scripts, package.json, package-lock.json, app.json, tsconfig.json, expo-env.d.ts, .gitignore, .vscode
+- **Скопировано:** src, assets, scripts, package.json, package-lock.json, app.json, tsconfig.json, expo-env.d.ts, README.md, .gitignore, .vscode
 
 ## ⚙️ Как восстановить проект
 
@@ -11,7 +11,7 @@
 
 1. **Скопируйте содержимое этой папки** в новую папку `na_mi_pmu`:
    ```bash
-   xcopy na_mi_pmu_2026-05-27_17-55-52\* na_mi_pmu\ /E /I
+   xcopy na_mi_pmu_2026-05-28_15-57-44\* na_mi_pmu\ /E /I
    ```
 
 2. **Перейдите в папку проекта:**
@@ -33,9 +33,9 @@
 
 1. **Скопируйте только изменённые файлы:**
    ```bash
-   xcopy na_mi_pmu_2026-05-27_17-55-52\src na_mi_pmu\src /E /Y
-   xcopy na_mi_pmu_2026-05-27_17-55-52\assets na_mi_pmu\assets /E /Y
-   xcopy na_mi_pmu_2026-05-27_17-55-52\scripts na_mi_pmu\scripts /E /Y
+   xcopy na_mi_pmu_2026-05-28_15-57-44\src na_mi_pmu\src /E /Y
+   xcopy na_mi_pmu_2026-05-28_15-57-44\assets na_mi_pmu\assets /E /Y
+   xcopy na_mi_pmu_2026-05-28_15-57-44\scripts na_mi_pmu\scripts /E /Y
    ```
 
 2. **Обновите зависимости:**
@@ -48,7 +48,7 @@
 
 1. **Копирование:**
    ```bash
-   cp -r na_mi_pmu_2026-05-27_17-55-52/* na_mi_pmu/
+   cp -r na_mi_pmu_2026-05-28_15-57-44/* na_mi_pmu/
    ```
 
 2. **Установка и запуск:**
@@ -90,4 +90,4 @@
    ```
 
 ---
-**Последний бекап:** 2026-05-27_17-55-52
+**Последний бекап:** 2026-05-28_15-57-44

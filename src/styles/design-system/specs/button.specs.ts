@@ -1,3 +1,5 @@
+import type { TextStyle } from 'react-native';
+import type { VisualFoundation } from '../foundation';
 import type { SemanticTokens } from '../theme';
 
 export interface ButtonSpecs {
@@ -9,7 +11,7 @@ export interface ButtonSpecs {
     backgroundColor: string;
     textColor: string;
     fontSize: number;
-    fontWeight: string;
+    fontWeight: TextStyle['fontWeight'];
     lineHeight: number;
     shadowElevation: number;
   };
@@ -23,7 +25,8 @@ export interface ButtonSpecs {
     borderColor: string;
     textColor: string;
     fontSize: number;
-    fontWeight: string;
+    fontWeight: TextStyle['fontWeight'];
+    lineHeight: number;
   };
   ghost: {
     height: number;
@@ -33,14 +36,15 @@ export interface ButtonSpecs {
     backgroundColor: string;
     textColor: string;
     fontSize: number;
-    fontWeight: string;
+    fontWeight: TextStyle['fontWeight'];
+    lineHeight: number;
   };
   disabled: {
     opacity: number;
   };
 }
 
-export function getButtonSpecs(tokens: SemanticTokens): ButtonSpecs {
+export function getButtonSpecs(tokens: SemanticTokens & VisualFoundation): ButtonSpecs {
   return {
     primary: {
       height: 52,
@@ -50,7 +54,7 @@ export function getButtonSpecs(tokens: SemanticTokens): ButtonSpecs {
       backgroundColor: tokens.interactive.accent,
       textColor: tokens.text.onAccent,
       fontSize: tokens.typography.fontSizeMd,
-      fontWeight: tokens.typography.fontWeightSemibold,
+      fontWeight: tokens.typography.fontWeightSemibold as TextStyle['fontWeight'],
       lineHeight: tokens.typography.lineHeightNormal,
       shadowElevation: tokens.shadows.md.elevation,
     },
@@ -64,7 +68,8 @@ export function getButtonSpecs(tokens: SemanticTokens): ButtonSpecs {
       borderColor: tokens.interactive.border,
       textColor: tokens.text.primary,
       fontSize: tokens.typography.fontSizeMd,
-      fontWeight: tokens.typography.fontWeightSemibold,
+      fontWeight: tokens.typography.fontWeightSemibold as TextStyle['fontWeight'],
+      lineHeight: tokens.typography.lineHeightNormal,
     },
     ghost: {
       height: 52,
@@ -74,7 +79,8 @@ export function getButtonSpecs(tokens: SemanticTokens): ButtonSpecs {
       backgroundColor: 'transparent',
       textColor: tokens.interactive.accent,
       fontSize: tokens.typography.fontSizeMd,
-      fontWeight: tokens.typography.fontWeightSemibold,
+      fontWeight: tokens.typography.fontWeightSemibold as TextStyle['fontWeight'],
+      lineHeight: tokens.typography.lineHeightNormal,
     },
     disabled: {
       opacity: 0.55,

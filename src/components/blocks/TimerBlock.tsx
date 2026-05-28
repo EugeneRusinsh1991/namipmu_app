@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useMemo, useRef, useState } from 'react';
-import { TouchableOpacity, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View, type TextStyle, type ViewStyle } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { useDesignTokens } from '../../hooks/useDesignTokens';
 import { getLocalized } from '../../utils/i18n';
@@ -92,12 +92,29 @@ export const TimerBlock: FC<TimerBlockProps> = ({ item, lang }) => {
     'Таймер практики'
   );
 
-  const styles = useMemo(
-    () => {
+  type TimerStyles = {
+    card: ViewStyle;
+    headerRow: ViewStyle;
+    headerTitle: TextStyle;
+    icon: TextStyle;
+    timerWrap: ViewStyle;
+    ring: ViewStyle;
+    innerFill: ViewStyle;
+    timeLabelWrap: ViewStyle;
+    timeLabel: TextStyle;
+    controls: ViewStyle;
+    btn: ViewStyle;
+    btnStart: ViewStyle;
+    btnPause: ViewStyle;
+    btnReset: ViewStyle;
+    btnTextOverride: TextStyle;
+  };
+
+  const styles = useMemo(() => {
       const ringSize = specs.timer.ringSize;
       const innerSize = ringSize - 16;
 
-      return {
+      return StyleSheet.create<TimerStyles>({
         card: {
           borderRadius: specs.timer.borderRadius,
           padding: specs.timer.containerPadding,
@@ -192,7 +209,7 @@ export const TimerBlock: FC<TimerBlockProps> = ({ item, lang }) => {
           fontSize: tokens.typography.fontSizeMd,
           color: tokens.text.primary,
         },
-      };
+      });
     },
     [tokens, specs]
   );

@@ -1,3 +1,4 @@
+import type { VisualFoundation } from '../foundation';
 import type { SemanticTokens } from '../theme';
 
 export interface QuizSpecs {
@@ -19,7 +20,7 @@ export interface QuizSpecs {
   wrongBorderColor: string;
 }
 
-export function getQuizSpecs(tokens: SemanticTokens): QuizSpecs {
+export function getQuizSpecs(tokens: SemanticTokens & VisualFoundation): QuizSpecs {
   return {
     containerPadding: tokens.spacing.lg,
     padding: tokens.spacing.lg,

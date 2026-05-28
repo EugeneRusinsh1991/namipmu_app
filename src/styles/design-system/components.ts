@@ -1,3 +1,5 @@
+import type { VisualFoundation } from './foundation';
+import foundation from './foundation';
 import type { ButtonSpecs } from './specs/button.specs';
 import { getButtonSpecs } from './specs/button.specs';
 import type { CardSpecs } from './specs/card.specs';
@@ -32,15 +34,16 @@ export interface ComponentSpecifications {
   image: ImageSpecs;
 }
 
-export function getComponentSpecs(tokens: SemanticTokens): ComponentSpecifications {
+export function getComponentSpecs(tokens: SemanticTokens & VisualFoundation): ComponentSpecifications {
+  const merged = { ...foundation, ...tokens } as SemanticTokens & VisualFoundation;
   return {
-    button: getButtonSpecs(tokens),
-    card: getCardSpecs(tokens),
-    input: getInputSpecs(tokens),
-    quiz: getQuizSpecs(tokens),
-    checklist: getChecklistSpecs(tokens),
-    timer: getTimerSpecs(tokens),
-    image: getImageSpecs(tokens),
+    button: getButtonSpecs(merged),
+    card: getCardSpecs(merged),
+    input: getInputSpecs(merged),
+    quiz: getQuizSpecs(merged),
+    checklist: getChecklistSpecs(merged),
+    timer: getTimerSpecs(merged),
+    image: getImageSpecs(merged),
   };
 }
 

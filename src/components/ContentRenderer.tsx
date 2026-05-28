@@ -56,7 +56,7 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({ content, lang = 'ru' 
         rendered.push(
           React.createElement(CardGrid, {
             key: `card-group-${i}`,
-            items: group,
+            items: group as any,
             lang,
             gap: tokens.spacing.md,
             heroOverlapStyle,

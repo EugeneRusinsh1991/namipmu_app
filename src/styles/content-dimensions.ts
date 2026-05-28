@@ -121,60 +121,30 @@ export const COMPONENT_SIZES = {
  * Единая шкала отступов (spacing scale)
  * Используется везде вместо hardcoded чисел
  */
-export const SPACING = {
-  xs: 4,   // Минимальный отступ
-  sm: 8,   // Очень маленький
-  md: 16,  // Стандартный
-  lg: 24,  // Большой
-  xl: 32,  // Очень большой
-  xxl: 64, // Максимальный
-} as const;
+import foundation from '../styles/design-system/foundation';
+
+export const SPACING = foundation.spacing;
 
 /**
  * Border radius значения
  */
 export const BORDER_RADIUS = {
-  sm: 8,    // Маленький (inputs, small elements)
-  md: 12,   // Medium (cards, modals)
-  lg: 20,   // Large (large containers)
-  full: 999, // Полностью круглый
+  sm: foundation.borders.radiusSm,
+  md: foundation.borders.radiusMd,
+  lg: foundation.borders.radiusLg,
+  full: foundation.borders.radiusFull,
 } as const;
 
 /**
  * Shadow specifications
  */
-export const SHADOWS = {
-  sm: {
-    elevation: 2,
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    shadowOffset: { width: 0, height: 2 },
-  },
-  md: {
-    elevation: 3,
-    shadowOpacity: 0.08,
-    shadowRadius: 12,
-    shadowOffset: { width: 0, height: 6 },
-  },
-  lg: {
-    elevation: 5,
-    shadowOpacity: 0.12,
-    shadowRadius: 20,
-    shadowOffset: { width: 0, height: 10 },
-  },
-  xl: {
-    elevation: 8,
-    shadowOpacity: 0.15,
-    shadowRadius: 28,
-    shadowOffset: { width: 0, height: 14 },
-  },
-} as const;
+export const SHADOWS = foundation.shadows;
 
 /**
  * Экспортируем все размеры как единый объект для удобства
  */
 export const LAYOUT = {
-  contentMaxWidth: 600,
+  contentMaxWidth: foundation.layout.contentMaxWidth,
 } as const;
 
 export const CONTENT_DIMENSIONS = {

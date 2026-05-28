@@ -36,12 +36,12 @@ export default function PageLanguageButton() {
   // dynamic styles derived from theme colors
   const dynamicButtonStyle = {
     backgroundColor: themeColors?.white || tokens.white,
-    borderColor: themeColors?.border || tokens.interactive.border,
+    borderColor: themeColors?.interactive?.border || tokens.interactive.border,
   };
 
   const dynamicDropdownStyle = {
     backgroundColor: themeColors?.white || tokens.white,
-    borderColor: themeColors?.border || tokens.interactive.border,
+    borderColor: themeColors?.interactive?.border || tokens.interactive.border,
   };
 
   const dynamicTextColor = { color: tokens.text.primary };

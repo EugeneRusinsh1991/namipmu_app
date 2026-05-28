@@ -17,7 +17,6 @@ function LayoutContent() {
             screenOptions={{
               contentStyle: [{ flex: 1, backgroundColor: tokens.surface.background }],
             }}
-            style={styles.stack}
           >
             <Stack.Screen name="index" options={{ title: 'Навчання', headerShown: true }} />
             <Stack.Screen name="skin" options={{ title: 'Кожа', headerShown: true }} />

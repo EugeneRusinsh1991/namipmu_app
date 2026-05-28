@@ -1,6 +1,6 @@
 import { Link } from 'expo-router';
-import { useMemo } from 'react';
-import { Pressable, StyleSheet, Text, TextStyle, useWindowDimensions, View, ViewStyle } from 'react-native';
+import React, { useMemo } from 'react';
+import { ImageStyle, Pressable, StyleSheet, Text, TextStyle, useWindowDimensions, View, ViewStyle } from 'react-native';
 import { useLanguage } from '../context/LanguageContext';
 import { useDesignTokens } from '../hooks/useDesignTokens';
 import { CARD_SIZES } from '../styles/content-dimensions';
@@ -86,7 +86,7 @@ export default function Card({
   inGrid = false, 
   gap,
   lang: propLang
-}: CardProps): JSX.Element {
+}: CardProps): React.ReactElement {
   const { lang: contextLang } = useLanguage();
   const activeLang = propLang || contextLang || 'ru';
   const { width: windowWidth } = useWindowDimensions();
@@ -102,7 +102,7 @@ export default function Card({
       } as ViewStyle,
       image: {
         resizeMode: 'cover',
-      } as ViewStyle,
+      } as ImageStyle,
       content: {
         justifyContent: 'flex-start',
       } as ViewStyle,
@@ -153,9 +153,9 @@ export default function Card({
     elevation: specs.card[cardMode].shadowElevation,
   };
 
-  const dynamicImageStyle: ViewStyle = {
+  const dynamicImageStyle: ImageStyle = {
     ...styles.image,
-    width: size === 'big' ? (cardWidth as number) : sizeConfig.cardWidth,
+    width: typeof cardWidth === 'number' ? cardWidth : undefined,
     height: sizeConfig.imageHeight,
     borderRadius: specs.card[cardMode].borderRadius,
   };
@@ -182,7 +182,7 @@ export default function Card({
 
   const safeTitle = getLocalized(title, activeLang, '');
   const safeDescription = getLocalized(description, activeLang, '');
-  const normalizedHref: string | undefined = typeof href === 'string' ? (href.startsWith('/') ? href : `/${href}`) : undefined;
+  const normalizedHref: any = typeof href === 'string' ? (href.startsWith('/') ? href : `/${href}`) : undefined;
 
   const cardInner = (
     <Pressable
