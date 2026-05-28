@@ -27,7 +27,7 @@ export const TimerBlock: FC<TimerBlockProps> = ({ item, lang }) => {
   const [isRunning, setIsRunning] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const { colors, typography } = useTheme();
-  const { tokens } = useDesignTokens();
+  const { tokens, specs } = useDesignTokens();
 
   // Animated value for smooth progress animation
   const animatedRemaining = useSharedValue(defaultSeconds);
@@ -96,11 +96,11 @@ export const TimerBlock: FC<TimerBlockProps> = ({ item, lang }) => {
 
   const dynamicStyles = StyleSheet.create({
     card: {
-      borderRadius: 16,
-      padding: 16,
-      marginVertical: 12,
-      backgroundColor: colors.cardBackground,
-      borderColor: colors.cardBorder,
+      borderRadius: specs.timer.borderRadius,
+      padding: specs.timer.padding,
+      marginVertical: specs.timer.marginVertical,
+      backgroundColor: specs.timer.backgroundColor,
+      borderColor: specs.timer.borderColor,
       borderWidth: 1,
       shadowColor: tokens.text.primary,
       shadowOpacity: 0.08,
@@ -148,8 +148,8 @@ export const TimerBlock: FC<TimerBlockProps> = ({ item, lang }) => {
       borderRadius: (160 - 32) / 2,
     },
     timeLabel: {
-      fontSize: tokens.typography.fontSizeXl,
-      fontWeight: tokens.typography.fontWeightBold,
+      fontSize: specs.timer.displayFontSize,
+      fontWeight: specs.timer.displayFontWeight,
     },
     controls: {
       flexDirection: 'row',
@@ -158,10 +158,10 @@ export const TimerBlock: FC<TimerBlockProps> = ({ item, lang }) => {
     },
     btn: {
       flex: 1,
-      paddingVertical: 12,
+      paddingVertical: specs.timer.buttonPadding,
       alignItems: 'center',
       justifyContent: 'center',
-      borderRadius: 12,
+      borderRadius: specs.timer.buttonBorderRadius,
       marginHorizontal: 6,
     },
     btnStart: {

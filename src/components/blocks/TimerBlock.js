@@ -1,7 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { useTheme } from '../../context/ThemeContext';
+import { useDesignTokens } from '../../hooks/useDesignTokens';
 import { getLocalized } from '../../utils/i18n';
 import ScaledText from '../ScaledText';
 
@@ -11,6 +12,7 @@ export function TimerBlock({ item, lang }) {
   const [isRunning, setIsRunning] = useState(false);
   const intervalRef = useRef(null);
   const { colors, typography } = useTheme();
+  const { tokens, specs } = useDesignTokens();
 
   // Animated value for smooth progress animation
   const animatedRemaining = useSharedValue(defaultSeconds);
@@ -75,11 +77,11 @@ export function TimerBlock({ item, lang }) {
 
   const dynamicStyles = StyleSheet.create({
     card: {
-      borderRadius: 16,
-      padding: 16,
-      marginVertical: 12,
-      backgroundColor: colors.cardBackground,
-      borderColor: colors.cardBorder,
+      borderRadius: specs.timer.borderRadius,
+      padding: specs.timer.padding,
+      marginVertical: specs.timer.marginVertical,
+      backgroundColor: specs.timer.backgroundColor,
+      borderColor: specs.timer.borderColor,
       borderWidth: 1,
       shadowColor: colors.textPrimary,
       shadowOpacity: 0.08,
@@ -127,8 +129,8 @@ export function TimerBlock({ item, lang }) {
       borderRadius: (160 - 32) / 2,
     },
     timeLabel: {
-      fontSize: 28,
-      fontWeight: '700',
+      fontSize: specs.timer.displayFontSize,
+      fontWeight: specs.timer.displayFontWeight,
     },
     controls: {
       flexDirection: 'row',
@@ -137,10 +139,10 @@ export function TimerBlock({ item, lang }) {
     },
     btn: {
       flex: 1,
-      paddingVertical: 12,
+      paddingVertical: specs.timer.buttonPadding,
       alignItems: 'center',
       justifyContent: 'center',
-      borderRadius: 12,
+      borderRadius: specs.timer.buttonBorderRadius,
       marginHorizontal: 6,
     },
     btnStart: {

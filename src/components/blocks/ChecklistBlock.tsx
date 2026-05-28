@@ -42,15 +42,17 @@ export const ChecklistBlock: FC<ChecklistBlockProps> = ({ item, lang, heroOverla
   const description = getLocalized(item.description, lang, '');
   const doneCount = items.filter((_, index) => checkedItems[index]).length;
 
+  const { specs } = useDesignTokens();
+
   const dynamicStyles = StyleSheet.create({
     container: {
       marginBottom: 16,
     },
     quizContainer: {
-      borderRadius: 16,
-      padding: 16,
-      marginVertical: 12,
-      backgroundColor: colors.cardBackground,
+      borderRadius: specs.checklist.borderRadius,
+      padding: specs.checklist.padding,
+      marginVertical: specs.checklist.marginVertical,
+      backgroundColor: specs.checklist.backgroundColor,
       borderWidth: 1,
       borderColor: colors.cardBorder,
     },
@@ -62,28 +64,28 @@ export const ChecklistBlock: FC<ChecklistBlockProps> = ({ item, lang, heroOverla
     itemRow: {
       flexDirection: 'row',
       alignItems: 'center',
-      paddingVertical: 14,
-      paddingHorizontal: 14,
-      borderRadius: 16,
-      backgroundColor: colors.surfaceDefault,
+      paddingVertical: specs.checklist.itemPadding,
+      paddingHorizontal: specs.checklist.itemPadding,
+      borderRadius: specs.checklist.itemBorderRadius,
+      backgroundColor: specs.checklist.itemBgColor,
       borderWidth: 1,
-      borderColor: colors.cardBorder,
-      marginBottom: 10,
+      borderColor: specs.checklist.itemBorderColor,
+      marginBottom: specs.checklist.itemMarginBottom,
     },
     itemRowChecked: {
       backgroundColor: colors.accentLight,
       borderColor: colors.accent,
     },
     checkbox: {
-      width: 24,
-      height: 24,
-      borderRadius: 6,
-      borderWidth: 1,
+      width: specs.checklist.checkboxSize,
+      height: specs.checklist.checkboxSize,
+      borderRadius: specs.checklist.checkboxBorderRadius,
+      borderWidth: specs.checklist.checkboxBorderWidth,
       borderColor: colors.cardBorder,
       alignItems: 'center',
       justifyContent: 'center',
       marginRight: 12,
-      backgroundColor: colors.surfaceDefault,
+      backgroundColor: specs.checklist.itemBgColor,
     },
     checkboxChecked: {
       borderColor: colors.success,
@@ -98,10 +100,10 @@ export const ChecklistBlock: FC<ChecklistBlockProps> = ({ item, lang, heroOverla
     itemText: {
       flex: 1,
       fontSize: tokens.typography.fontSizeMd,
-      color: tokens.text.secondary,
+      color: specs.checklist.itemTextColor,
     },
     itemTextChecked: {
-      color: tokens.text.tertiary,
+      color: specs.checklist.itemCheckedTextColor,
       textDecorationLine: 'line-through',
     },
   });

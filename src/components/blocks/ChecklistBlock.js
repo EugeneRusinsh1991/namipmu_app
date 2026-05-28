@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useTheme } from '../../context/ThemeContext';
+import { useDesignTokens } from '../../hooks/useDesignTokens';
 import { getLocalized } from '../../utils/i18n';
 import ScaledText from '../ScaledText';
 
@@ -8,6 +9,7 @@ export function ChecklistBlock({ item, lang, heroOverlapStyle }) {
   const items = Array.isArray(item.items) ? item.items : [];
   const [checkedItems, setCheckedItems] = useState({});
   const { colors, typography, componentStyles } = useTheme();
+  const { tokens, specs } = useDesignTokens();
 
   const handleToggle = index => {
     setCheckedItems(prev => ({
@@ -25,10 +27,10 @@ export function ChecklistBlock({ item, lang, heroOverlapStyle }) {
       marginBottom: 16,
     },
     quizContainer: {
-      borderRadius: 16,
-      padding: 16,
-      marginVertical: 12,
-      backgroundColor: colors.cardBackground,
+      borderRadius: specs.checklist.borderRadius,
+      padding: specs.checklist.padding,
+      marginVertical: specs.checklist.marginVertical,
+      backgroundColor: specs.checklist.backgroundColor,
       borderWidth: 1,
       borderColor: colors.cardBorder,
     },
@@ -40,28 +42,28 @@ export function ChecklistBlock({ item, lang, heroOverlapStyle }) {
     itemRow: {
       flexDirection: 'row',
       alignItems: 'center',
-      paddingVertical: 14,
-      paddingHorizontal: 14,
-      borderRadius: 16,
-      backgroundColor: colors.surfaceDefault,
+      paddingVertical: specs.checklist.itemPadding,
+      paddingHorizontal: specs.checklist.itemPadding,
+      borderRadius: specs.checklist.itemBorderRadius,
+      backgroundColor: specs.checklist.itemBgColor,
       borderWidth: 1,
-      borderColor: colors.cardBorder,
-      marginBottom: 10,
+      borderColor: specs.checklist.itemBorderColor,
+      marginBottom: specs.checklist.itemMarginBottom,
     },
     itemRowChecked: {
       backgroundColor: colors.accentLight,
       borderColor: colors.accent,
     },
     checkbox: {
-      width: 24,
-      height: 24,
-      borderRadius: 6,
-      borderWidth: 1,
+      width: specs.checklist.checkboxSize,
+      height: specs.checklist.checkboxSize,
+      borderRadius: specs.checklist.checkboxBorderRadius,
+      borderWidth: specs.checklist.checkboxBorderWidth,
       borderColor: colors.cardBorder,
       alignItems: 'center',
       justifyContent: 'center',
       marginRight: 12,
-      backgroundColor: colors.surfaceDefault,
+      backgroundColor: specs.checklist.itemBgColor,
     },
     checkboxChecked: {
       borderColor: colors.success,
@@ -76,10 +78,10 @@ export function ChecklistBlock({ item, lang, heroOverlapStyle }) {
     itemText: {
       flex: 1,
       fontSize: 16,
-      color: colors.bodyText,
+      color: specs.checklist.itemTextColor,
     },
     itemTextChecked: {
-      color: colors.textTertiary,
+      color: specs.checklist.itemCheckedTextColor,
       textDecorationLine: 'line-through',
     },
   });

@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useTheme } from '../../context/ThemeContext';
+import { useDesignTokens } from '../../hooks/useDesignTokens';
 import { getLocalized } from '../../utils/i18n';
 import ScaledText from '../ScaledText';
 
@@ -12,6 +13,7 @@ export function QuizBlock({ item, lang, heroOverlapStyle }) {
   const [score, setScore] = useState(0);
   const [finished, setFinished] = useState(false);
   const { colors, typography } = useTheme();
+  const { tokens, specs } = useDesignTokens();
 
   const title = getLocalized(item.title, lang, '');
   const description = getLocalized(item.description, lang, '');
@@ -52,12 +54,12 @@ export function QuizBlock({ item, lang, heroOverlapStyle }) {
 
   const dynamicStyles = StyleSheet.create({
     quizContainer: {
-      borderRadius: 16,
-      padding: 16,
-      marginVertical: 12,
-      backgroundColor: colors.cardBackground,
-      borderWidth: 1,
-      borderColor: colors.cardBorder,
+      borderRadius: specs.quiz.borderRadius,
+      padding: specs.quiz.padding,
+      marginVertical: specs.quiz.marginVertical,
+      backgroundColor: specs.quiz.backgroundColor,
+      borderWidth: specs.quiz.borderWidth,
+      borderColor: specs.quiz.borderColor,
     },
     quizDescription: {
       fontSize: 14,
@@ -69,30 +71,30 @@ export function QuizBlock({ item, lang, heroOverlapStyle }) {
       marginVertical: 12,
     },
     quizOption: {
-      borderRadius: 12,
-      padding: 12,
-      marginVertical: 8,
+      borderRadius: specs.quiz.answerBorderRadius,
+      padding: specs.quiz.answerPadding,
+      marginVertical: specs.quiz.answerMargin,
       borderWidth: 1,
       borderColor: colors.borderDefault,
       backgroundColor: colors.surfaceDefault,
     },
     quizOptionSelected: {
-      borderColor: colors.accent,
-      backgroundColor: colors.accentLight,
+      borderColor: specs.quiz.selectedBorderColor,
+      backgroundColor: specs.quiz.selectedBgColor,
     },
     quizOptionCorrect: {
-      borderColor: colors.success,
-      backgroundColor: colors.success,
+      borderColor: specs.quiz.correctBorderColor,
+      backgroundColor: specs.quiz.correctBgColor,
       opacity: 0.1,
     },
     quizOptionWrong: {
-      borderColor: colors.danger,
-      backgroundColor: colors.danger,
+      borderColor: specs.quiz.wrongBorderColor,
+      backgroundColor: specs.quiz.wrongBgColor,
       opacity: 0.1,
     },
     quizSubmitButton: {
-      borderRadius: 12,
-      padding: 12,
+      borderRadius: specs.quiz.answerBorderRadius,
+      padding: specs.quiz.answerPadding,
       marginTop: 16,
       backgroundColor: colors.accent,
       alignItems: 'center',
