@@ -1,6 +1,5 @@
 import React, { FC } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { useTheme } from '../../context/ThemeContext';
 import { useDesignTokens } from '../../hooks/useDesignTokens';
 import { getLocalized } from '../../utils/i18n';
 import ScaledText from '../ScaledText';
@@ -31,26 +30,27 @@ interface ListBlockProps {
 export const ListBlock: FC<ListBlockProps> = ({ item, lang, heroOverlapStyle }) => {
   if (!item || !Array.isArray(item.items) || item.items.length === 0) return null;
 
-  const { colors } = useTheme();
   const { tokens } = useDesignTokens();
   const styles = StyleSheet.create({
     listContainer: {
-      marginVertical: 12,
+      marginVertical: tokens.spacing.md,
     },
     listItem: {
       flexDirection: 'row',
       alignItems: 'flex-start',
-      marginVertical: 8,
+      marginVertical: tokens.spacing.sm,
     },
     listBullet: {
-      marginRight: 8,
-      color: colors.accent,
+      marginRight: tokens.spacing.sm,
+      color: tokens.interactive.accent,
       fontSize: tokens.typography.fontSizeMd,
+      lineHeight: tokens.typography.lineHeightNormal,
     },
     listItemText: {
       flex: 1,
-      color: tokens.text.secondary,
+      color: tokens.text.primary,
       fontSize: tokens.typography.fontSizeMd,
+      lineHeight: tokens.typography.lineHeightNormal,
     },
   });
 

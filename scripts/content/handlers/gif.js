@@ -1,7 +1,7 @@
 const { parseImageSizing, parseImagePair } = require('../parsers');
 
 module.exports = function gif(row, sheetName) {
-  const res = { ...parseImageSizing(row) };
+  const res = { ...parseImageSizing(row, 'gif') };
   const srcPair = parseImagePair(row, sheetName, ['gif', 'image']);
   if (srcPair) {
     res.src = srcPair;

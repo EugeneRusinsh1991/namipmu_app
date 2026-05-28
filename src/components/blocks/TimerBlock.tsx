@@ -102,8 +102,8 @@ export const TimerBlock: FC<TimerBlockProps> = ({ item, lang }) => {
           borderRadius: specs.timer.borderRadius,
           padding: specs.timer.containerPadding,
           marginVertical: specs.timer.marginVertical,
-          backgroundColor: specs.timer.backgroundColor,
-          borderColor: specs.timer.borderColor,
+          backgroundColor: tokens.surface.surfaceSecondary,
+          borderColor: tokens.interactive.border,
           borderWidth: 1,
           shadowColor: tokens.text.primary,
           shadowOpacity: 0.08,
@@ -116,6 +116,11 @@ export const TimerBlock: FC<TimerBlockProps> = ({ item, lang }) => {
           alignItems: 'center',
           justifyContent: 'flex-start',
           marginBottom: tokens.spacing.md,
+        },
+        headerTitle: {
+          fontSize: tokens.typography.fontSizeLg,
+          fontWeight: tokens.typography.fontWeightBold,
+          color: tokens.text.primary,
         },
         icon: {
           fontSize: tokens.typography.fontSizeLg,

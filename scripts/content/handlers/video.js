@@ -1,7 +1,7 @@
 const { parseImageSizing, parseVideoPair } = require('../parsers');
 
 module.exports = function video(row, sheetName) {
-  const res = { ...parseImageSizing(row) };
+  const res = { ...parseImageSizing(row, 'video') };
   const srcPair = parseVideoPair(row, sheetName, ['video']);
   if (srcPair) {
     res.src = srcPair;

@@ -1,6 +1,31 @@
+const fs = require('fs');
+const path = require('path');
+const Module = require('module');
+const ts = require('typescript');
 const { getRowField } = require('./utils');
 const { processImageField } = require('./imageResolver');
 const { processVideoField } = require('./videoResolver');
+
+function requireTypeScript(filePath) {
+  const absolutePath = path.resolve(__dirname, filePath);
+  const source = fs.readFileSync(absolutePath, 'utf8');
+  const compiled = ts.transpileModule(source, {
+    compilerOptions: {
+      module: ts.ModuleKind.CommonJS,
+      target: ts.ScriptTarget.ES2020,
+      esModuleInterop: true,
+      jsx: ts.JsxEmit.Preserve,
+    },
+  }).outputText;
+
+  const moduleWrapper = new Module(absolutePath, module.parent);
+  moduleWrapper.filename = absolutePath;
+  moduleWrapper.paths = Module._nodeModulePaths(path.dirname(absolutePath));
+  moduleWrapper._compile(compiled, absolutePath);
+  return moduleWrapper.exports;
+}
+
+const { IMAGE_SIZES, COMPONENT_SIZES } = requireTypeScript('../../src/styles/content-dimensions.ts');
 
 const LANGUAGE_ALIASES = {
   ua: ['ukr', 'ua'],
@@ -199,27 +224,83 @@ function parseVideoPair(row, sheetName, bases = ['video']) {
   return result;
 }
 
-function parseImageSizing(row) {
+function getDefaultImageSizing(type) {
+  switch (type) {
+    case 'heroImage':
+      return { height: IMAGE_SIZES.hero.height };
+    case 'gif':
+    case 'video':
+      return { height: IMAGE_SIZES.video.height };
+    case 'image':
+    default:
+      return { height: IMAGE_SIZES.card.height };
+  }
+}
+
+function parseImageSizing(row, blockType = 'image') {
   const sizing = parseMetaString(getRowField(row, 'meta'));
 
-  if (sizing.width == null) {
-    const width = parseSize(getRowField(row, 'imageWidth'));
+  const widthRaw = getRowField(row, 'imageWidth');
+  const heightRaw = getRowField(row, 'imageHeight');
+  const ratioRaw = getRowField(row, 'imageAspectRatio');
+
+  if (sizing.width == null && widthRaw != null) {
+    const width = parseSize(widthRaw);
     if (width != null) sizing.width = width;
+    else if (String(widthRaw).trim() !== '') {
+      console.warn(`Invalid imageWidth value: ${widthRaw}`);
+    }
   }
-  if (sizing.height == null) {
-    const height = parseSize(getRowField(row, 'imageHeight'));
+
+  if (sizing.height == null && heightRaw != null) {
+    const height = parseSize(heightRaw);
     if (height != null) sizing.height = height;
+    else if (String(heightRaw).trim() !== '') {
+      console.warn(`Invalid imageHeight value: ${heightRaw}`);
+    }
   }
-  if (sizing.aspectRatio == null) {
-    const aspectRatio = parseAspectRatio(getRowField(row, 'imageAspectRatio'));
+
+  if (sizing.aspectRatio == null && ratioRaw != null) {
+    const aspectRatio = parseAspectRatio(ratioRaw);
     if (aspectRatio != null) sizing.aspectRatio = aspectRatio;
+    else if (String(ratioRaw).trim() !== '') {
+      console.warn(`Invalid imageAspectRatio value: ${ratioRaw}`);
+    }
   }
+
   if (!sizing.resizeMode) {
     const resizeMode = getRowField(row, 'imageResizeMode');
     if (resizeMode) sizing.resizeMode = String(resizeMode).trim();
   }
 
-  return sizing;
+  const result = { ...sizing };
+  const defaults = getDefaultImageSizing(blockType);
+
+  if (result.width == null && result.height == null) {
+    return { ...defaults, ...result };
+  }
+
+  if (result.width != null && result.height == null) {
+    if (result.aspectRatio != null) {
+      result.height = Math.round(result.width / result.aspectRatio);
+    } else {
+      result.height = defaults.height;
+    }
+  }
+
+  if (result.height != null && result.width == null) {
+    if (result.aspectRatio != null) {
+      result.width = Math.round(result.height * result.aspectRatio);
+    } else if (defaults.width != null) {
+      result.width = defaults.width;
+    }
+  }
+
+  if (result.width == null && result.height == null) {
+    return { ...defaults, ...result };
+  }
+
+  return result;
 }
 
 module.exports = {

@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { useTheme } from '../../context/ThemeContext';
+import { useDesignTokens } from '../../hooks/useDesignTokens';
 import { getLocalized } from '../../utils/i18n';
 
 /**
@@ -22,30 +22,33 @@ interface SpacerDividerProps {
 export const SpacerDivider: FC<SpacerDividerProps> = ({ item, lang, heroOverlapStyle }) => {
   const title = getLocalized(item.title, lang, '');
   const hasTitle = Boolean(title && String(title).trim());
-  const { colors, typography } = useTheme();
+  const { tokens } = useDesignTokens();
 
   const dynamicStyles = StyleSheet.create({
     wrapper: {
       flexDirection: 'row',
       alignItems: 'center',
       width: '100%',
-      paddingVertical: 8,
+      paddingVertical: tokens.spacing.sm,
     },
     line: {
       flex: 1,
       height: StyleSheet.hairlineWidth,
-      backgroundColor: colors.borderDefault,
+      backgroundColor: tokens.interactive.border,
     },
     lineFull: {
       width: '100%',
       height: StyleSheet.hairlineWidth,
-      backgroundColor: colors.borderDefault,
+      backgroundColor: tokens.interactive.border,
     },
     text: {
-      marginHorizontal: 8,
-      textAlign: 'center',
+      marginHorizontal: tokens.spacing.sm,
+      textAlign: 'center' as const,
       flexShrink: 1,
       minWidth: 0,
+      color: tokens.text.secondary,
+      fontSize: tokens.typography.fontSizeSm,
+      lineHeight: tokens.typography.lineHeightNormal,
     },
   });
 
@@ -54,9 +57,9 @@ export const SpacerDivider: FC<SpacerDividerProps> = ({ item, lang, heroOverlapS
       {hasTitle ? (
         <>
           <View style={dynamicStyles.line} />
-          <Text 
-            style={[dynamicStyles.text, typography.spacer]} 
-            numberOfLines={2} 
+          <Text
+            style={dynamicStyles.text}
+            numberOfLines={2}
             ellipsizeMode="tail"
           >
             {title}
