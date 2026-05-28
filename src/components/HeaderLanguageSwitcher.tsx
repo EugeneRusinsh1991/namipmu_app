@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
     Modal,
     Pressable,
@@ -10,7 +10,6 @@ import {
 import { useLanguage } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
 import { useDesignTokens } from '../hooks/useDesignTokens';
-import { colors, radius } from '../styles/theme';
 
 type LanguageOption = {
   value: string;
@@ -36,13 +35,13 @@ export default function PageLanguageButton() {
 
   // dynamic styles derived from theme colors
   const dynamicButtonStyle = {
-    backgroundColor: themeColors?.white || colors.white,
-    borderColor: themeColors?.border || colors.border,
+    backgroundColor: themeColors?.white || tokens.white,
+    borderColor: themeColors?.border || tokens.interactive.border,
   };
 
   const dynamicDropdownStyle = {
-    backgroundColor: themeColors?.white || colors.white,
-    borderColor: themeColors?.border || colors.border,
+    backgroundColor: themeColors?.white || tokens.white,
+    borderColor: themeColors?.border || tokens.interactive.border,
   };
 
   const dynamicTextColor = { color: tokens.text.primary };
@@ -51,6 +50,81 @@ export default function PageLanguageButton() {
     setLang(value);
     setIsOpen(false);
   };
+
+  // Memoized styles using design tokens
+  const styles = useMemo(() => StyleSheet.create({
+    button: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 4,
+      paddingHorizontal: tokens.spacing.md,
+      paddingVertical: tokens.spacing.xs,
+      borderRadius: tokens.borders.radiusMd,
+      borderWidth: tokens.borders.widthBase,
+      ...tokens.shadows.sm,
+    },
+    buttonPressed: {
+      opacity: 0.7,
+    },
+    buttonText: {
+      fontSize: tokens.typography.fontSizeSm,
+    },
+    arrow: {
+      fontSize: tokens.typography.fontSizeXs,
+      marginLeft: 2,
+    },
+    overlay: {
+      flex: 1,
+      backgroundColor: 'rgba(0, 0, 0, 0.3)',
+      justifyContent: 'flex-start',
+      alignItems: 'flex-end',
+      paddingTop: 80,
+      paddingRight: tokens.spacing.md,
+    },
+    dropdownContainer: {
+      backgroundColor: tokens.white,
+      borderRadius: tokens.borders.radiusMd,
+      overflow: 'hidden',
+      minWidth: 180,
+      ...tokens.shadows.md,
+      borderWidth: tokens.borders.widthBase,
+      borderColor: tokens.interactive.border,
+    },
+    option: {
+      paddingVertical: tokens.spacing.sm,
+      paddingHorizontal: tokens.spacing.md,
+      borderBottomWidth: tokens.borders.widthThin,
+      borderBottomColor: tokens.interactive.border,
+    },
+    optionActive: {
+      backgroundColor: tokens.surface.surfaceSecondary,
+    },
+    optionPressed: {
+      backgroundColor: tokens.surface.surfaceSecondary,
+    },
+    optionContent: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: tokens.spacing.md,
+    },
+    optionCode: {
+      fontSize: tokens.typography.fontSizeXs,
+      minWidth: 30,
+    },
+    optionText: {
+      fontSize: tokens.typography.fontSizeMd,
+    },
+    optionTextActive: {
+      color: tokens.interactive.accent,
+    },
+    iconButton: {
+      padding: tokens.spacing.xs,
+      borderRadius: tokens.borders.radiusFull,
+      backgroundColor: tokens.white,
+      borderWidth: tokens.borders.widthBase,
+      borderColor: tokens.interactive.border,
+    },
+  }), [tokens]);
 
   return (
     <>
@@ -69,12 +143,12 @@ export default function PageLanguageButton() {
           onPress={() => toggleTheme()}
           accessibilityRole="button"
           accessibilityLabel={`Переключить тему`}
-          style={({ pressed }) => [styles.iconButton, { backgroundColor: themeColors?.white || colors.white }, pressed && { opacity: 0.7 }]}
+          style={({ pressed }) => [styles.iconButton, { backgroundColor: themeColors?.white || tokens.white }, pressed && { opacity: 0.7 }]}
         >
           <Ionicons
             name={theme === 'dark' ? 'sunny' : 'moon'}
             size={18}
-            color={themeColors?.accent || colors.accent}
+            color={themeColors?.accent || tokens.interactive.accent}
           />
         </Pressable>
       </View>
@@ -98,7 +172,7 @@ export default function PageLanguageButton() {
                   key={option.value}
                   style={({ pressed }) => [
                     styles.option,
-                    isActive && { backgroundColor: themeColors?.cardBackground || colors.cardBackground },
+                    isActive && { backgroundColor: themeColors?.cardBackground || tokens.surface.surfaceSecondary },
                     pressed && styles.optionPressed,
                   ]}
                   onPress={() => handleSelectLanguage(option.value)}
@@ -111,7 +185,7 @@ export default function PageLanguageButton() {
                       style={[
                         styles.optionText,
                         { color: tokens.text.primary },
-                        isActive && { color: themeColors?.primary || colors.primary },
+                        isActive && { color: themeColors?.primary || tokens.interactive.accent },
                       ]}
                     >
                       {option.label}
@@ -126,85 +200,3 @@ export default function PageLanguageButton() {
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  button: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: radius.md,
-    borderWidth: 1,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.12,
-    shadowRadius: 12,
-    elevation: 4,
-  },
-  buttonPressed: {
-    opacity: 0.7,
-  },
-  buttonText: {
-    fontSize: 13,
-  },
-  arrow: {
-    fontSize: 10,
-    marginLeft: 2,
-  },
-  overlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
-    justifyContent: 'flex-start',
-    alignItems: 'flex-end',
-    paddingTop: 80,
-    paddingRight: 16,
-  },
-  dropdownContainer: {
-    backgroundColor: colors.white,
-    borderRadius: radius.md,
-    overflow: 'hidden',
-    minWidth: 180,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.15,
-    shadowRadius: 20,
-    elevation: 6,
-    borderWidth: 1,
-    borderColor: colors.border,
-  },
-  option: {
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
-  },
-  optionActive: {
-    backgroundColor: colors.cardBackground,
-  },
-  optionPressed: {
-    backgroundColor: colors.cardBackground,
-  },
-  optionContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
-  optionCode: {
-    fontSize: 12,
-    minWidth: 30,
-  },
-  optionText: {
-    fontSize: 14,
-  },
-  optionTextActive: {
-    color: colors.primary,
-  },
-  iconButton: {
-    padding: 6,
-    borderRadius: radius.round,
-    backgroundColor: colors.white,
-    borderWidth: 1,
-    borderColor: colors.border,
-  },
-});

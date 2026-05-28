@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { StyleSheet, View, ViewStyle } from 'react-native';
-import { spacing } from '../styles/theme';
+import { useDesignTokens } from '../hooks/useDesignTokens';
 import { getLocalized, getLocalizedAsset } from '../utils/i18n';
 import Card from './Card';
 
@@ -81,18 +81,21 @@ interface CardGridProps {
 export default function CardGrid({ 
   items = [], 
   lang = 'ru', 
-  gap = spacing.md, 
+  gap, 
   heroOverlapStyle = {} 
 }: CardGridProps): ReactNode {
+  const { tokens } = useDesignTokens();
+  const effectiveGap = gap ?? tokens.spacing.md;
+
   // Возвращаем null если нет элементов
   if (!items || items.length === 0) return null;
 
   // Контейнерный стиль с отрицательным margin для компенсации padding карточек
-  const containerStyle: ViewStyle = {
+  const containerStyle: ViewStyle = useMemo(() => ({
     ...styles.container,
-    marginHorizontal: -Math.floor(gap / 2),
+    marginHorizontal: -Math.floor(effectiveGap / 2),
     ...heroOverlapStyle,
-  };
+  }), [tokens, effectiveGap, heroOverlapStyle]);
 
   return (
     <View style={containerStyle}>
@@ -105,8 +108,8 @@ export default function CardGrid({
 
         // Стиль для wrapper каждой карточки (с padding для создания промежутков)
         const cardWrapperStyle: ViewStyle = {
-          paddingHorizontal: Math.floor(gap / 2),
-          marginBottom: gap,
+          paddingHorizontal: Math.floor(effectiveGap / 2),
+          marginBottom: effectiveGap,
         };
 
         return (
@@ -118,7 +121,7 @@ export default function CardGrid({
               href={item.href}
               size={size}
               inGrid={true}
-              gap={gap}
+              gap={effectiveGap}
             />
           </View>
         );

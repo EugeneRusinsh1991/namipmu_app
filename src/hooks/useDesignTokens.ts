@@ -22,13 +22,14 @@ import {
     type ComponentSpecifications,
     type SemanticTokens,
 } from '../styles/design-system';
+import type { TypographyStyles } from '../styles/design-system/typography';
 
 /**
  * Полный набор дизайн-токенов и спецификаций
  */
 export interface DesignTokensHookReturn {
   /** Семантические токены (цвета, типография, отступы, размеры) */
-  tokens: SemanticTokens;
+  tokens: SemanticTokens & { typography: TypographyStyles };
   
   /** Спецификации компонентов (Button, Card, Input, etc.) */
   specs: ComponentSpecifications;
@@ -80,8 +81,16 @@ export function useDesignTokens(): DesignTokensHookReturn {
     [themeContext.colors]
   );
 
+  const tokensWithTypography = useMemo(
+    () => ({
+      ...themeContext.colors,
+      typography: themeContext.typography,
+    }),
+    [themeContext.colors, themeContext.typography]
+  );
+
   return {
-    tokens: themeContext.colors as SemanticTokens,
+    tokens: tokensWithTypography as SemanticTokens & { typography: TypographyStyles },
     specs,
     theme: themeContext.theme,
     isDark: themeContext.isDark,

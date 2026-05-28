@@ -1,108 +1,128 @@
-import React, { FC, useState } from 'react';
-import { Image, ImageResizeMode, ImageStyle } from 'react-native';
-import { getUriFromSource, isLikelyValidUri } from '../utils/imageHelpers';
+import React, { useMemo, useState } from 'react';
+import {
+    Image,
+    ImageResizeMode,
+    ImageSourcePropType,
+    ImageStyle,
+    StyleProp,
+    StyleSheet,
+} from 'react-native';
+import { useDesignTokens } from '../hooks/useDesignTokens';
 
-const componentDefaults = require('../styles/componentDefaults').componentStyles;
+const errorImage: ImageSourcePropType = require('../../assets/images/error.jpg');
 
-const errorImage = require('../../assets/images/error.jpg');
+const getUriString = (source: ImageSourcePropType | undefined | null): string => {
+  if (!source) return '';
 
-/**
- * Props для компонента ImageWithFallback
- */
+  if (typeof source === 'number') {
+    try {
+      const resolved = Image.resolveAssetSource(source);
+      return resolved?.uri ? String(resolved.uri) : '';
+    } catch {
+      return '';
+    }
+  }
+
+  if (typeof source === 'object' && 'uri' in source && source.uri) {
+    return String(source.uri);
+  }
+
+  if (typeof source === 'string') {
+    return source;
+  }
+
+  return '';
+};
+
+const isValidUriString = (uri: unknown): boolean => {
+  if (!uri) return false;
+
+  const value = String(uri).trim();
+  if (!value) return false;
+  if (/^https?:\/\//i.test(value)) return true;
+  if (/^file:\/\//i.test(value)) return true;
+  if (/^data:/i.test(value)) return true;
+  if (value.includes('images/') || value.includes('assets/')) return true;
+  if (/\.(jpg|jpeg|png|gif|webp|mp4)(\?.*)?$/i.test(value)) return true;
+  return false;
+};
+
 interface ImageWithFallbackProps {
-  /** Источник изображения */
-  source: any;
-  
-  /** Стили для изображения */
-  style?: ImageStyle;
-  
-  /** Ширина изображения */
+  source?: ImageSourcePropType;
+  style?: StyleProp<ImageStyle>;
   width?: number;
-  
-  /** Высота изображения */
   height?: number;
-  
-  /** Соотношение сторон */
   aspectRatio?: number;
-  
-  /** Режим отображения изображения */
   resizeMode?: ImageResizeMode;
-  
-  /** Стили для fallback изображения */
-  fallbackStyle?: ImageStyle;
+  fallbackStyle?: StyleProp<ImageStyle>;
 }
 
-/**
- * ImageWithFallback — компонент для изображений с обработкой ошибок
- * Используется для heroImage. Для адаптивных изображений используйте ResponsiveImage.
- */
-const ImageWithFallback: FC<ImageWithFallbackProps> = ({
+const ImageWithFallback = ({
   source,
   style,
   width,
   height,
   aspectRatio,
   resizeMode = 'cover',
-  fallbackStyle = {},
-}) => {
+  fallbackStyle,
+}: ImageWithFallbackProps) => {
+  const { tokens, specs } = useDesignTokens();
   const [failedUri, setFailedUri] = useState<string>('');
   const [useFallback, setUseFallback] = useState<boolean>(false);
 
-  /**
-   * Обработчик ошибки загрузки
-   */
-  const handleError = (e: any): void => {
-    const uri = getUriFromSource(source);
-    setFailedUri(uri);
-    setUseFallback(true);
-    console.warn('ImageWithFallback failed to load:', uri, e?.nativeEvent || e);
-  };
-
-  /**
-   * Проверяет, является ли значение положительным числом
-   */
-  const isPositiveNumber = (value: any): value is number => 
-    typeof value === 'number' && value > 0;
-
-  // Строим стиль из параметров, игнорируя нулевые размеры и неверный aspectRatio
-  const computedStyle: ImageStyle = {
-    ...style,
-    ...(isPositiveNumber(width) && { width }),
-    ...(isPositiveNumber(height) && { height }),
-    ...(isPositiveNumber(aspectRatio) && { aspectRatio }),
-    ...fallbackStyle,
-  };
-
-  // Ensure borderRadius is applied to Image itself (Android needs it on the image)
-  if (!computedStyle.borderRadius) {
-    computedStyle.borderRadius = componentDefaults?.image?.borderRadius;
-  }
-
-  const uri = getUriFromSource(source);
-  const invalidUri = !source || !isLikelyValidUri(uri);
+  const uri = getUriString(source);
+  const invalidUri = !source || !isValidUriString(uri);
   const shouldUseFallback = useFallback || invalidUri || uri === failedUri;
-
-  // choose final source: either original or local error image
   const finalSource = shouldUseFallback ? errorImage : source;
 
-  // If finalSource is a local asset, try to derive aspect ratio to avoid zero-height blanks
-  let assetAspect: number | null = null;
-  try {
+  const computedStyle = useMemo<StyleProp<ImageStyle>>(() => {
+    const normalizedStyle = StyleSheet.flatten(style) ?? {};
+    const normalizedFallbackStyle = StyleSheet.flatten(fallbackStyle) ?? {};
+
+    const mergedStyle: ImageStyle = {
+      ...normalizedStyle,
+      ...normalizedFallbackStyle,
+      ...(typeof width === 'number' && width > 0 ? { width } : {}),
+      ...(typeof height === 'number' && height > 0 ? { height } : {}),
+      ...(typeof aspectRatio === 'number' && aspectRatio > 0 ? { aspectRatio } : {}),
+    };
+
+    if (mergedStyle.borderRadius == null) {
+      mergedStyle.borderRadius = specs?.image?.borderRadius ?? tokens.borders.radiusMd;
+    }
+
+    return mergedStyle;
+  }, [style, fallbackStyle, width, height, aspectRatio, specs?.image?.borderRadius, tokens.borders.radiusMd]);
+
+  const finalComputedStyle = useMemo<StyleProp<ImageStyle>>(() => {
+    const flattenedComputed = StyleSheet.flatten(computedStyle) ?? {};
+    const styleObject = { ...flattenedComputed } as ImageStyle;
+
+    let assetAspect: number | null = null;
     if (typeof finalSource === 'number') {
-      const resolved = Image.resolveAssetSource(finalSource);
-      if (resolved && resolved.width && resolved.height) {
-        assetAspect = resolved.width / resolved.height;
+      try {
+        const resolved = Image.resolveAssetSource(finalSource);
+        if (resolved?.width && resolved?.height) {
+          assetAspect = resolved.width / resolved.height;
+        }
+      } catch {
+        assetAspect = null;
       }
     }
-  } catch (e) {
-    // ignore
-  }
 
-  // If no explicit size provided and we have asset aspect, apply it
-  const finalComputedStyle: ImageStyle = { ...computedStyle };
-  if (!finalComputedStyle.width && !finalComputedStyle.height && assetAspect) {
-    finalComputedStyle.aspectRatio = assetAspect;
-  }
+    if (!styleObject.width && !styleObject.height && assetAspect) {
+      styleObject.aspectRatio = assetAspect;
+    }
+
+    return styleObject;
+  }, [computedStyle, finalSource]);
+
+  const handleError = (event: any) => {
+    const sourceUri = getUriString(source);
+    setFailedUri(sourceUri);
+    setUseFallback(true);
+    console.warn('ImageWithFallback failed to load:', sourceUri, event?.nativeEvent || event);
+  };
 
   return (
     <Image

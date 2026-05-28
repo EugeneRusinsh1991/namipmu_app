@@ -1,8 +1,8 @@
 import React, { createContext, useContext, useMemo } from 'react';
 import { useInitializeTheme } from '../hooks/useInitializeTheme';
-import { getComponentSpecs } from '../styles/design-system/components';
-import { getTheme, lightTheme } from '../styles/design-system/theme';
-import { getTypography } from '../styles/design-system/typography';
+import { ComponentSpecifications, getComponentSpecs } from '../styles/design-system/components';
+import { getTheme, lightTheme, SemanticTokens } from '../styles/design-system/theme';
+import { getTypography, TypographyStyles } from '../styles/design-system/typography';
 import { LanguageProvider } from './LanguageContext';
 
 export interface ThemeContextValue {
@@ -11,12 +11,9 @@ export interface ThemeContextValue {
   toggleTheme: () => Promise<void>;
   
   // Design System exports
-  colors: any;
-  typography: any;
-  componentStyles: any;
-  
-  // Legacy support
-  components?: any;
+  colors: SemanticTokens;
+  typography: TypographyStyles;
+  componentStyles: ComponentSpecifications;
 }
 
 const ThemeContext = createContext<ThemeContextValue>({
@@ -51,7 +48,6 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
     colors: designSystem.colors,
     typography: designSystem.typography,
     componentStyles: designSystem.componentStyles,
-    components: designSystem.componentStyles,
   };
 
   return (

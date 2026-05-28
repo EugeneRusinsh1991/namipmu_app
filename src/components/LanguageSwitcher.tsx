@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
     Pressable,
     StyleSheet,
@@ -8,9 +8,7 @@ import {
     type TextStyle,
     type ViewStyle,
 } from 'react-native';
-import { useTheme } from '../context/ThemeContext';
 import { useDesignTokens } from '../hooks/useDesignTokens';
-import { radius, spacing } from '../styles/theme';
 
 type LanguageOption = {
   value: string;
@@ -39,8 +37,58 @@ export default function LanguageSwitcher({
   style,
   optionTextStyle,
 }: LanguageSwitcherProps) {
-  const { colors } = useTheme();
   const { tokens } = useDesignTokens();
+
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        root: {
+          flexDirection: 'row',
+          borderRadius: tokens.borders.radiusFull,
+          padding: tokens.spacing.xs,
+          alignSelf: 'center',
+          borderWidth: tokens.borders.widthBase,
+          borderColor: tokens.interactive.border,
+          backgroundColor: tokens.surface.surfacePrimary,
+          ...tokens.shadows.sm,
+          marginVertical: tokens.spacing.md,
+        },
+        option: {
+          flex: 1,
+          paddingVertical: tokens.spacing.sm,
+          paddingHorizontal: tokens.spacing.md,
+          borderRadius: tokens.borders.radiusFull,
+          borderWidth: 0,
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: tokens.surface.surfaceSecondary,
+        },
+        optionSpacing: {
+          marginRight: tokens.spacing.sm,
+        },
+        optionActive: {
+          backgroundColor: tokens.interactive.accent,
+          borderWidth: tokens.borders.widthThin,
+          borderColor: tokens.interactive.accent,
+          ...tokens.shadows.sm,
+        },
+        optionPressed: {
+          opacity: 0.78,
+          transform: [{ scale: 0.995 }],
+        },
+        optionLabel: {
+          lineHeight: 20,
+          fontSize: tokens.typography.fontSizeSm,
+          color: tokens.text.tertiary,
+        },
+        optionLabelActive: {
+          color: tokens.text.primary,
+          fontWeight: tokens.typography.fontWeightSemibold,
+        },
+      }),
+    [tokens]
+  );
+
   const containerStyle = StyleSheet.flatten([styles.root, style]);
 
   return (
@@ -59,7 +107,6 @@ export default function LanguageSwitcher({
                 !isLast && styles.optionSpacing,
                 isActive && styles.optionActive,
                 pressed && styles.optionPressed,
-                { backgroundColor: isActive ? colors.cardBackground : colors.white, borderColor: colors.border },
               ])
             }
             accessibilityRole="button"
@@ -71,10 +118,6 @@ export default function LanguageSwitcher({
                 styles.optionLabel,
                 isActive && styles.optionLabelActive,
                 optionTextStyle,
-                {
-                  color: isActive ? tokens.text.primary : tokens.text.tertiary,
-                  fontWeight: tokens.typography.fontWeightSemibold,
-                },
               ])}
             >
               {option.label}
@@ -85,48 +128,3 @@ export default function LanguageSwitcher({
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  root: {
-    flexDirection: 'row',
-    borderRadius: radius.round,
-    padding: spacing.xs / 2,
-    alignSelf: 'center',
-    borderWidth: 1,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.08,
-    shadowRadius: 15,
-    elevation: 4,
-    marginVertical: 18,
-  },
-  option: {
-    flex: 1,
-    paddingVertical: 12,
-    paddingHorizontal: 18,
-    borderRadius: 999,
-    borderWidth: 0,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  optionSpacing: {
-    marginRight: 10,
-  },
-  optionActive: {
-    borderWidth: 1,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 6,
-    elevation: 2,
-  },
-  optionPressed: {
-    opacity: 0.78,
-    transform: [{ scale: 0.995 }],
-  },
-  optionLabel: {
-    //fontSize: typography.fontSizeSm,
-    lineHeight: 20,
-  },
-  optionLabelActive: {
-  },
-});

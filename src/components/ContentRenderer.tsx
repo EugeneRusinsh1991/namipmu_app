@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLanguage } from '../context/LanguageContext';
-import { spacing } from '../styles/theme';
+import { useDesignTokens } from '../hooks/useDesignTokens';
 import { blockRegistry } from './blocks/registry';
 import CardGrid from './CardGrid';
 
@@ -17,6 +17,7 @@ interface ContentRendererProps {
 
 const ContentRenderer: React.FC<ContentRendererProps> = ({ content, lang = 'ru' }) => {
   const { setLang } = useLanguage();
+  const { tokens } = useDesignTokens();
   const filteredContent = content.filter(item => item.type !== 'heroImage');
   const hadHeroImage = content.some(item => item.type === 'heroImage');
 
@@ -40,7 +41,7 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({ content, lang = 'ru' 
   for (let i = 0; i < filteredContent.length; i++) {
     const item = filteredContent[i];
     const isFirstAfterHero = i === 0 && hadHeroImage;
-    const heroOverlapStyle = isFirstAfterHero ? { marginTop: -spacing.xxl } : {};
+    const heroOverlapStyle = isFirstAfterHero ? { marginTop: -tokens.spacing.xxl } : {};
 
     // Group consecutive card-like items
     if (item && typeof item.type === 'string' && /^card/i.test(item.type)) {
@@ -57,7 +58,7 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({ content, lang = 'ru' 
             key: `card-group-${i}`,
             items: group,
             lang,
-            gap: spacing.md,
+            gap: tokens.spacing.md,
             heroOverlapStyle,
           })
         );

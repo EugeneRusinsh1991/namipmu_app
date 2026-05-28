@@ -1,6 +1,6 @@
+import { useDesignTokens } from '@/hooks/useDesignTokens';
 import React, { FC, useMemo, useState } from 'react';
 import { Pressable, View } from 'react-native';
-import { useDesignTokens } from '../../hooks/useDesignTokens';
 import { getLocalized } from '../../utils/i18n';
 import ScaledText from '../ScaledText';
 
@@ -90,7 +90,7 @@ export const ChecklistBlock: FC<ChecklistBlockProps> = ({ item, lang, heroOverla
       checkmark: {
         color: tokens.interactive.accent,
         fontSize: tokens.typography.fontSizeSm,
-        lineHeight: 18,
+        lineHeight: tokens.typography.lineHeightNormal,
       },
       itemText: {
         flex: 1,

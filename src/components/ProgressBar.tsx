@@ -1,40 +1,45 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { useTheme } from '../context/ThemeContext';
+import { useDesignTokens } from '../hooks/useDesignTokens';
 
 interface ProgressBarProps {
-  progress: number; // 0 to 100
+  progress: number; // 0 to 1
 }
 
 export default function ProgressBar({ progress }: ProgressBarProps) {
-  // Ensure progress is a valid number to prevent "Value is undefined" errors in native styles
-  const clampedProgress = isNaN(progress) ? 0 : Math.max(0, Math.min(100, progress));
+  const { tokens, specs } = useDesignTokens();
 
-  const { colors } = useTheme();
+  const styles = useMemo(() => {
+    const normalizedProgress = isNaN(progress) ? 0 : Math.max(0, Math.min(1, progress));
+    const progressBarHeight =
+      typeof (specs as any)?.progressBar?.height === 'number'
+        ? (specs as any).progressBar.height
+        : tokens.spacing.xs;
+    const borderRadius =
+      typeof tokens.borders.radiusFull === 'number'
+        ? tokens.borders.radiusFull
+        : tokens.borders.radiusMd;
+
+    return StyleSheet.create({
+      container: {
+        width: '100%',
+        height: progressBarHeight,
+        backgroundColor: tokens.interactive.border,
+        borderRadius,
+        overflow: 'hidden',
+      },
+      bar: {
+        width: `${normalizedProgress * 100}%`,
+        height: '100%',
+        backgroundColor: tokens.interactive.accent,
+        borderRadius,
+      },
+    });
+  }, [tokens, specs, progress]);
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.border }]}>
-      <View
-        style={[
-          styles.bar,
-          {
-            width: `${clampedProgress}%`,
-            backgroundColor: colors.accent,
-          },
-        ]}
-      />
+    <View style={styles.container}>
+      <View style={styles.bar} />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-    height: 4, // Увеличено в 2 раза для лучшей видимости (база 2px)
-    overflow: 'hidden',
-    zIndex: 50,
-  },
-  bar: {
-    height: '100%',
-  },
-});

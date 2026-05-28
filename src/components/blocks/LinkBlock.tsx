@@ -1,7 +1,7 @@
+import { useDesignTokens } from '@/hooks/useDesignTokens';
 import { Link } from 'expo-router';
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 import { StyleSheet } from 'react-native';
-import { useDesignTokens } from '../../hooks/useDesignTokens';
 import { getLocalized } from '../../utils/i18n';
 import ScaledText from '../ScaledText';
 
@@ -31,9 +31,15 @@ export const LinkBlock: FC<LinkBlockProps> = ({ item, lang, heroOverlapStyle }) 
     : item.href;
   const flattenedHeroStyle = StyleSheet.flatten(heroOverlapStyle);
 
+  const styles = useMemo(() => ({
+    linkText: {
+      color: tokens.interactive.accent,
+    },
+  }), [tokens]);
+
   return (
     <Link href={normalizedHref} style={flattenedHeroStyle}>
-      <ScaledText style={[{ color: tokens.interactive.accent }, flattenedHeroStyle]}>
+      <ScaledText style={[styles.linkText, flattenedHeroStyle]}>
         {text}
       </ScaledText>
     </Link>

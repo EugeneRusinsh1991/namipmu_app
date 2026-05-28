@@ -1,8 +1,5 @@
 /**
  * Design System - Typography
- * 
- * Вместо статического StyleSheet.create, экспортируем функцию getTypography,
- * которая возвращает стили, привязанные к переданным цветам.
  */
 
 import type { SemanticTokens } from './theme';
@@ -63,12 +60,6 @@ export interface TypographyStyles {
   caption: any;
   label: any;
   labelSmall: any;
-  
-  // Legacy names (для обратной совместимости)
-  title: any;
-  subtitle: any;
-  text: any;
-  spacer: any;
   eyebrow: any;
 }
 
@@ -144,43 +135,13 @@ export function getTypography(colors: SemanticTokens, fontScale = 1): Typography
       color: colors.textPrimary,
       fontFamily: scale.familyMain,
     },
-    
-    // Legacy support (для обратной совместимости с существующим кодом)
-    title: {
-      fontSize: scale.fontSizeXxl * fontScale,
-      fontWeight: scale.fontWeightBold,
-      lineHeight: scale.fontSizeXxl * fontScale * scale.lineHeightTight,
-      color: colors.textPrimary,
-      fontFamily: scale.familyHeading,
-    },
-    subtitle: {
-      fontSize: scale.fontSizeLg * fontScale,
-      fontWeight: scale.fontWeightSemibold,
-      lineHeight: scale.fontSizeLg * fontScale * scale.lineHeightTight,
-      color: colors.textPrimary,
-      fontFamily: scale.familyHeading,
-    },
-    text: {
-      fontSize: scale.fontSizeMd * fontScale,
-      fontWeight: scale.fontWeightRegular,
-      lineHeight: scale.fontSizeMd * fontScale * scale.lineHeightNormal,
-      color: colors.bodyText,
-      fontFamily: scale.familyMain,
-    },
-    spacer: {
-      fontSize: scale.fontSizeSm * fontScale,
-      fontWeight: scale.fontWeightRegular,
-      lineHeight: scale.fontSizeSm * fontScale * scale.lineHeightNormal,
-      color: colors.muted,
-      fontFamily: scale.familyMain,
-    },
     eyebrow: {
-      fontSize: scale.fontSizeXs * fontScale,
+      fontSize: scale.fontSizeSm * fontScale,
       fontWeight: scale.fontWeightSemibold,
-      lineHeight: scale.fontSizeXs * fontScale * scale.lineHeightTight,
-      color: colors.white,
-      fontFamily: scale.familyHeading,
-      textTransform: 'uppercase' as const,
+      lineHeight: scale.fontSizeSm * fontScale * scale.lineHeightTight,
+      color: colors.textSecondary,
+      fontFamily: scale.familyMain,
+      textTransform: 'uppercase' as any,
     },
   };
 }

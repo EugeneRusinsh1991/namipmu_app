@@ -1,10 +1,9 @@
 import { Link } from 'expo-router';
-import React, { useMemo, type ReactNode } from 'react';
+import { useMemo } from 'react';
 import { Pressable, StyleSheet, Text, TextStyle, useWindowDimensions, View, ViewStyle } from 'react-native';
 import { useLanguage } from '../context/LanguageContext';
 import { useDesignTokens } from '../hooks/useDesignTokens';
 import { CARD_SIZES } from '../styles/content-dimensions';
-import { radius, spacing } from '../styles/theme';
 import { getLocalized, getLocalizedAsset } from '../utils/i18n';
 import ImageWithFallback from './ImageWithFallback';
 
@@ -87,22 +86,45 @@ export default function Card({
   inGrid = false, 
   gap,
   lang: propLang
-}: CardProps): ReactNode {
+}: CardProps): JSX.Element {
   const { lang: contextLang } = useLanguage();
   const activeLang = propLang || contextLang || 'ru';
   const { width: windowWidth } = useWindowDimensions();
-  const { tokens } = useDesignTokens();
+  const { tokens, specs } = useDesignTokens();
+  const cardMode = size === 'big' ? 'large' : 'small';
 
-  // Мемоизируем расчеты размеров
+  const styles = useMemo(
+    () => StyleSheet.create({
+      card: {
+        overflow: 'hidden',
+        marginBottom: tokens.spacing.lg,
+        alignSelf: 'center',
+      } as ViewStyle,
+      image: {
+        resizeMode: 'cover',
+      } as ViewStyle,
+      content: {
+        justifyContent: 'flex-start',
+      } as ViewStyle,
+      title: {
+        fontFamily: 'serif',
+      } as TextStyle,
+      description: {
+        fontFamily: 'sans-serif',
+      } as TextStyle,
+    }),
+    [tokens, specs]
+  );
+
   const { cardWidth, sizeConfig } = useMemo(() => {
-    const containerPadding = spacing.lg;
+    const containerPadding = tokens.spacing.lg;
     const maxContentWidth = 600;
     const availableWidth = windowWidth - containerPadding * 2;
     
     let gridWidth: number | null = null;
     if (inGrid) {
       const columns = windowWidth >= 768 ? 3 : 1;
-      const gapSize = typeof gap === 'number' ? gap : spacing.md;
+      const gapSize = typeof gap === 'number' ? gap : tokens.spacing.md;
       const totalGap = gapSize * (columns - 1);
       gridWidth = Math.floor((Math.min(availableWidth, maxContentWidth) - totalGap) / columns);
     }
@@ -112,36 +134,35 @@ export default function Card({
 
     return {
       cardWidth: size === 'small' ? 'auto' : finalWidth,
-      sizeConfig: finalSizeConfig
+      sizeConfig: finalSizeConfig,
     };
-  }, [windowWidth, inGrid, gap, size]);
+  }, [windowWidth, inGrid, gap, size, tokens.spacing.lg]);
 
-  // Получаем картинку в зависимости от языка
   const imageSource = getLocalizedAsset(image, activeLang);
 
-  // Динамические стили в зависимости от размера и темы
   const dynamicCardStyle: ViewStyle = {
     ...styles.card,
     width: cardWidth as any,
-    backgroundColor: tokens.cardBackground,
-    borderColor: tokens.border,
+    backgroundColor: tokens.surface.surfacePrimary,
+    borderColor: tokens.interactive.border,
+    borderWidth: tokens.borders.widthBase,
+    borderRadius: specs.card[cardMode].borderRadius,
     shadowColor: tokens.text.primary,
-    borderRadius: radius.md,
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 2,
+    elevation: specs.card[cardMode].shadowElevation,
   };
 
   const dynamicImageStyle: ViewStyle = {
     ...styles.image,
-    width: size === 'big' ? (cardWidth as number) : (sizeConfig as any).cardWidth,
+    width: size === 'big' ? (cardWidth as number) : sizeConfig.cardWidth,
     height: sizeConfig.imageHeight,
-    borderRadius: radius.md,
+    borderRadius: specs.card[cardMode].borderRadius,
   };
 
   const dynamicContentStyle: ViewStyle = {
     ...styles.content,
-    padding: sizeConfig === CARD_SIZES.large ? spacing.lg : spacing.md,
+    padding: specs.card[cardMode].padding,
   };
 
   const dynamicTitleStyle: TextStyle = {
@@ -159,11 +180,11 @@ export default function Card({
     color: tokens.text.tertiary,
   };
 
-  const safeTitle: string = getLocalized(title, activeLang, '');
-  const safeDescription: string = getLocalized(description, activeLang, '');
+  const safeTitle = getLocalized(title, activeLang, '');
+  const safeDescription = getLocalized(description, activeLang, '');
   const normalizedHref: string | undefined = typeof href === 'string' ? (href.startsWith('/') ? href : `/${href}`) : undefined;
 
-  const cardInner: ReactNode = (
+  const cardInner = (
     <Pressable
       style={dynamicCardStyle}
       accessibilityRole={normalizedHref ? 'link' : 'button'}
@@ -189,24 +210,3 @@ export default function Card({
 
   return cardInner;
 }
-
-const styles = StyleSheet.create({
-  card: {
-    borderWidth: 0,
-    overflow: 'hidden',
-    marginBottom: 20,
-    alignSelf: 'center',
-  } as ViewStyle,
-  image: {
-    resizeMode: 'cover',
-  } as ViewStyle,
-  content: {
-    justifyContent: 'flex-start',
-  } as ViewStyle,
-  title: {
-    fontFamily: 'serif',
-  } as TextStyle,
-  description: {
-    fontFamily: 'sans-serif',
-  } as TextStyle,
-});
