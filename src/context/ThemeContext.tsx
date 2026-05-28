@@ -1,19 +1,9 @@
-import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
-import { Appearance } from 'react-native';
-let AsyncStorage;
-try {
-  AsyncStorage = require('@react-native-async-storage/async-storage').default;
-} catch (e) {
-  // fallback - AsyncStorage may not be installed in this environment
-  AsyncStorage = null;
-}
-
+import React, { createContext, useContext, useMemo } from 'react';
+import { useInitializeTheme } from '../hooks/useInitializeTheme';
 import { getComponentSpecs } from '../styles/design-system/components';
 import { getTheme, lightTheme } from '../styles/design-system/theme';
 import { getTypography } from '../styles/design-system/typography';
 import { LanguageProvider } from './LanguageContext';
-
-const THEME_KEY = '@app:theme';
 
 export interface ThemeContextValue {
   theme: 'light' | 'dark';
@@ -39,42 +29,8 @@ const ThemeContext = createContext<ThemeContextValue>({
 });
 
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
-  const [fontScale, setFontScale] = useState(1);
+  const { theme, fontScale, toggleTheme } = useInitializeTheme();
 
-  useEffect(() => {
-    (async () => {
-      try {
-        let saved: string | null = null;
-        if (AsyncStorage) saved = await AsyncStorage.getItem(THEME_KEY);
-        const system = Appearance.getColorScheme();
-        const initial = (saved || system || 'light') as 'light' | 'dark';
-        applyTheme(initial);
-      } catch (e) {
-        const system = Appearance.getColorScheme();
-        applyTheme((system || 'light') as 'light' | 'dark');
-      }
-    })();
-  }, []);
-
-  function applyTheme(name: 'light' | 'dark') {
-    const n = name === 'dark' ? 'dark' : 'light';
-    console.log('[ThemeContext] applyTheme ->', n);
-    setTheme(n);
-  }
-
-  const toggleTheme = async () => {
-    const next = theme === 'dark' ? 'light' : 'dark';
-    console.log('[ThemeContext] toggleTheme ->', next);
-    applyTheme(next);
-    try {
-      if (AsyncStorage) await AsyncStorage.setItem(THEME_KEY, next);
-    } catch (e) {
-      // ignore
-    }
-  };
-
-  // Memoized design system computed from current theme
   const designSystem = useMemo(() => {
     const isDark = theme === 'dark';
     const colors = getTheme(isDark);

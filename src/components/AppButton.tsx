@@ -1,15 +1,15 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import {
-  Pressable,
-  StyleSheet,
-  Text,
-  type GestureResponderEvent,
-  type PressableProps,
-  type StyleProp,
-  type TextStyle,
-  type ViewStyle,
+    Pressable,
+    StyleSheet,
+    Text,
+    type GestureResponderEvent,
+    type PressableProps,
+    type StyleProp,
+    type TextStyle,
+    type ViewStyle,
 } from 'react-native';
-import { useDesignTokens } from '../hooks/useDesignTokens';
+import { useAppButtonStyles } from '../hooks/useAppButtonStyles';
 
 type AppButtonVariant = 'primary' | 'secondary' | 'ghost';
 
@@ -44,71 +44,15 @@ export default function AppButton({
   onPress,
   ...props
 }: AppButtonProps) {
-  const { tokens, specs } = useDesignTokens();
-  
-  // Получаем спецификацию для текущего варианта кнопки
-  const variantSpecs = specs.button[variant];
-  
-  // Динамические стили для кнопки (зависят от состояния и варианта)
-  const buttonStyle = useMemo(() => ({ pressed }: { pressed: boolean }) =>
-    StyleSheet.flatten([
-      // Базовые размеры из спецификации
-      {
-        height: variantSpecs.height,
-        paddingHorizontal: variantSpecs.paddingHorizontal,
-        paddingVertical: variantSpecs.paddingVertical,
-        borderRadius: variantSpecs.borderRadius,
-        alignItems: 'center',
-        justifyContent: 'center',
-      },
-      
-      // Специфичные для primary варианта
-      variant === 'primary' && {
-        backgroundColor: disabled ? tokens.surface.disabled : variantSpecs.backgroundColor,
-        shadowColor: tokens.text.primary,
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.1,
-        shadowRadius: 14,
-        elevation: variantSpecs.shadowElevation || 4,
-      },
-      
-      // Специфичные для secondary варианта
-      variant === 'secondary' && {
-        backgroundColor: variantSpecs.backgroundColor,
-        borderWidth: variantSpecs.borderWidth,
-        borderColor: disabled ? tokens.surface.disabled : variantSpecs.borderColor,
-      },
-      
-      // Специфичные для ghost варианта
-      variant === 'ghost' && {
-        backgroundColor: variantSpecs.backgroundColor,
-      },
-      
-      // Pressed состояние
-      pressed && !disabled && {
-        opacity: 0.85,
-      },
-      
-      // Disabled состояние
-      disabled && {
-        opacity: specs.button.disabled.opacity,
-      },
-      
-      // Пользовательский стиль (может переопределить любой из выше)
-      style,
-    ]), [variant, variantSpecs, tokens, disabled, style, specs.button.disabled.opacity]);
+  const flattenedStyle = StyleSheet.flatten(style) as StyleProp<ViewStyle>;
+  const flattenedTextStyle = StyleSheet.flatten(textStyle) as StyleProp<TextStyle>;
 
-  // Динамические стили для текста
-  const labelStyle = useMemo(() => StyleSheet.flatten([
-    {
-      fontSize: variantSpecs.fontSize,
-      fontWeight: variantSpecs.fontWeight,
-      lineHeight: variantSpecs.lineHeight,
-      // Упрощенная логика цвета: берем из спецификации варианта
-      color: disabled ? tokens.text.disabled : variantSpecs.textColor,
-    },
-    textStyle,
-  ]), [variantSpecs, tokens.text.disabled, disabled, textStyle]);
+  const { buttonStyle, labelStyle } = useAppButtonStyles({
+    variant,
+    disabled,
+    style: flattenedStyle,
+    textStyle: flattenedTextStyle,
+  });
 
   return (
     <Pressable

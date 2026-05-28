@@ -1,6 +1,7 @@
 import { Link } from 'expo-router';
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
+import { useDesignTokens } from '../../hooks/useDesignTokens';
 import { getLocalized } from '../../utils/i18n';
 import AppButton from '../AppButton';
 
@@ -19,36 +20,42 @@ interface NavigationBlockProps {
   heroOverlapStyle?: any;
 }
 
-const styles = StyleSheet.create({
-  navigationRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 24,
-  },
-  navigationButton: {
-    flex: 1,
-  },
-  primaryButton: {
-    marginLeft: 12,
-  },
-});
-
 /**
  * Block компонент для навигационных кнопок (Назад/Далее)
  */
 export const NavigationBlock: FC<NavigationBlockProps> = ({ item, lang, heroOverlapStyle }) => {
+  const { tokens } = useDesignTokens();
+  const styles = useMemo(
+    () => ({
+      navigationRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginTop: tokens.spacing.lg,
+      },
+      navigationButton: {
+        flex: 1,
+      },
+      primaryButton: {
+        marginLeft: tokens.spacing.lg,
+      },
+    }),
+    [tokens.spacing.lg]
+  );
+
   const backText = getLocalized(item.backText, lang, 'Назад');
   const nextText = getLocalized(item.nextText, lang, '');
   const nextHref = item.href || '/';
+  const backButtonStyle = StyleSheet.flatten(styles.navigationButton);
+  const nextButtonStyle = StyleSheet.flatten([styles.navigationButton, styles.primaryButton]);
 
   return (
-    <View style={StyleSheet.flatten([styles.navigationRow, heroOverlapStyle])}>
+    <View style={[styles.navigationRow, heroOverlapStyle]}>
       <Link href={item.backHref || '/'} asChild>
         <AppButton
           title={backText}
           variant="secondary"
           accessibilityLabel={`Кнопка ${backText}`}
-          style={styles.navigationButton}
+          style={backButtonStyle}
         />
       </Link>
       <Link href={nextHref} asChild>
@@ -56,10 +63,7 @@ export const NavigationBlock: FC<NavigationBlockProps> = ({ item, lang, heroOver
           title={nextText}
           variant="primary"
           accessibilityLabel={`Кнопка ${nextText}`}
-          style={StyleSheet.flatten([
-            styles.navigationButton,
-            styles.primaryButton,
-          ])}
+          style={nextButtonStyle}
         />
       </Link>
     </View>

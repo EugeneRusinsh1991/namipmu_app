@@ -1,6 +1,5 @@
 import React, { FC, useMemo, useState } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
-import { useTheme } from '../../context/ThemeContext';
+import { Pressable, View } from 'react-native';
 import { useDesignTokens } from '../../hooks/useDesignTokens';
 import { getLocalized } from '../../utils/i18n';
 import ScaledText from '../ScaledText';
@@ -46,7 +45,6 @@ export const QuizBlock: FC<QuizBlockProps> = ({ item, lang, heroOverlapStyle }) 
   const [isAnswered, setIsAnswered] = useState(false);
   const [score, setScore] = useState(0);
   const [finished, setFinished] = useState(false);
-  const { colors, typography } = useTheme();
   const { tokens, specs } = useDesignTokens();
 
   const title = getLocalized(item.title, lang, '');
@@ -88,72 +86,106 @@ export const QuizBlock: FC<QuizBlockProps> = ({ item, lang, heroOverlapStyle }) 
     setIsAnswered(false);
   };
 
-  const dynamicStyles = StyleSheet.create({
-    quizContainer: {
-      borderRadius: specs.quiz.borderRadius,
-      padding: specs.quiz.padding,
-      marginVertical: specs.quiz.marginVertical,
-      backgroundColor: specs.quiz.backgroundColor,
-      borderWidth: specs.quiz.borderWidth,
-      borderColor: specs.quiz.borderColor,
-    },
-    quizDescription: {
-      fontSize: tokens.typography.fontSizeSm,
-      marginBottom: 12,
-      color: tokens.text.tertiary,
-      marginTop: 8,
-    },
-    quizQuestionBlock: {
-      marginVertical: 12,
-    },
-    quizOption: {
-      borderRadius: specs.quiz.answerBorderRadius,
-      padding: specs.quiz.answerPadding,
-      marginVertical: specs.quiz.answerMargin,
-      borderWidth: 1,
-      borderColor: colors.borderDefault,
-      backgroundColor: colors.surfaceDefault,
-    },
-    quizOptionSelected: {
-      borderColor: specs.quiz.selectedBorderColor,
-      backgroundColor: specs.quiz.selectedBgColor,
-    },
-    quizOptionCorrect: {
-      borderColor: specs.quiz.correctBorderColor,
-      backgroundColor: specs.quiz.correctBgColor,
-      opacity: 0.1,
-    },
-    quizOptionWrong: {
-      borderColor: specs.quiz.wrongBorderColor,
-      backgroundColor: specs.quiz.wrongBgColor,
-      opacity: 0.1,
-    },
-    quizSubmitButton: {
-      borderRadius: specs.quiz.answerBorderRadius,
-      padding: specs.quiz.answerPadding,
-      marginTop: 16,
-      backgroundColor: colors.accent,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    quizSubmitText: {
-      color: tokens.text.onAccent,
-      fontWeight: tokens.typography.fontWeightBold,
-      fontSize: tokens.typography.fontSizeMd,
-    },
-    quizEmpty: {
-      color: tokens.text.tertiary,
-      fontSize: tokens.typography.fontSizeSm,
-      marginTop: 8,
-    },
-  });
+  const styles = useMemo(
+    () => ({
+      quizContainer: {
+        borderRadius: specs.quiz.borderRadius,
+        padding: specs.quiz.containerPadding,
+        marginVertical: specs.quiz.marginVertical,
+        backgroundColor: tokens.surface.surfaceSecondary,
+        borderWidth: specs.quiz.borderWidth,
+        borderColor: tokens.interactive.border,
+      },
+      quizHeaderTitle: {
+        fontSize: tokens.typography.fontSizeXl,
+        fontWeight: tokens.typography.fontWeightBold,
+        color: tokens.text.primary,
+      },
+      quizHeaderDescription: {
+        fontSize: tokens.typography.fontSizeMd,
+        color: tokens.text.secondary,
+        marginTop: tokens.spacing.sm,
+      },
+      quizDescription: {
+        fontSize: tokens.typography.fontSizeSm,
+        marginBottom: tokens.spacing.sm,
+        color: tokens.text.tertiary,
+        marginTop: tokens.spacing.sm,
+      },
+      quizQuestionBlock: {
+        marginVertical: tokens.spacing.md,
+      },
+      quizQuestionTitle: {
+        fontSize: tokens.typography.fontSizeLg,
+        fontWeight: tokens.typography.fontWeightBold,
+        color: tokens.text.primary,
+        marginBottom: tokens.spacing.sm,
+      },
+      quizOption: {
+        borderRadius: specs.quiz.answerBorderRadius,
+        padding: specs.quiz.answerPadding,
+        marginVertical: specs.quiz.answerMargin,
+        borderWidth: 1,
+        borderColor: tokens.interactive.border,
+        backgroundColor: tokens.surface.surfacePrimary,
+      },
+      quizOptionSelected: {
+        borderColor: tokens.interactive.accent,
+        backgroundColor: tokens.interactive.accentLight,
+      },
+      quizOptionCorrect: {
+        borderColor: tokens.text.success,
+        backgroundColor: tokens.text.success,
+        opacity: 0.08,
+      },
+      quizOptionWrong: {
+        borderColor: tokens.text.danger,
+        backgroundColor: tokens.text.danger,
+        opacity: 0.08,
+      },
+      quizOptionText: {
+        color: tokens.text.primary,
+        fontSize: tokens.typography.fontSizeMd,
+      },
+      quizOptionTextCorrect: {
+        color: tokens.text.success,
+      },
+      quizOptionTextWrong: {
+        color: tokens.text.danger,
+      },
+      quizSubmitButton: {
+        borderRadius: specs.quiz.answerBorderRadius,
+        padding: specs.quiz.answerPadding,
+        marginTop: tokens.spacing.lg,
+        backgroundColor: tokens.interactive.accent,
+        alignItems: 'center' as const,
+        justifyContent: 'center' as const,
+      },
+      quizSubmitText: {
+        color: tokens.text.onAccent,
+        fontWeight: tokens.typography.fontWeightBold,
+        fontSize: tokens.typography.fontSizeMd,
+      },
+      quizEmpty: {
+        color: tokens.text.tertiary,
+        fontSize: tokens.typography.fontSizeSm,
+        marginTop: tokens.spacing.sm,
+      },
+      quizStatusText: {
+        marginTop: tokens.spacing.sm,
+        color: tokens.text.primary,
+        fontSize: tokens.typography.fontSizeMd,
+      },
+    }),
+    [tokens, specs]
+  );
 
   if (!questions.length) {
     return (
-      <View style={[dynamicStyles.quizContainer, heroOverlapStyle]}>
-        {title ? <ScaledText style={typography.title}>{title}</ScaledText> : null}
-        {description ? <ScaledText style={typography.text}>{description}</ScaledText> : null}
-        <ScaledText style={dynamicStyles.quizEmpty}>
+      <View style={[styles.quizContainer, heroOverlapStyle]}>
+        {title ? <ScaledText style={styles.quizHeaderTitle}>{title}</ScaledText> : null}
+        {description ? <ScaledText style={styles.quizHeaderDescription}>{description}</ScaledText> : null}
+        <ScaledText style={styles.quizEmpty}>
           {getLocalized(item.title, lang, '') ? 'Quiz content is not available.' : 'Quiz not found.'}
         </ScaledText>
       </View>
@@ -161,23 +193,23 @@ export const QuizBlock: FC<QuizBlockProps> = ({ item, lang, heroOverlapStyle }) 
   }
 
   return (
-    <View style={[dynamicStyles.quizContainer, heroOverlapStyle]}>
-      {title ? <ScaledText style={typography.title}>{title}</ScaledText> : null}
-      {description ? <ScaledText style={typography.text}>{description}</ScaledText> : null}
-      <ScaledText style={dynamicStyles.quizDescription}>{progressText}</ScaledText>
+    <View style={[styles.quizContainer, heroOverlapStyle]}>
+      {title ? <ScaledText style={styles.quizHeaderTitle}>{title}</ScaledText> : null}
+      {description ? <ScaledText style={styles.quizHeaderDescription}>{description}</ScaledText> : null}
+      <ScaledText style={styles.quizDescription}>{progressText}</ScaledText>
 
       {finished ? (
-        <View style={dynamicStyles.quizQuestionBlock}>
-          <ScaledText style={typography.subtitle}>
+        <View style={styles.quizQuestionBlock}>
+          <ScaledText style={styles.quizQuestionTitle}>
             {getLocalized(item.title, lang, 'Quiz complete')}
           </ScaledText>
-          <ScaledText style={typography.text}>
+          <ScaledText style={styles.quizStatusText}>
             {`Score: ${score} / ${questions.length}`}
           </ScaledText>
         </View>
       ) : (
-        <View style={dynamicStyles.quizQuestionBlock}>
-          <ScaledText style={typography.subtitle}>
+        <View style={styles.quizQuestionBlock}>
+          <ScaledText style={styles.quizQuestionTitle}>
             {`${currentIndex + 1}. ${getLocalized(currentQuestion.question, lang, '')}`}
           </ScaledText>
           {(currentQuestion.options || []).map(option => {
@@ -191,19 +223,27 @@ export const QuizBlock: FC<QuizBlockProps> = ({ item, lang, heroOverlapStyle }) 
                 key={String(option.value)}
                 onPress={() => handleSelect(option.value)}
                 style={[
-                  dynamicStyles.quizOption,
-                  isSelected ? dynamicStyles.quizOptionSelected : null,
-                  isCorrect ? dynamicStyles.quizOptionCorrect : null,
-                  showWrong ? dynamicStyles.quizOptionWrong : null,
+                  styles.quizOption,
+                  isSelected ? styles.quizOptionSelected : null,
+                  isCorrect ? styles.quizOptionCorrect : null,
+                  showWrong ? styles.quizOptionWrong : null,
                 ]}
               >
-                <ScaledText style={typography.text}>{optionText}</ScaledText>
+                <ScaledText
+                  style={[
+                    styles.quizOptionText,
+                    isCorrect ? styles.quizOptionTextCorrect : null,
+                    showWrong ? styles.quizOptionTextWrong : null,
+                  ]}
+                >
+                  {optionText}
+                </ScaledText>
               </Pressable>
             );
           })}
 
           {isAnswered ? (
-            <ScaledText style={[typography.text, { marginTop: 12 }]}>
+            <ScaledText style={styles.quizStatusText}>
               {String(selectedOption).trim() === correctAnswer
                 ? lang === 'eng' ? 'Correct' : 'Правильно'
                 : lang === 'eng' ? 'Incorrect' : 'Неправильно'}
@@ -213,16 +253,14 @@ export const QuizBlock: FC<QuizBlockProps> = ({ item, lang, heroOverlapStyle }) 
           <Pressable
             onPress={handleNext}
             style={[
-              dynamicStyles.quizSubmitButton,
+              styles.quizSubmitButton,
               !isAnswered ? { opacity: 0.6 } : null,
             ]}
             disabled={!isAnswered}
           >
-            <ScaledText style={dynamicStyles.quizSubmitText}>
-              {currentIndex + 1 >= questions.length
-                ? finished
-                  ? 'Finished'
-                  : lang === 'eng'
+            <ScaledText style={styles.quizSubmitText}>
+              {currentIndex + 1 === questions.length
+                ? lang === 'eng'
                   ? 'Finish'
                   : 'Закончить'
                 : lang === 'eng'

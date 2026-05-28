@@ -125,6 +125,7 @@ export const palette = {
   ...status,
   
   // Legacy aliases для обратной совместимости
+  // @deprecated: используйте семантические токены из theme.ts вместо этих алиасов
   gray50: neutrals.neutral50,
   gray100: neutrals.neutral100,
   gray200: neutrals.neutral200,

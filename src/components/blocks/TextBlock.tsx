@@ -1,5 +1,5 @@
-import React, { FC } from 'react';
-import { useTheme } from '../../context/ThemeContext';
+import React, { FC, useMemo } from 'react';
+import { useDesignTokens } from '../../hooks/useDesignTokens';
 import { getLocalized } from '../../utils/i18n';
 import ScaledText from '../ScaledText';
 
@@ -43,30 +43,74 @@ const LocalizedTextBlock: FC<LocalizedTextBlockProps> = ({
  * Block компонент для заголовка
  */
 export const TitleBlock: FC<LocalizedTextBlockProps> = (props) => {
-  const { typography } = useTheme();
-  return <LocalizedTextBlock {...props} style={typography.title} />;
+  const { tokens } = useDesignTokens();
+  const styles = useMemo(
+    () => ({
+      title: {
+        fontSize: tokens.typography.fontSizeXl,
+        color: tokens.text.primary,
+        fontWeight: tokens.typography.fontWeightBold,
+      },
+    }),
+    [tokens]
+  );
+
+  return <LocalizedTextBlock {...props} style={styles.title} />;
 };
 
 /**
  * Block компонент для eyebrow (надзаголовок)
  */
 export const EyebrowBlock: FC<LocalizedTextBlockProps> = (props) => {
-  const { typography } = useTheme();
-  return <LocalizedTextBlock {...props} style={typography.eyebrow} />;
+  const { tokens } = useDesignTokens();
+  const styles = useMemo(
+    () => ({
+      eyebrow: {
+        color: tokens.interactive.accent,
+        fontWeight: tokens.typography.fontWeightBold,
+        textTransform: 'uppercase' as const,
+        fontSize: tokens.typography.fontSizeSm,
+      },
+    }),
+    [tokens]
+  );
+
+  return <LocalizedTextBlock {...props} style={styles.eyebrow} />;
 };
 
 /**
  * Block компонент для подзаголовка
  */
 export const SubtitleBlock: FC<LocalizedTextBlockProps> = (props) => {
-  const { typography } = useTheme();
-  return <LocalizedTextBlock {...props} style={typography.subtitle} />;
+  const { tokens } = useDesignTokens();
+  const styles = useMemo(
+    () => ({
+      subtitle: {
+        fontSize: tokens.typography.fontSizeLg,
+        color: tokens.text.secondary,
+      },
+    }),
+    [tokens]
+  );
+
+  return <LocalizedTextBlock {...props} style={styles.subtitle} />;
 };
 
 /**
  * Block компонент для основного текста контента
  */
 export const TextContentBlock: FC<LocalizedTextBlockProps> = (props) => {
-  const { typography } = useTheme();
-  return <LocalizedTextBlock {...props} style={typography.text} />;
+  const { tokens } = useDesignTokens();
+  const styles = useMemo(
+    () => ({
+      text: {
+        fontSize: tokens.typography.fontSizeMd,
+        lineHeight: tokens.typography.lineHeightMd,
+        color: tokens.text.primary,
+      },
+    }),
+    [tokens]
+  );
+
+  return <LocalizedTextBlock {...props} style={styles.text} />;
 };

@@ -1,7 +1,6 @@
-import React, { FC, useEffect, useRef, useState } from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import React, { FC, useEffect, useMemo, useRef, useState } from 'react';
+import { TouchableOpacity, View } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
-import { useTheme } from '../../context/ThemeContext';
 import { useDesignTokens } from '../../hooks/useDesignTokens';
 import { getLocalized } from '../../utils/i18n';
 import ScaledText from '../ScaledText';
@@ -26,7 +25,6 @@ export const TimerBlock: FC<TimerBlockProps> = ({ item, lang }) => {
   const [remaining, setRemaining] = useState(defaultSeconds);
   const [isRunning, setIsRunning] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  const { colors, typography } = useTheme();
   const { tokens, specs } = useDesignTokens();
 
   // Animated value for smooth progress animation
@@ -94,145 +92,136 @@ export const TimerBlock: FC<TimerBlockProps> = ({ item, lang }) => {
     'Таймер практики'
   );
 
-  const dynamicStyles = StyleSheet.create({
-    card: {
-      borderRadius: specs.timer.borderRadius,
-      padding: specs.timer.padding,
-      marginVertical: specs.timer.marginVertical,
-      backgroundColor: specs.timer.backgroundColor,
-      borderColor: specs.timer.borderColor,
-      borderWidth: 1,
-      shadowColor: tokens.text.primary,
-      shadowOpacity: 0.08,
-      shadowRadius: 12,
-      shadowOffset: { width: 0, height: 6 },
-      elevation: 3,
+  const styles = useMemo(
+    () => {
+      const ringSize = specs.timer.ringSize;
+      const innerSize = ringSize - 16;
+
+      return {
+        card: {
+          borderRadius: specs.timer.borderRadius,
+          padding: specs.timer.containerPadding,
+          marginVertical: specs.timer.marginVertical,
+          backgroundColor: specs.timer.backgroundColor,
+          borderColor: specs.timer.borderColor,
+          borderWidth: 1,
+          shadowColor: tokens.text.primary,
+          shadowOpacity: 0.08,
+          shadowRadius: 12,
+          shadowOffset: { width: 0, height: 6 },
+          elevation: 3,
+        },
+        headerRow: {
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'flex-start',
+          marginBottom: tokens.spacing.md,
+        },
+        icon: {
+          fontSize: tokens.typography.fontSizeLg,
+          opacity: 0.9,
+          marginLeft: tokens.spacing.sm,
+        },
+        timerWrap: {
+          alignItems: 'center',
+          justifyContent: 'center',
+        },
+        ring: {
+          width: ringSize,
+          height: ringSize,
+          borderRadius: ringSize / 2,
+          borderWidth: 2,
+          borderColor: tokens.interactive.accent,
+          alignItems: 'center',
+          justifyContent: 'center',
+          overflow: 'hidden' as any,
+          backgroundColor: tokens.interactive.accentLight,
+        },
+        innerFill: {
+          position: 'absolute' as any,
+          width: innerSize,
+          height: innerSize,
+          borderRadius: innerSize / 2,
+          backgroundColor: tokens.interactive.accent,
+        },
+        timeLabelWrap: {
+          alignItems: 'center',
+          justifyContent: 'center',
+          width: innerSize - 16,
+          height: innerSize - 16,
+          borderRadius: (innerSize - 16) / 2,
+        },
+        timeLabel: {
+          fontSize: specs.timer.displayFontSize,
+          fontWeight: specs.timer.displayFontWeight,
+          fontFamily: tokens.typography.fontFamilyHeading,
+          color: tokens.text.primary,
+          textAlign: 'center' as const,
+        },
+        controls: {
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          marginTop: tokens.spacing.lg,
+        },
+        btn: {
+          flex: 1,
+          paddingVertical: specs.timer.buttonPadding,
+          alignItems: 'center',
+          justifyContent: 'center',
+          borderRadius: specs.timer.buttonBorderRadius,
+          marginHorizontal: tokens.spacing.xs,
+        },
+        btnStart: {
+          borderWidth: 1,
+          borderColor: tokens.interactive.accent,
+          backgroundColor: tokens.interactive.accentLight,
+        },
+        btnPause: {
+          backgroundColor: tokens.surface.surfacePrimary,
+        },
+        btnReset: {
+          borderWidth: 1,
+          borderColor: tokens.interactive.border,
+          backgroundColor: tokens.surface.surfacePrimary,
+        },
+        btnTextOverride: {
+          fontWeight: tokens.typography.fontWeightBold,
+          fontSize: tokens.typography.fontSizeMd,
+          color: tokens.text.primary,
+        },
+      };
     },
-    headerRow: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'flex-start',
-      marginBottom: 12,
-    },
-    icon: {
-      fontSize: 18,
-      opacity: 0.9,
-    },
-    timerWrap: {
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    ring: {
-      width: 160,
-      height: 160,
-      borderRadius: 80,
-      borderWidth: 2,
-      borderColor: colors.cardBorder,
-      alignItems: 'center',
-      justifyContent: 'center',
-      overflow: 'hidden' as any,
-      backgroundColor: 'transparent',
-    },
-    innerFill: {
-      position: 'absolute' as any,
-      width: 160 - 16,
-      height: 160 - 16,
-      borderRadius: (160 - 16) / 2,
-      backgroundColor: colors.accentLight,
-    },
-    timeLabelWrap: {
-      alignItems: 'center',
-      justifyContent: 'center',
-      width: 160 - 32,
-      height: 160 - 32,
-      borderRadius: (160 - 32) / 2,
-    },
-    timeLabel: {
-      fontSize: specs.timer.displayFontSize,
-      fontWeight: specs.timer.displayFontWeight,
-    },
-    controls: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      marginTop: 16,
-    },
-    btn: {
-      flex: 1,
-      paddingVertical: specs.timer.buttonPadding,
-      alignItems: 'center',
-      justifyContent: 'center',
-      borderRadius: specs.timer.buttonBorderRadius,
-      marginHorizontal: 6,
-    },
-    btnStart: {
-      borderWidth: 1,
-      borderColor: colors.accent,
-      backgroundColor: colors.accentLight,
-    },
-    btnPause: {
-      backgroundColor: colors.secondarySurface,
-    },
-    btnReset: {
-      borderWidth: 1,
-      borderColor: colors.cardBorder,
-      backgroundColor: colors.white,
-    },
-    btnText: {
-      fontSize: tokens.typography.fontSizeMd,
-      fontWeight: tokens.typography.fontWeightBold,
-    },
-    timeLabelOverride: {
-      textAlign: 'center',
-      includeFontPadding: false,
-    },
-    btnTextOverride: {
-      fontWeight: tokens.typography.fontWeightBold,
-      fontSize: tokens.typography.fontSizeMd,
-    },
-  });
+    [tokens, specs]
+  );
 
   return (
-    <View style={dynamicStyles.card}>
-      <View style={dynamicStyles.headerRow}>
-        <ScaledText style={[typography.subtitle, { color: tokens.text.primary }]}> 
-          {title}
-        </ScaledText>
-        <ScaledText style={dynamicStyles.icon}>⏱️</ScaledText>
+    <View style={styles.card}>
+      <View style={styles.headerRow}>
+        <ScaledText style={styles.headerTitle}>{title}</ScaledText>
+        <ScaledText style={styles.icon}>⏱️</ScaledText>
       </View>
 
-      <View style={dynamicStyles.timerWrap}>
-        <View style={dynamicStyles.ring}>
-          <Animated.View style={[dynamicStyles.innerFill, progressStyle]} />
-          <View style={dynamicStyles.timeLabelWrap} pointerEvents="none">
-            <ScaledText
-              style={[
-                typography.title,
-                dynamicStyles.timeLabelOverride,
-                { color: tokens.text.primary },
-              ]}
-            >
+      <View style={styles.timerWrap}>
+        <View style={styles.ring}>
+          <Animated.View style={[styles.innerFill, progressStyle]} />
+          <View style={styles.timeLabelWrap} pointerEvents="none">
+            <ScaledText style={[styles.timeLabel, { includeFontPadding: false }]}> 
               {formatTime(remaining)}
             </ScaledText>
           </View>
         </View>
       </View>
 
-      <View style={dynamicStyles.controls}>
+      <View style={styles.controls}>
         <TouchableOpacity
           activeOpacity={0.8}
           onPress={toggleRun}
           style={[
-            dynamicStyles.btn,
-            isRunning ? dynamicStyles.btnPause : dynamicStyles.btnStart,
+            styles.btn,
+            isRunning ? styles.btnPause : styles.btnStart,
           ]}
         >
-          <ScaledText
-            style={[
-              typography.text,
-              dynamicStyles.btnTextOverride,
-              { color: colors.accent },
-            ]}
-          >
+          <ScaledText style={[styles.btnTextOverride, { color: tokens.text.primary }]}> 
             {isRunning ? 'Пауза' : 'Старт'}
           </ScaledText>
         </TouchableOpacity>
@@ -240,15 +229,9 @@ export const TimerBlock: FC<TimerBlockProps> = ({ item, lang }) => {
         <TouchableOpacity
           activeOpacity={0.8}
           onPress={reset}
-          style={[dynamicStyles.btn, dynamicStyles.btnReset]}
+          style={[styles.btn, styles.btnReset]}
         >
-          <ScaledText
-            style={[
-              typography.text,
-              dynamicStyles.btnTextOverride,
-              { color: tokens.text.primary },
-            ]}
-          >
+          <ScaledText style={[styles.btnTextOverride, { color: tokens.text.primary }]}> 
             Скинути
           </ScaledText>
         </TouchableOpacity>

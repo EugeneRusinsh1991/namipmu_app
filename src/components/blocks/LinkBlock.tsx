@@ -1,5 +1,6 @@
 import { Link } from 'expo-router';
 import React, { FC } from 'react';
+import { StyleSheet } from 'react-native';
 import { useTheme } from '../../context/ThemeContext';
 import { getLocalized } from '../../utils/i18n';
 import ScaledText from '../ScaledText';
@@ -28,10 +29,11 @@ export const LinkBlock: FC<LinkBlockProps> = ({ item, lang, heroOverlapStyle }) 
   const normalizedHref = typeof item.href === 'string' 
     ? (item.href.startsWith('/') ? item.href : `/${item.href}`) 
     : item.href;
+  const flattenedHeroStyle = StyleSheet.flatten(heroOverlapStyle);
 
   return (
-    <Link href={normalizedHref} style={heroOverlapStyle}>
-      <ScaledText style={[{ color: colors.accent }, heroOverlapStyle]}>
+    <Link href={normalizedHref} style={flattenedHeroStyle}>
+      <ScaledText style={[{ color: colors.accent }, flattenedHeroStyle]}>
         {text}
       </ScaledText>
     </Link>
