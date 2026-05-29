@@ -12,7 +12,7 @@ export function getLayoutStyles(tokens: SemanticTokens & VisualFoundation): Layo
       flex: 1,
       width: '100%',
       maxWidth: tokens.layout.contentMaxWidth,
-      paddingHorizontal: tokens.spacing.lg,
+      paddingHorizontal: tokens.spacing.standard,
       alignSelf: 'center',
     },
   };

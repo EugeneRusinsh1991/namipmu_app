@@ -32,29 +32,29 @@ export const ChecklistBlock: FC<ChecklistBlockProps> = ({ item, lang, heroOverla
   const styles = useMemo(
     () => ({
       container: {
-        marginBottom: tokens.spacing.lg,
+        marginBottom: tokens.spacing.standard,
       },
       card: {
-        borderRadius: specs.checklist.borderRadius,
-        padding: specs.checklist.padding,
-        marginVertical: specs.checklist.marginVertical,
-        backgroundColor: specs.checklist.backgroundColor,
-        borderWidth: 1,
+        borderRadius: specs.card.large.borderRadius,
+        padding: specs.card.large.padding,
+        marginVertical: tokens.spacing.standard,
+        backgroundColor: tokens.surface.surfacePrimary,
+        borderWidth: tokens.borders.widthStandard,
         borderColor: tokens.interactive.border,
+        ...specs.card.large.shadow,
       },
       headerTitle: {
-        fontSize: tokens.typography.fontSizeXl,
-        fontWeight: tokens.typography.fontWeightBold,
+        ...tokens.typography.subheading,
         color: tokens.text.primary,
       },
       headerDescription: {
-        fontSize: tokens.typography.fontSizeMd,
+        ...tokens.typography.text,
         color: tokens.text.secondary,
-        marginTop: tokens.spacing.sm,
+        marginTop: tokens.spacing.standard,
       },
       progressLabel: {
-        fontSize: tokens.typography.fontSizeSm,
-        marginBottom: tokens.spacing.sm,
+        ...tokens.typography.text,
+        marginBottom: tokens.spacing.standard,
         color: tokens.text.tertiary,
       },
       itemRow: {
@@ -62,7 +62,7 @@ export const ChecklistBlock: FC<ChecklistBlockProps> = ({ item, lang, heroOverla
         alignItems: 'center',
         paddingVertical: specs.checklist.itemPadding,
         paddingHorizontal: specs.checklist.itemPadding,
-        borderRadius: tokens.borders.radiusMd,
+        borderRadius: tokens.borders.radiusStandard,
         backgroundColor: specs.checklist.itemBgColor,
         borderWidth: 1,
         borderColor: specs.checklist.itemBorderColor,
@@ -80,7 +80,7 @@ export const ChecklistBlock: FC<ChecklistBlockProps> = ({ item, lang, heroOverla
         borderColor: tokens.interactive.border,
         alignItems: 'center',
         justifyContent: 'center',
-        marginRight: tokens.spacing.md,
+        marginRight: tokens.spacing.standard,
         backgroundColor: specs.checklist.itemBgColor,
       },
       checkboxChecked: {
@@ -88,13 +88,15 @@ export const ChecklistBlock: FC<ChecklistBlockProps> = ({ item, lang, heroOverla
         backgroundColor: tokens.interactive.accent,
       },
       checkmark: {
+        ...tokens.typography.text,
+        fontSize: 12,
+        fontWeight: '500',
+        fontFamily: 'sans-serif',
         color: tokens.interactive.accent,
-        fontSize: tokens.typography.fontSizeSm,
-        lineHeight: tokens.typography.lineHeightNormal,
       },
       itemText: {
+        ...tokens.typography.text,
         flex: 1,
-        fontSize: tokens.typography.fontSizeMd,
         color: tokens.text.primary,
       },
       itemTextChecked: {

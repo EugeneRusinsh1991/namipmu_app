@@ -3,6 +3,8 @@
  */
 
 import type { TextStyle } from 'react-native';
+import type { VisualFoundation } from './foundation';
+import { foundation as defaultFoundation } from './foundation';
 import type { SemanticTokens } from './theme';
 
 export interface TypographyScale {
@@ -52,97 +54,31 @@ export const typographyScale: TypographyScale = {
 };
 
 export interface TypographyStyles {
-  heading1: any;
-  heading2: any;
-  heading3: any;
-  bodyLarge: any;
-  bodyMedium: any;
-  bodySmall: any;
-  caption: any;
-  label: any;
-  labelSmall: any;
-  eyebrow: any;
+  header: TextStyle;
+  subheading: TextStyle;
+  text: TextStyle;
 }
 
-export function getTypography(colors: SemanticTokens, fontScale = 1): TypographyStyles {
-  const scale = typographyScale;
-  
+export function getTypography(colors: SemanticTokens, fontScale = 1, foundation: VisualFoundation = defaultFoundation): TypographyStyles {
+  const scaleRole = (role: { fontSize: number; fontWeight: TextStyle['fontWeight']; lineHeight: number; fontFamily: string }) => ({
+    fontSize: role.fontSize * fontScale,
+    fontWeight: role.fontWeight,
+    lineHeight: role.lineHeight * fontScale,
+    fontFamily: role.fontFamily,
+  });
+
   return {
-    // Headings
-    heading1: {
-      fontSize: scale.fontSizeXxl * fontScale,
-      fontWeight: scale.fontWeightBold,
-      lineHeight: scale.fontSizeXxl * fontScale * scale.lineHeightTight,
+    header: {
+      ...scaleRole(foundation.header),
       color: colors.textPrimary,
-      fontFamily: scale.familyHeading,
     },
-    heading2: {
-      fontSize: scale.fontSizeXl * fontScale,
-      fontWeight: scale.fontWeightBold,
-      lineHeight: scale.fontSizeXl * fontScale * scale.lineHeightTight,
+    subheading: {
+      ...scaleRole(foundation.subheading),
       color: colors.textPrimary,
-      fontFamily: scale.familyHeading,
     },
-    heading3: {
-      fontSize: scale.fontSizeLg * fontScale,
-      fontWeight: scale.fontWeightSemibold,
-      lineHeight: scale.fontSizeLg * fontScale * scale.lineHeightTight,
-      color: colors.textPrimary,
-      fontFamily: scale.familyHeading,
-    },
-    
-    // Body text
-    bodyLarge: {
-      fontSize: scale.fontSizeMd * fontScale,
-      fontWeight: scale.fontWeightRegular,
-      lineHeight: scale.fontSizeMd * fontScale * scale.lineHeightNormal,
+    text: {
+      ...scaleRole(foundation.text),
       color: colors.bodyText,
-      fontFamily: scale.familyMain,
-    },
-    bodyMedium: {
-      fontSize: scale.fontSizeMd * fontScale,
-      fontWeight: scale.fontWeightRegular,
-      lineHeight: scale.fontSizeMd * fontScale * scale.lineHeightNormal,
-      color: colors.textSecondary,
-      fontFamily: scale.familyMain,
-    },
-    bodySmall: {
-      fontSize: scale.fontSizeSm * fontScale,
-      fontWeight: scale.fontWeightRegular,
-      lineHeight: scale.fontSizeSm * fontScale * scale.lineHeightNormal,
-      color: colors.textTertiary,
-      fontFamily: scale.familyMain,
-    },
-    
-    // Captions & Labels
-    caption: {
-      fontSize: scale.fontSizeXs * fontScale,
-      fontWeight: scale.fontWeightRegular,
-      lineHeight: scale.fontSizeXs * fontScale * scale.lineHeightTight,
-      color: colors.textTertiary,
-      fontFamily: scale.familyMain,
-    },
-    label: {
-      fontSize: scale.fontSizeSm * fontScale,
-      fontWeight: scale.fontWeightSemibold,
-      lineHeight: scale.fontSizeSm * fontScale * scale.lineHeightNormal,
-      color: colors.textPrimary,
-      fontFamily: scale.familyMain,
-    },
-    labelSmall: {
-      fontSize: scale.fontSizeXs * fontScale,
-      fontWeight: scale.fontWeightSemibold,
-      lineHeight: scale.fontSizeXs * fontScale * scale.lineHeightTight,
-      color: colors.textPrimary,
-      fontFamily: scale.familyMain,
-    },
-    eyebrow: {
-      fontSize: scale.fontSizeSm * fontScale,
-      fontWeight: scale.fontWeightSemibold,
-      lineHeight: scale.fontSizeSm * fontScale * scale.lineHeightTight,
-      color: colors.textSecondary,
-      fontFamily: scale.familyMain,
-      textTransform: 'uppercase' as any,
     },
   };
 }

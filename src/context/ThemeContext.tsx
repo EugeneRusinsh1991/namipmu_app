@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useMemo } from 'react';
 import { useInitializeTheme } from '../hooks/useInitializeTheme';
 import { ComponentSpecifications, getComponentSpecs } from '../styles/design-system/components';
-import foundation from '../styles/design-system/foundation';
+import foundation, { type ShadowTokensGeometry } from '../styles/design-system/foundation';
 import { getTheme, lightTheme, type SemanticTokens } from '../styles/design-system/theme';
 import { getTypography, TypographyStyles } from '../styles/design-system/typography';
 import { LanguageProvider } from './LanguageContext';
@@ -36,6 +36,12 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
     const colors = getTheme(isDark);
     const typography = getTypography(colors, fontScale);
     const mergedTokens = { ...foundation, ...(colors as any) } as any;
+    mergedTokens.shadows = {
+      standard: {
+        ...foundation.shadows.standard,
+        ...((mergedTokens.shadows as any)?.standard || {}),
+      },
+    } as ShadowTokensGeometry;
     // inject shadowColor into merged shadows if provided by theme
     const shadowColor = (colors as any).shadowColor as string | undefined;
     const borderDefault = (colors as any).borderDefault as string | undefined;

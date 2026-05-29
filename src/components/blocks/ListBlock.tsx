@@ -30,32 +30,42 @@ interface ListBlockProps {
 export const ListBlock: FC<ListBlockProps> = ({ item, lang, heroOverlapStyle }) => {
   if (!item || !Array.isArray(item.items) || item.items.length === 0) return null;
 
-  const { tokens } = useDesignTokens();
+  const { tokens, specs } = useDesignTokens();
   const styles = StyleSheet.create({
     listContainer: {
-      marginVertical: tokens.spacing.md,
+      marginVertical: tokens.spacing.standard,
+    },
+    card: {
+      borderRadius: specs.card.large.borderRadius,
+      padding: specs.card.large.padding,
+      backgroundColor: tokens.surface.surfacePrimary,
+      borderWidth: tokens.borders.widthStandard,
+      borderColor: tokens.interactive.border,
+      marginVertical: tokens.spacing.standard,
+      ...specs.card.large.shadow,
     },
     listItem: {
       flexDirection: 'row',
       alignItems: 'flex-start',
-      marginVertical: tokens.spacing.sm,
+      marginVertical: tokens.spacing.standard,
     },
     listBullet: {
-      marginRight: tokens.spacing.sm,
+      ...tokens.typography.text,
+      fontSize: tokens.typography.text.fontSize,
+      fontWeight: tokens.typography.text.fontWeight,
+      lineHeight: tokens.typography.text.lineHeight,
+      marginRight: tokens.spacing.standard,
       color: tokens.interactive.accent,
-      fontSize: tokens.typography.fontSizeMd,
-      lineHeight: tokens.typography.lineHeightNormal,
     },
     listItemText: {
+      ...tokens.typography.text,
       flex: 1,
       color: tokens.text.primary,
-      fontSize: tokens.typography.fontSizeMd,
-      lineHeight: tokens.typography.lineHeightNormal,
     },
   });
 
   return (
-    <View style={[styles.listContainer, heroOverlapStyle]}>
+    <View style={[styles.card, styles.listContainer, heroOverlapStyle]}>
       {item.items.map((listItem, itemIndex) => {
         const maybeText = (listItem as any)?.text ?? listItem;
         const itemText = getLocalized(maybeText, lang, '');

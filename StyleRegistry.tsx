@@ -1,7 +1,29 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
+import foundation from './src/styles/design-system/foundation';
 import initialTokens from './tokens.json';
 
 export type Tokens = typeof initialTokens;
+
+const normalizeCssValue = (value: any): any => {
+  if (value == null) return value;
+  if (typeof value === 'number') return `${value}px`;
+  if (typeof value === 'string' || typeof value === 'boolean') return value;
+  if (Array.isArray(value)) return value.map(normalizeCssValue);
+  if (typeof value === 'object') return convertTokensToCss(value);
+  return String(value);
+};
+
+const convertTokensToCss = (obj: any): any => {
+  if (obj == null || typeof obj !== 'object' || Array.isArray(obj)) {
+    return normalizeCssValue(obj);
+  }
+  return Object.entries(obj).reduce((acc, [key, value]) => {
+    acc[key] = normalizeCssValue(value);
+    return acc;
+  }, {} as any);
+};
+
+const foundationCssTokens = convertTokensToCss(foundation);
 
 interface StyleRegistryProps {
   children: React.ReactNode;
@@ -68,7 +90,7 @@ export const StyleRegistry: React.FC<StyleRegistryProps> = ({
   }, [dynamicTokens, resolveTokens, prefersDark]);
 
   useEffect(() => {
-    applyTokensToCSS(tokensToApply);
+    applyTokensToCSS(deepMerge(tokensToApply, foundationCssTokens));
 
     // слушаем изменения системной темы и переприменяем токены
     let mq: MediaQueryList | null = null;
@@ -78,7 +100,7 @@ export const StyleRegistry: React.FC<StyleRegistryProps> = ({
         const useDarkNow = e.matches;
         const source = dynamicTokens || initialTokens;
         const resolved = resolveTokens(source, useDarkNow);
-        applyTokensToCSS(resolved);
+        applyTokensToCSS(deepMerge(resolved, foundationCssTokens));
       };
       // modern API
       if (mq.addEventListener) mq.addEventListener('change', handler as any);

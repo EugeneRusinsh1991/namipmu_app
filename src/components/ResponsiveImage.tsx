@@ -58,7 +58,7 @@ const ResponsiveImage: FC<ResponsiveImageProps> = ({
 }) => {
   const { tokens, specs } = useDesignTokens();
   const windowDimensions = useWindowDimensions();
-  const resolvedPadding = padding ?? tokens.spacing.lg;
+  const resolvedPadding = padding ?? tokens.spacing.standard;
 
   const styles = useMemo(
     () =>
@@ -70,13 +70,25 @@ const ResponsiveImage: FC<ResponsiveImageProps> = ({
           width: '100%',
           maxWidth: tokens.layout.contentMaxWidth,
         },
-        image: {
+        wrapper: {
           alignSelf: 'center',
-          borderRadius: specs.image.card.borderRadius ?? tokens.borders.radiusMd,
-          borderWidth: tokens.borders.widthBase,
+          width: '100%',
+          borderRadius: specs.image.card.borderRadius ?? tokens.borders.radiusStandard,
+          backgroundColor: tokens.surface.surfacePrimary,
+          ...specs.image.card.shadow,
+        },
+        imageWrapper: {
+          width: '100%',
+          borderRadius: specs.image.card.borderRadius ?? tokens.borders.radiusStandard,
+          borderWidth: tokens.borders.widthStandard,
           borderColor: tokens.borderDefault,
           backgroundColor: tokens.cardBackground,
           overflow: 'hidden',
+        },
+        image: {
+          width: '100%',
+          height: '100%',
+          backgroundColor: tokens.cardBackground,
         },
       }),
     [tokens, specs, resolvedPadding]
@@ -108,17 +120,22 @@ const ResponsiveImage: FC<ResponsiveImageProps> = ({
   const shouldUseFallback =
     useFallback ||
     !source ||
-    (!isValidUri && !fallbackSource) ||
-    (uri === failedUri && fallbackSource);
+    !isValidUri ||
+    (!fallbackSource && !uri);
+
 
   return (
     <View style={styles.container}>
-      <Image
-        source={shouldUseFallback ? fallbackSource || errorImage : source}
-        style={[styles.image, imageStyle]}
-        resizeMode={resizeMode}
-        onError={handleImageError}
-      />
+      <View style={[styles.wrapper, imageStyle]}>
+        <View style={styles.imageWrapper}>
+          <Image
+            source={shouldUseFallback ? fallbackSource || errorImage : source}
+            style={styles.image}
+            resizeMode={resizeMode}
+            onError={handleImageError}
+          />
+        </View>
+      </View>
     </View>
   );
 };

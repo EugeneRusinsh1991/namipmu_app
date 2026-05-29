@@ -41,7 +41,7 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({ content, lang = 'ru' 
   for (let i = 0; i < filteredContent.length; i++) {
     const item = filteredContent[i];
     const isFirstAfterHero = i === 0 && hadHeroImage;
-    const heroOverlapStyle = isFirstAfterHero ? { marginTop: -tokens.spacing.xxl } : {};
+    const heroOverlapStyle = isFirstAfterHero ? { marginTop: -tokens.spacing.standard } : {};
 
     // Group consecutive card-like items
     if (item && typeof item.type === 'string' && /^card/i.test(item.type)) {
@@ -58,7 +58,7 @@ const ContentRenderer: React.FC<ContentRendererProps> = ({ content, lang = 'ru' 
             key: `card-group-${i}`,
             items: group as any,
             lang,
-            gap: tokens.spacing.md,
+            gap: tokens.spacing.standard,
             heroOverlapStyle,
           })
         );

@@ -5,9 +5,24 @@
  * Экспортирует палитру, семантические токены, спецификации компонентов и типографику.
  */
 
-// ===== PALETTE EXPORTS =====
+// ===== TOKEN MODULES EXPORTS =====
 import { palette } from './palette';
+
+export {
+    BODY_ROLE,
+    HEADING_ROLE,
+    SUBHEADING_ROLE
+} from './tokens';
+export type {
+    BorderTokens, ColorTokens, ComponentSpacingTokens, EffectsTokens, GeometryTokens,
+    LayoutTokens, SemanticTypographyRole, ShadowGeometry,
+    ShadowTokensGeometry, SizingTokens,
+    SpacingTokens, TypographyTokens, VisualCardSize,
+    VisualTokens
+} from './tokens';
 export { palette };
+
+// ===== PALETTE EXPORTS =====
 
 // ===== THEME EXPORTS (Semantic Tokens) =====
     import type { SemanticTokens } from './theme';
@@ -59,7 +74,7 @@ export function buildDesignSystem(tokens: SemanticTokens, fontScale = 1): Design
   return {
     tokens: merged,
     specs: getComponentSpecs(merged),
-    typography: getTypography(merged, fontScale),
+    typography: getTypography(tokens, fontScale, foundation),
   };
 }
 

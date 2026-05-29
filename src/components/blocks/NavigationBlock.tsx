@@ -30,16 +30,16 @@ export const NavigationBlock: FC<NavigationBlockProps> = ({ item, lang, heroOver
       navigationRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginTop: tokens.spacing.lg,
+        marginTop: tokens.spacing.standard,
       },
       navigationButton: {
         flex: 1,
       },
       primaryButton: {
-        marginLeft: tokens.spacing.lg,
+        marginLeft: tokens.spacing.standard,
       },
     }),
-    [tokens.spacing.lg]
+    [tokens.spacing.standard]
   );
 
   const backText = getLocalized(item.backText, lang, 'Назад');
@@ -54,7 +54,7 @@ export const NavigationBlock: FC<NavigationBlockProps> = ({ item, lang, heroOver
       <Link href={backHref} asChild>
         <AppButton
           title={backText}
-          variant="secondary"
+          variant="primary"
           accessibilityLabel={`Кнопка ${backText}`}
           style={backButtonStyle}
         />

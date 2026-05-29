@@ -11,24 +11,26 @@
  * но выделены отдельно, чтобы их легко было импортировать из скриптов.
  */
 
+import foundation from '../styles/design-system/foundation';
+
 /**
  * Размеры карточек (для разных вариантов)
  */
 export const CARD_SIZES = {
   large: {
     /** Высота изображения в карточке */
-    imageHeight: 150,
+    imageHeight: foundation.visuals.card.large.imageHeight,
     /** Высота контентной части (title + description) */
-    contentHeight: 110,
-    /** Заголовок в большой карточке */
-    titleFontSize: 20,
+    contentHeight: foundation.visuals.card.large.contentHeight,
+    /** Упрощаем: большая карточка использует общий subheading-вариант, не отдельный card title token */
+    titleFontSize: foundation.subheading.fontSize,
     /** Отступ между title и description */
-    titleMarginBottom: 10,
+    titleMarginBottom: 0,
   },
   small: {
-    imageHeight: 110,
-    contentHeight: 70,
-    titleFontSize: 14,
+    imageHeight: foundation.visuals.card.small.imageHeight,
+    contentHeight: foundation.visuals.card.small.contentHeight,
+    titleFontSize: foundation.text.fontSize,
     titleMarginBottom: 6,
   },
 } as const;
@@ -36,36 +38,40 @@ export const CARD_SIZES = {
 /**
  * Размеры изображений (для разных типов)
  */
+export const SHADOWS = foundation.shadows;
+
 export const IMAGE_SIZES = {
   /** Hero image - большое изображение в начале экрана */
   hero: {
-    height: 200,
-    marginBottom: -30, // Отрицательный margin для overlap эффекта
-    webHeight: 250,
-    webMarginBottom: -40,
-    webGradientHeight: 120,
-    defaultGradientHeight: 80,
+    height: foundation.visuals.hero.height,
+    marginBottom: foundation.visuals.hero.marginBottom,
+    webHeight: foundation.visuals.hero.webHeight,
+    webMarginBottom: foundation.visuals.hero.webMarginBottom,
+    webGradientHeight: foundation.visuals.hero.webGradientHeight,
+    defaultGradientHeight: foundation.visuals.hero.defaultGradientHeight,
   },
   
   /** Карточка - изображение внутри карточки */
   card: {
-    height: 150,
-    borderRadius: 12,
+    height: foundation.visuals.card.large.imageHeight,
+    borderRadius: foundation.borders.radiusStandard,
+    shadow: SHADOWS.standard,
   },
   
   /** Квадратное изображение */
   square: {
-    width: 300,
-    height: 300,
+    width: foundation.visuals.square.width,
+    height: foundation.visuals.square.height,
     borderRadius: 0,
-    marginBottom: 20,
+    marginBottom: foundation.visuals.square.marginBottom,
+    shadow: SHADOWS.standard,
   },
   
   /** Видео контейнер */
   video: {
-    height: 220,
-    borderRadius: 10,
-    overflow: 'hidden',
+    height: foundation.visuals.video.height,
+    borderRadius: foundation.borders.radiusStandard,
+    shadow: SHADOWS.standard,
   },
 } as const;
 
@@ -76,43 +82,43 @@ export const COMPONENT_SIZES = {
   /** Button размеры */
   button: {
     primary: {
-      height: 52,
-      paddingHorizontal: 24,
-      paddingVertical: 14,
-      minHeight: 52,
+      height: foundation.sizing.buttonHeight,
+      paddingHorizontal: foundation.sizing.buttonPaddingHorizontal,
+      paddingVertical: foundation.sizing.buttonPaddingVertical,
+      minHeight: foundation.sizing.buttonHeight,
     },
     secondary: {
-      height: 52,
-      paddingHorizontal: 24,
-      paddingVertical: 14,
-      minHeight: 52,
+      height: foundation.sizing.buttonHeight,
+      paddingHorizontal: foundation.sizing.buttonPaddingHorizontal,
+      paddingVertical: foundation.sizing.buttonPaddingVertical,
+      minHeight: foundation.sizing.buttonHeight,
     },
   },
   
   /** Input размеры */
   input: {
-    height: 48,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
+    height: foundation.sizing.inputHeight,
+    paddingHorizontal: foundation.sizing.inputPaddingHorizontal,
+    paddingVertical: foundation.sizing.inputPaddingVertical,
   },
   
   /** Quiz вопрос + ответ */
   quiz: {
-    containerPadding: 24,
-    answerPadding: 16,
-    answerMarginVertical: 8,
+    containerPadding: foundation.componentSpacing.quiz.container,
+    answerPadding: foundation.componentSpacing.quiz.answerPadding,
+    answerMarginVertical: foundation.componentSpacing.quiz.answerMarginVertical,
   },
   
   /** Checklist элемент */
   checklist: {
-    itemPadding: 16,
-    itemMarginBottom: 16,
-    checkboxSize: 24,
+    itemPadding: foundation.componentSpacing.checklist.itemPadding,
+    itemMarginBottom: foundation.componentSpacing.checklist.itemMarginBottom,
+    checkboxSize: foundation.sizing.checkboxSize,
   },
   
   /** Timer дисплей */
   timer: {
-    containerPadding: 24,
+    containerPadding: foundation.componentSpacing.timer.containerPadding,
     displayFontSize: 36,
   },
 } as const;
@@ -121,7 +127,6 @@ export const COMPONENT_SIZES = {
  * Единая шкала отступов (spacing scale)
  * Используется везде вместо hardcoded чисел
  */
-import foundation from '../styles/design-system/foundation';
 
 export const SPACING = foundation.spacing;
 
@@ -129,17 +134,13 @@ export const SPACING = foundation.spacing;
  * Border radius значения
  */
 export const BORDER_RADIUS = {
-  sm: foundation.borders.radiusSm,
-  md: foundation.borders.radiusMd,
-  lg: foundation.borders.radiusLg,
+  standard: foundation.borders.radiusStandard,
   full: foundation.borders.radiusFull,
 } as const;
 
 /**
  * Shadow specifications
  */
-export const SHADOWS = foundation.shadows;
-
 /**
  * Экспортируем все размеры как единый объект для удобства
  */

@@ -17,6 +17,7 @@ type AppButtonProps = {
   title: string;
   variant?: AppButtonVariant;
   disabled?: boolean;
+  shadowless?: boolean;
   style?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
   accessibilityLabel?: string;
@@ -38,6 +39,7 @@ export default function AppButton({
   title,
   variant = 'primary',
   disabled = false,
+  shadowless = false,
   style,
   textStyle,
   accessibilityLabel,
@@ -50,6 +52,7 @@ export default function AppButton({
   const { buttonStyle, labelStyle } = useAppButtonStyles({
     variant,
     disabled,
+    shadowless,
     style: flattenedStyle,
     textStyle: flattenedTextStyle,
   });

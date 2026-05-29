@@ -1,21 +1,18 @@
 import type { TextStyle } from 'react-native';
-import type { VisualFoundation } from '../foundation';
+import type { SemanticTypographyRole, VisualFoundation } from '../foundation';
 import type { SemanticTokens } from '../theme';
 
 export interface ButtonSpecs {
-  primary: {
+  primary: SemanticTypographyRole & {
     height: number;
     paddingHorizontal: number;
     paddingVertical: number;
     borderRadius: number;
     backgroundColor: string;
     textColor: string;
-    fontSize: number;
-    fontWeight: TextStyle['fontWeight'];
-    lineHeight: number;
     shadowElevation: number;
   };
-  secondary: {
+  secondary: SemanticTypographyRole & {
     height: number;
     paddingHorizontal: number;
     paddingVertical: number;
@@ -24,20 +21,16 @@ export interface ButtonSpecs {
     borderWidth: number;
     borderColor: string;
     textColor: string;
-    fontSize: number;
-    fontWeight: TextStyle['fontWeight'];
-    lineHeight: number;
+    shadowElevation: number;
   };
-  ghost: {
+  ghost: SemanticTypographyRole & {
     height: number;
     paddingHorizontal: number;
     paddingVertical: number;
     borderRadius: number;
     backgroundColor: string;
     textColor: string;
-    fontSize: number;
-    fontWeight: TextStyle['fontWeight'];
-    lineHeight: number;
+    shadowElevation: number;
   };
   disabled: {
     opacity: number;
@@ -47,40 +40,49 @@ export interface ButtonSpecs {
 export function getButtonSpecs(tokens: SemanticTokens & VisualFoundation): ButtonSpecs {
   return {
     primary: {
-      height: 52,
-      paddingHorizontal: tokens.spacing.lg,
-      paddingVertical: tokens.spacing.md,
-      borderRadius: tokens.borders.radiusMd,
+      // Spread typography from text role
+      ...tokens.text,
+      // Override font weight to semibold for button emphasis
+      fontWeight: '600' as TextStyle['fontWeight'],
+      // Geometry pulled from foundation tokens
+      height: tokens.sizing.buttonHeight,
+      paddingHorizontal: tokens.sizing.buttonPaddingHorizontal,
+      paddingVertical: tokens.sizing.buttonPaddingVertical,
+      borderRadius: tokens.borders.radiusStandard,
       backgroundColor: tokens.interactive.accent,
       textColor: tokens.text.onAccent,
-      fontSize: tokens.typography.fontSizeMd,
-      fontWeight: tokens.typography.fontWeightSemibold as TextStyle['fontWeight'],
-      lineHeight: tokens.typography.lineHeightNormal,
-      shadowElevation: tokens.shadows.md.elevation,
+      shadowElevation: tokens.shadows.standard.elevation,
     },
     secondary: {
-      height: 52,
-      paddingHorizontal: tokens.spacing.lg,
-      paddingVertical: tokens.spacing.md,
-      borderRadius: tokens.borders.radiusMd,
+      // Spread typography from text role
+      ...tokens.text,
+      // Override font weight to semibold for button emphasis
+      fontWeight: '600' as TextStyle['fontWeight'],
+      // Same geometry as primary — uses foundation values
+      height: tokens.sizing.buttonHeight,
+      paddingHorizontal: tokens.sizing.buttonPaddingHorizontal,
+      paddingVertical: tokens.sizing.buttonPaddingVertical,
+      borderRadius: tokens.borders.radiusStandard,
+      // Keep background neutral by default
       backgroundColor: tokens.surface.surfacePrimary,
       borderWidth: 0,
       borderColor: tokens.interactive.border,
       textColor: tokens.text.primary,
-      fontSize: tokens.typography.fontSizeMd,
-      fontWeight: tokens.typography.fontWeightSemibold as TextStyle['fontWeight'],
-      lineHeight: tokens.typography.lineHeightNormal,
+      shadowElevation: tokens.shadows.standard.elevation,
     },
     ghost: {
-      height: 52,
-      paddingHorizontal: tokens.spacing.lg,
-      paddingVertical: tokens.spacing.md,
-      borderRadius: tokens.borders.radiusMd,
+      // Spread typography from text role
+      ...tokens.text,
+      // Override font weight to semibold for button emphasis
+      fontWeight: '600' as TextStyle['fontWeight'],
+      // Ghost button geometry
+      height: tokens.sizing.buttonHeight,
+      paddingHorizontal: tokens.sizing.buttonPaddingHorizontal,
+      paddingVertical: tokens.sizing.buttonPaddingVertical,
+      borderRadius: tokens.borders.radiusStandard,
       backgroundColor: 'transparent',
       textColor: tokens.interactive.accent,
-      fontSize: tokens.typography.fontSizeMd,
-      fontWeight: tokens.typography.fontWeightSemibold as TextStyle['fontWeight'],
-      lineHeight: tokens.typography.lineHeightNormal,
+      shadowElevation: tokens.shadows.standard.elevation,
     },
     disabled: {
       opacity: 0.55,

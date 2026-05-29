@@ -2,6 +2,7 @@ import React, { FC, useMemo, useState } from 'react';
 import { Pressable, View } from 'react-native';
 import { useDesignTokens } from '../../hooks/useDesignTokens';
 import { getLocalized } from '../../utils/i18n';
+import AppButton from '../AppButton';
 import ScaledText from '../ScaledText';
 
 /**
@@ -89,37 +90,36 @@ export const QuizBlock: FC<QuizBlockProps> = ({ item, lang, heroOverlapStyle }) 
   const styles = useMemo(
     () => ({
       quizContainer: {
-        borderRadius: specs.quiz.borderRadius,
-        padding: specs.quiz.containerPadding,
-        marginVertical: specs.quiz.marginVertical,
-        backgroundColor: tokens.surface.surfaceSecondary,
-        borderWidth: specs.quiz.borderWidth,
+        borderRadius: specs.card.large.borderRadius,
+        padding: specs.card.large.padding,
+        marginVertical: tokens.spacing.standard,
+        backgroundColor: tokens.surface.surfacePrimary,
+        borderWidth: tokens.borders.widthStandard,
         borderColor: tokens.interactive.border,
+        ...specs.card.large.shadow,
       },
       quizHeaderTitle: {
-        fontSize: tokens.typography.fontSizeXl,
-        fontWeight: tokens.typography.fontWeightBold,
-        color: tokens.text.primary,
+        ...specs.quiz.questionText,
+        color: specs.quiz.questionColor,
       },
       quizHeaderDescription: {
-        fontSize: tokens.typography.fontSizeMd,
+        ...tokens.typography.text,
         color: tokens.text.secondary,
-        marginTop: tokens.spacing.sm,
+        marginTop: tokens.spacing.standard,
       },
       quizDescription: {
-        fontSize: tokens.typography.fontSizeSm,
-        marginBottom: tokens.spacing.sm,
+        ...tokens.typography.text,
+        marginBottom: tokens.spacing.standard,
         color: tokens.text.tertiary,
-        marginTop: tokens.spacing.sm,
+        marginTop: tokens.spacing.standard,
       },
       quizQuestionBlock: {
-        marginVertical: tokens.spacing.md,
+        marginVertical: tokens.spacing.standard,
       },
       quizQuestionTitle: {
-        fontSize: tokens.typography.fontSizeLg,
-        fontWeight: tokens.typography.fontWeightBold,
-        color: tokens.text.primary,
-        marginBottom: tokens.spacing.sm,
+        ...specs.quiz.questionText,
+        color: specs.quiz.questionColor,
+        marginBottom: specs.quiz.questionMarginBottom,
       },
       quizOption: {
         borderRadius: specs.quiz.answerBorderRadius,
@@ -144,8 +144,8 @@ export const QuizBlock: FC<QuizBlockProps> = ({ item, lang, heroOverlapStyle }) 
         opacity: 0.08,
       },
       quizOptionText: {
-        color: tokens.text.primary,
-        fontSize: tokens.typography.fontSizeMd,
+        ...specs.quiz.answerText,
+        color: specs.quiz.answerColor,
       },
       quizOptionTextCorrect: {
         color: tokens.text.success,
@@ -154,27 +154,21 @@ export const QuizBlock: FC<QuizBlockProps> = ({ item, lang, heroOverlapStyle }) 
         color: tokens.text.danger,
       },
       quizSubmitButton: {
-        borderRadius: specs.quiz.answerBorderRadius,
-        padding: specs.quiz.answerPadding,
-        marginTop: tokens.spacing.lg,
-        backgroundColor: tokens.interactive.accent,
-        alignItems: 'center' as const,
-        justifyContent: 'center' as const,
+        marginTop: tokens.spacing.standard,
       },
       quizSubmitText: {
+        ...tokens.typography.text,
         color: tokens.text.onAccent,
-        fontWeight: tokens.typography.fontWeightBold,
-        fontSize: tokens.typography.fontSizeMd,
       },
       quizEmpty: {
+        ...tokens.typography.text,
         color: tokens.text.tertiary,
-        fontSize: tokens.typography.fontSizeSm,
-        marginTop: tokens.spacing.sm,
+        marginTop: tokens.spacing.standard,
       },
       quizStatusText: {
-        marginTop: tokens.spacing.sm,
+        ...tokens.typography.text,
+        marginTop: tokens.spacing.standard,
         color: tokens.text.primary,
-        fontSize: tokens.typography.fontSizeMd,
       },
     }),
     [tokens, specs]
@@ -250,24 +244,32 @@ export const QuizBlock: FC<QuizBlockProps> = ({ item, lang, heroOverlapStyle }) 
             </ScaledText>
           ) : null}
 
-          <Pressable
-            onPress={handleNext}
-            style={[
-              styles.quizSubmitButton,
-              !isAnswered ? { opacity: 0.6 } : null,
-            ]}
-            disabled={!isAnswered}
-          >
-            <ScaledText style={styles.quizSubmitText}>
-              {currentIndex + 1 === questions.length
-                ? lang === 'eng'
-                  ? 'Finish'
-                  : 'Закончить'
-                : lang === 'eng'
-                ? 'Next'
-                : 'Далее'}
-            </ScaledText>
-          </Pressable>
+          <View style={styles.quizSubmitButton}>
+            <AppButton
+              title={
+                currentIndex + 1 === questions.length
+                  ? lang === 'eng'
+                    ? 'Finish'
+                    : 'Закончить'
+                  : lang === 'eng'
+                  ? 'Next'
+                  : 'Далее'
+              }
+              variant="primary"
+                shadowless
+              onPress={handleNext}
+              disabled={!isAnswered}
+              accessibilityLabel={
+                currentIndex + 1 === questions.length
+                  ? lang === 'eng'
+                    ? 'Finish'
+                    : 'Закончить'
+                  : lang === 'eng'
+                  ? 'Next'
+                  : 'Далее'
+              }
+            />
+          </View>
         </View>
       )}
     </View>

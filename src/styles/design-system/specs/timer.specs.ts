@@ -9,9 +9,20 @@ export interface TimerSpecs {
   borderRadius: number;
   backgroundColor: string;
   borderColor: string;
+  containerShadow: VisualFoundation['shadows']['standard'];
+  
+  // Display typography (countdown numbers)
   displayFontSize: number;
   displayFontWeight: TextStyle['fontWeight'];
+  displayLineHeight: number;
   displayColor: string;
+  
+  // Label typography (captions)
+  labelFontSize: number;
+  labelFontWeight: TextStyle['fontWeight'];
+  labelLineHeight: number;
+  labelColor: string;
+  
   buttonPadding: number;
   buttonBorderRadius: number;
   ringSize: number;
@@ -19,17 +30,28 @@ export interface TimerSpecs {
 
 export function getTimerSpecs(tokens: SemanticTokens & VisualFoundation): TimerSpecs {
   return {
-    containerPadding: tokens.spacing.lg,
-    padding: tokens.spacing.lg,
-    marginVertical: tokens.spacing.md,
-    borderRadius: tokens.borders.radiusLg,
+    containerPadding: tokens.componentSpacing.timer.containerPadding,
+    padding: tokens.spacing.standard,
+    marginVertical: tokens.spacing.standard,
+    borderRadius: tokens.borders.radiusStandard,
     backgroundColor: tokens.surface.surfaceSecondary,
     borderColor: tokens.interactive.border,
-    displayFontSize: tokens.typography.fontSizeXxl,
-    displayFontWeight: tokens.typography.fontWeightBold as TextStyle['fontWeight'],
+    containerShadow: tokens.shadows.standard,
+    
+    // Display typography — header
+    displayFontSize: tokens.header.fontSize,
+    displayFontWeight: tokens.header.fontWeight as TextStyle['fontWeight'],
+    displayLineHeight: tokens.header.lineHeight,
     displayColor: tokens.text.primary,
-    buttonPadding: tokens.spacing.md,
-    buttonBorderRadius: tokens.borders.radiusMd,
+    
+    // Label typography — text role (compact)
+    labelFontSize: Math.round(tokens.text.fontSize * 0.75),
+    labelFontWeight: tokens.text.fontWeight as TextStyle['fontWeight'],
+    labelLineHeight: Math.round(tokens.text.lineHeight * 0.75),
+    labelColor: tokens.text.secondary,
+    
+    buttonPadding: tokens.componentSpacing.timer.containerPadding,
+    buttonBorderRadius: tokens.borders.radiusStandard,
     ringSize: 160,
   };
 }

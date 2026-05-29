@@ -97,8 +97,8 @@ export default function Card({
     () => StyleSheet.create({
       card: {
         overflow: 'hidden',
-        marginBottom: tokens.spacing.lg,
-        alignSelf: 'center',
+        marginBottom: tokens.spacing.standard,
+        alignSelf: inGrid ? 'stretch' : 'center',
       } as ViewStyle,
       image: {
         resizeMode: 'cover',
@@ -113,49 +113,37 @@ export default function Card({
         fontFamily: 'sans-serif',
       } as TextStyle,
     }),
-    [tokens, specs]
+    [tokens, specs, inGrid]
   );
 
   const { cardWidth, sizeConfig } = useMemo(() => {
-    const containerPadding = tokens.spacing.lg;
-    const maxContentWidth = 600;
+    const containerPadding = tokens.spacing.standard;
+    const maxContentWidth = tokens.layout.contentMaxWidth;
     const availableWidth = windowWidth - containerPadding * 2;
-    
-    let gridWidth: number | null = null;
-    if (inGrid) {
-      const columns = windowWidth >= 768 ? 3 : 1;
-      const gapSize = typeof gap === 'number' ? gap : tokens.spacing.md;
-      const totalGap = gapSize * (columns - 1);
-      gridWidth = Math.floor((Math.min(availableWidth, maxContentWidth) - totalGap) / columns);
-    }
-
     const finalSizeConfig = size === 'small' ? CARD_SIZES.small : CARD_SIZES.large;
-    const finalWidth = gridWidth || Math.min(availableWidth, maxContentWidth);
+    const finalWidth = Math.min(availableWidth, maxContentWidth);
 
     return {
-      cardWidth: size === 'small' ? 'auto' : finalWidth,
+      cardWidth: inGrid ? undefined : finalWidth,
       sizeConfig: finalSizeConfig,
     };
-  }, [windowWidth, inGrid, gap, size, tokens.spacing.lg]);
+  }, [windowWidth, inGrid, size, tokens.spacing.standard, tokens.layout.contentMaxWidth]);
 
   const imageSource = getLocalizedAsset(image, activeLang);
 
   const dynamicCardStyle: ViewStyle = {
     ...styles.card,
-    width: cardWidth as any,
+    ...(typeof cardWidth === 'number' ? { width: cardWidth } : {}),
     backgroundColor: tokens.surface.surfacePrimary,
     borderColor: tokens.interactive.border,
-    borderWidth: tokens.borders.widthBase,
+    borderWidth: tokens.borders.widthStandard,
     borderRadius: specs.card[cardMode].borderRadius,
-    shadowColor: tokens.text.primary,
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: specs.card[cardMode].shadowElevation,
+    ...specs.card[cardMode].shadow,
   };
 
   const dynamicImageStyle: ImageStyle = {
     ...styles.image,
-    width: typeof cardWidth === 'number' ? cardWidth : undefined,
+    width: '100%',
     height: sizeConfig.imageHeight,
     borderRadius: specs.card[cardMode].borderRadius,
   };
@@ -167,16 +155,20 @@ export default function Card({
 
   const dynamicTitleStyle: TextStyle = {
     ...styles.title,
-    fontSize: sizeConfig.titleFontSize,
+    fontSize: tokens.subheading.fontSize,
+    fontWeight: tokens.subheading.fontWeight,
+    lineHeight: tokens.subheading.lineHeight,
+    fontFamily: tokens.subheading.fontFamily,
     marginBottom: sizeConfig.titleMarginBottom,
     color: tokens.text.primary,
-    fontWeight: tokens.typography.fontWeightSemibold,
   };
 
   const dynamicDescriptionStyle: TextStyle = {
     ...styles.description,
-    fontSize: sizeConfig === CARD_SIZES.large ? tokens.typography.fontSizeSm : tokens.typography.fontSizeXs,
-    lineHeight: sizeConfig === CARD_SIZES.large ? 22 : 16,
+    fontSize: tokens.text.fontSize,
+    fontWeight: tokens.text.fontWeight,
+    lineHeight: tokens.text.lineHeight,
+    fontFamily: tokens.text.fontFamily,
     color: tokens.text.tertiary,
   };
 

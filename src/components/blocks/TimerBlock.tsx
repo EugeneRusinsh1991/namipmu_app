@@ -1,8 +1,9 @@
 import React, { FC, useEffect, useMemo, useRef, useState } from 'react';
-import { StyleSheet, TouchableOpacity, View, type TextStyle, type ViewStyle } from 'react-native';
+import { StyleSheet, View, type TextStyle, type ViewStyle } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { useDesignTokens } from '../../hooks/useDesignTokens';
 import { getLocalized } from '../../utils/i18n';
+import AppButton from '../AppButton';
 import ScaledText from '../ScaledText';
 
 /**
@@ -116,33 +117,28 @@ export const TimerBlock: FC<TimerBlockProps> = ({ item, lang }) => {
 
       return StyleSheet.create<TimerStyles>({
         card: {
-          borderRadius: specs.timer.borderRadius,
-          padding: specs.timer.containerPadding,
-          marginVertical: specs.timer.marginVertical,
-          backgroundColor: tokens.surface.surfaceSecondary,
+          borderRadius: specs.card.large.borderRadius,
+          padding: specs.card.large.padding,
+          marginVertical: tokens.spacing.standard,
+          backgroundColor: tokens.surface.surfacePrimary,
           borderColor: tokens.interactive.border,
-          borderWidth: 1,
-          shadowColor: tokens.text.primary,
-          shadowOpacity: 0.08,
-          shadowRadius: 12,
-          shadowOffset: { width: 0, height: 6 },
-          elevation: 3,
+          borderWidth: tokens.borders.widthStandard,
+          ...specs.card.large.shadow,
         },
         headerRow: {
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'flex-start',
-          marginBottom: tokens.spacing.md,
+          marginBottom: tokens.spacing.standard,
         },
         headerTitle: {
-          fontSize: tokens.typography.fontSizeLg,
-          fontWeight: tokens.typography.fontWeightBold,
+          ...tokens.typography.subheading,
           color: tokens.text.primary,
         },
         icon: {
-          fontSize: tokens.typography.fontSizeLg,
+          ...tokens.typography.subheading,
           opacity: 0.9,
-          marginLeft: tokens.spacing.sm,
+          marginLeft: tokens.spacing.standard,
         },
         timerWrap: {
           alignItems: 'center',
@@ -174,40 +170,20 @@ export const TimerBlock: FC<TimerBlockProps> = ({ item, lang }) => {
           borderRadius: (innerSize - 16) / 2,
         },
         timeLabel: {
-          ...tokens.typography.heading1,
+          fontSize: specs.timer.displayFontSize,
+          fontWeight: specs.timer.displayFontWeight,
+          lineHeight: specs.timer.displayLineHeight,
           color: tokens.text.primary,
           textAlign: 'center' as const,
         },
         controls: {
           flexDirection: 'row',
           justifyContent: 'space-between',
-          marginTop: tokens.spacing.lg,
+          marginTop: tokens.spacing.standard,
         },
-        btn: {
+        buttonWrapper: {
           flex: 1,
-          paddingVertical: specs.timer.buttonPadding,
-          alignItems: 'center',
-          justifyContent: 'center',
-          borderRadius: specs.timer.buttonBorderRadius,
-          marginHorizontal: tokens.spacing.xs,
-        },
-        btnStart: {
-          borderWidth: 1,
-          borderColor: tokens.interactive.accent,
-          backgroundColor: tokens.interactive.accentLight,
-        },
-        btnPause: {
-          backgroundColor: tokens.surface.surfacePrimary,
-        },
-        btnReset: {
-          borderWidth: 1,
-          borderColor: tokens.interactive.border,
-          backgroundColor: tokens.surface.surfacePrimary,
-        },
-        btnTextOverride: {
-          fontWeight: tokens.typography.fontWeightBold,
-          fontSize: tokens.typography.fontSizeMd,
-          color: tokens.text.primary,
+          marginHorizontal: tokens.spacing.standard,
         },
       });
     },
@@ -233,28 +209,25 @@ export const TimerBlock: FC<TimerBlockProps> = ({ item, lang }) => {
       </View>
 
       <View style={styles.controls}>
-        <TouchableOpacity
-          activeOpacity={0.8}
-          onPress={toggleRun}
-          style={[
-            styles.btn,
-            isRunning ? styles.btnPause : styles.btnStart,
-          ]}
-        >
-          <ScaledText style={[styles.btnTextOverride, { color: tokens.text.primary }]}> 
-            {isRunning ? 'Пауза' : 'Старт'}
-          </ScaledText>
-        </TouchableOpacity>
+        <View style={styles.buttonWrapper}>
+          <AppButton
+            title={isRunning ? 'Пауза' : 'Старт'}
+            variant="primary"
+            shadowless
+            onPress={toggleRun}
+            accessibilityLabel={isRunning ? 'Пауза' : 'Старт'}
+          />
+        </View>
 
-        <TouchableOpacity
-          activeOpacity={0.8}
-          onPress={reset}
-          style={[styles.btn, styles.btnReset]}
-        >
-          <ScaledText style={[styles.btnTextOverride, { color: tokens.text.primary }]}> 
-            Скинути
-          </ScaledText>
-        </TouchableOpacity>
+        <View style={styles.buttonWrapper}>
+          <AppButton
+            title="Скинути"
+            variant="primary"
+            shadowless
+            onPress={reset}
+            accessibilityLabel="Скинути"
+          />
+        </View>
       </View>
     </View>
   );

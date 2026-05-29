@@ -28,7 +28,7 @@ function App() {
     <StyleRegistry dynamicTokens={dynamicTokens}>
       <div className="App">
         <h1 style={{ color: 'var(--colors-primary)' }}>Мое приложение</h1>
-        <p style={{ padding: 'var(--spacing-md)' }}>Этот текст будет менять стиль на лету!</p>
+        <p style={{ padding: 'var(--spacing-standard)' }}>Этот текст будет менять стиль на лету!</p>
       </div>
     </StyleRegistry>
   );

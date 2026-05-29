@@ -1,11 +1,11 @@
 import { Ionicons } from '@expo/vector-icons';
 import React, { useMemo, useState } from 'react';
 import {
-    Modal,
-    Pressable,
-    StyleSheet,
-    Text,
-    View,
+  Modal,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
 } from 'react-native';
 import { useLanguage } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
@@ -27,22 +27,11 @@ const LANGUAGE_OPTIONS: LanguageOption[] = [
 export default function PageLanguageButton() {
   const { lang, setLang } = useLanguage();
   const { theme, toggleTheme, colors: themeColors } = useTheme();
-  const { tokens } = useDesignTokens();
+  const { tokens, specs } = useDesignTokens();
   const [isOpen, setIsOpen] = useState(false);
 
   const currentLanguage = LANGUAGE_OPTIONS.find((opt) => opt.value === lang);
   const currentAbbr = currentLanguage?.abbr || 'UA';
-
-  // dynamic styles derived from theme colors
-  const dynamicButtonStyle = {
-    backgroundColor: themeColors?.white || tokens.white,
-    borderColor: themeColors?.interactive?.border || tokens.interactive.border,
-  };
-
-  const dynamicDropdownStyle = {
-    backgroundColor: themeColors?.white || tokens.white,
-    borderColor: themeColors?.interactive?.border || tokens.interactive.border,
-  };
 
   const dynamicTextColor = { color: tokens.text.primary };
 
@@ -57,21 +46,33 @@ export default function PageLanguageButton() {
       flexDirection: 'row',
       alignItems: 'center',
       gap: 4,
-      paddingHorizontal: tokens.spacing.md,
-      paddingVertical: tokens.spacing.xs,
-      borderRadius: tokens.borders.radiusMd,
-      borderWidth: tokens.borders.widthBase,
-      ...tokens.shadows.sm,
+      minWidth: 44,
+      justifyContent: 'center',
+      borderRadius: specs.button.secondary.borderRadius,
+      backgroundColor: specs.button.secondary.backgroundColor,
+      borderWidth: specs.button.secondary.borderWidth,
+      borderColor: specs.button.secondary.borderColor,
+      paddingHorizontal: specs.button.secondary.paddingHorizontal,
+      paddingVertical: specs.button.secondary.paddingVertical,
+      ...tokens.shadows.standard,
     },
     buttonPressed: {
-      opacity: 0.7,
+      opacity: 0.75,
     },
     buttonText: {
-      fontSize: tokens.typography.fontSizeSm,
+      ...tokens.typography.text,
+      fontSize: Math.round(tokens.typography.text.fontSize * 0.9),
+      fontWeight: '600',
+      fontFamily: 'sans-serif',
+      color: tokens.interactive.accent,
     },
     arrow: {
-      fontSize: tokens.typography.fontSizeXs,
+      ...tokens.typography.text,
+      fontSize: Math.round(tokens.typography.text.fontSize * 0.8),
+      fontWeight: '600',
+      fontFamily: 'sans-serif',
       marginLeft: 2,
+      color: tokens.interactive.accent,
     },
     overlay: {
       flex: 1,
@@ -79,21 +80,21 @@ export default function PageLanguageButton() {
       justifyContent: 'flex-start',
       alignItems: 'flex-end',
       paddingTop: 80,
-      paddingRight: tokens.spacing.md,
+      paddingRight: tokens.spacing.standard,
     },
     dropdownContainer: {
       backgroundColor: tokens.white,
-      borderRadius: tokens.borders.radiusMd,
+      borderRadius: tokens.borders.radiusStandard,
       overflow: 'hidden',
       minWidth: 180,
-      ...tokens.shadows.md,
-      borderWidth: tokens.borders.widthBase,
+      ...(tokens.shadows?.standard ?? {}),
+      borderWidth: tokens.borders.widthStandard,
       borderColor: tokens.interactive.border,
     },
     option: {
-      paddingVertical: tokens.spacing.sm,
-      paddingHorizontal: tokens.spacing.md,
-      borderBottomWidth: tokens.borders.widthThin,
+      paddingVertical: tokens.spacing.standard,
+      paddingHorizontal: tokens.spacing.standard,
+      borderBottomWidth: tokens.borders.widthStandard,
       borderBottomColor: tokens.interactive.border,
     },
     optionActive: {
@@ -105,45 +106,55 @@ export default function PageLanguageButton() {
     optionContent: {
       flexDirection: 'row',
       alignItems: 'center',
-      gap: tokens.spacing.md,
+      gap: tokens.spacing.standard,
     },
     optionCode: {
-      fontSize: tokens.typography.fontSizeXs,
+      ...tokens.typography.text,
+      fontSize: Math.round(tokens.typography.text.fontSize * 0.8),
+      fontWeight: '600',
+      fontFamily: 'sans-serif',
       minWidth: 30,
     },
     optionText: {
-      fontSize: tokens.typography.fontSizeMd,
+      ...tokens.typography.text,
+      fontWeight: '600',
+      fontFamily: 'sans-serif',
     },
     optionTextActive: {
       color: tokens.interactive.accent,
     },
     iconButton: {
-      padding: tokens.spacing.xs,
-      borderRadius: tokens.borders.radiusFull,
-      backgroundColor: tokens.white,
-      borderWidth: tokens.borders.widthBase,
-      borderColor: tokens.interactive.border,
+      minWidth: 44,
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: specs.button.secondary.borderRadius,
+      backgroundColor: specs.button.secondary.backgroundColor,
+      borderWidth: specs.button.secondary.borderWidth,
+      borderColor: specs.button.secondary.borderColor,
+      paddingHorizontal: specs.button.secondary.paddingHorizontal,
+      paddingVertical: specs.button.secondary.paddingVertical,
+      ...tokens.shadows.standard,
     },
-  }), [tokens]);
+  }), [tokens, specs]);
 
   return (
     <>
       <View style={{ flexDirection: 'row', gap: 8, alignItems: 'center' }}>
         <Pressable
-          style={({ pressed }) => [styles.button, dynamicButtonStyle, pressed && styles.buttonPressed]}
+          style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}
           onPress={() => setIsOpen(!isOpen)}
           accessibilityRole="button"
           accessibilityLabel={`Язык: ${currentLanguage?.label}`}
         >
-          <Text style={[styles.buttonText, dynamicTextColor]}>{currentAbbr}</Text>
-          <Text style={[styles.arrow, dynamicTextColor]}>▼</Text>
+          <Text style={styles.buttonText}>{currentAbbr}</Text>
+          <Text style={styles.arrow}>▼</Text>
         </Pressable>
 
         <Pressable
           onPress={() => toggleTheme()}
           accessibilityRole="button"
           accessibilityLabel={`Переключить тему`}
-          style={({ pressed }) => [styles.iconButton, { backgroundColor: themeColors?.white || tokens.white }, pressed && { opacity: 0.7 }]}
+          style={({ pressed }) => [styles.iconButton, pressed && { opacity: 0.7 }]}
         >
           <Ionicons
             name={theme === 'dark' ? 'sunny' : 'moon'}
@@ -164,7 +175,7 @@ export default function PageLanguageButton() {
           style={styles.overlay}
           onPress={() => setIsOpen(false)}
         >
-          <View style={[styles.dropdownContainer, dynamicDropdownStyle]}>
+          <View style={styles.dropdownContainer}>
             {LANGUAGE_OPTIONS.map((option) => {
               const isActive = option.value === lang;
               return (
@@ -172,7 +183,6 @@ export default function PageLanguageButton() {
                   key={option.value}
                   style={({ pressed }) => [
                     styles.option,
-                    isActive && { backgroundColor: themeColors?.cardBackground || tokens.surface.surfaceSecondary },
                     pressed && styles.optionPressed,
                   ]}
                   onPress={() => handleSelectLanguage(option.value)}

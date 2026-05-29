@@ -45,22 +45,12 @@ export default function ContentPage({ title, contentModule }: ContentPageProps) 
       StyleSheet.create({
         headerControls: {
           position: 'absolute',
-          top: tokens.spacing.xl,
-          right: tokens.spacing.lg,
+          top: tokens.spacing.standard,
+          right: tokens.spacing.standard,
           zIndex: 200,
           flexDirection: 'row',
           alignItems: 'center',
-          gap: tokens.spacing.sm,
-          borderWidth: tokens.borders.widthBase,
-          padding: tokens.spacing.sm,
-          backgroundColor: tokens.surface.surfacePrimary,
-          borderColor: tokens.interactive.border,
-          borderRadius: specs.card.large.borderRadius,
-          shadowColor: tokens.shadows.md.shadowColor,
-          shadowOffset: tokens.shadows.md.shadowOffset,
-          shadowOpacity: tokens.shadows.md.shadowOpacity,
-          shadowRadius: tokens.shadows.md.shadowRadius,
-          elevation: tokens.shadows.md.elevation,
+          gap: tokens.spacing.standard,
         },
         scrollView: {
           flex: 1,
@@ -68,7 +58,7 @@ export default function ContentPage({ title, contentModule }: ContentPageProps) 
         },
         scrollContainer: {
           flexGrow: 1,
-          paddingBottom: tokens.spacing.xxl,
+          paddingBottom: tokens.spacing.standard,
         },
       }),
     [tokens, specs]

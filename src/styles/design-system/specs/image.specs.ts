@@ -5,38 +5,46 @@ export interface ImageSpecs {
   hero: {
     height: number;
     marginBottom: number;
+    shadow: VisualFoundation['shadows']['standard'];
   };
   card: {
     height: number;
     borderRadius: number;
+    shadow: VisualFoundation['shadows']['standard'];
   };
   square: {
     width: number;
     height: number;
+    shadow: VisualFoundation['shadows']['standard'];
   };
   video: {
     height: number;
     borderRadius: number;
+    shadow: VisualFoundation['shadows']['standard'];
   };
 }
 
 export function getImageSpecs(tokens: SemanticTokens & VisualFoundation): ImageSpecs {
   return {
     hero: {
-      height: 200,
-      marginBottom: -30,
+      height: tokens.visuals.hero.height,
+      marginBottom: tokens.visuals.hero.marginBottom,
+      shadow: tokens.shadows.standard,
     },
     card: {
-      height: 150,
-      borderRadius: tokens.borders.radiusMd,
+      height:  tokens.visuals.card.large.imageHeight,
+      borderRadius: tokens.borders.radiusStandard,
+      shadow: tokens.shadows.standard,
     },
     square: {
-      width: 300,
-      height: 300,
+      width: tokens.visuals.square.width,
+      height: tokens.visuals.square.height,
+      shadow: tokens.shadows.standard,
     },
     video: {
-      height: 220,
-      borderRadius: tokens.borders.radiusMd,
+      height: tokens.visuals.video.height,
+      borderRadius: tokens.borders.radiusStandard,
+      shadow: tokens.shadows.standard,
     },
   };
 }

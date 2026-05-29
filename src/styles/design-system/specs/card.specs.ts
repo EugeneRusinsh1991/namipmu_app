@@ -6,6 +6,7 @@ export interface CardSpecs {
     borderRadius: number;
     padding: number;
     shadowElevation: number;
+    shadow: VisualFoundation['shadows']['standard'];
     backgroundColor: string;
     borderColor: string;
     imageSizeConfig: {
@@ -17,6 +18,7 @@ export interface CardSpecs {
     borderRadius: number;
     padding: number;
     shadowElevation: number;
+    shadow: VisualFoundation['shadows']['standard'];
     backgroundColor: string;
     borderColor: string;
     imageSizeConfig: {
@@ -29,25 +31,27 @@ export interface CardSpecs {
 export function getCardSpecs(tokens: SemanticTokens & VisualFoundation): CardSpecs {
   return {
     large: {
-      borderRadius: tokens.borders.radiusMd,
-      padding: tokens.spacing.lg,
+      borderRadius: tokens.borders.radiusStandard,
+      padding: tokens.spacing.standard,
       backgroundColor: tokens.surface.surfaceSecondary,
       borderColor: tokens.interactive.border,
-      shadowElevation: tokens.shadows.md.elevation,
+      shadowElevation: tokens.shadows.standard.elevation,
+      shadow: tokens.shadows.standard,
       imageSizeConfig: {
-        height: 150,
-        contentHeight: 110,
+        height: tokens.visuals.card.large.imageHeight,
+        contentHeight: tokens.visuals.card.large.contentHeight,
       },
     },
     small: {
-      borderRadius: tokens.borders.radiusMd,
-      padding: tokens.spacing.md,
+      borderRadius: tokens.borders.radiusStandard,
+      padding: tokens.spacing.standard,
       backgroundColor: tokens.surface.surfaceSecondary,
       borderColor: tokens.interactive.border,
-      shadowElevation: tokens.shadows.sm.elevation,
+      shadowElevation: tokens.shadows.standard.elevation,
+      shadow: tokens.shadows.standard,
       imageSizeConfig: {
-        height: 110,
-        contentHeight: 70,
+        height: tokens.visuals.card.small.imageHeight,
+        contentHeight: tokens.visuals.card.small.contentHeight,
       },
     },
   };

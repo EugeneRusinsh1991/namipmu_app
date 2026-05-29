@@ -29,7 +29,7 @@ export const SpacerDivider: FC<SpacerDividerProps> = ({ item, lang, heroOverlapS
       flexDirection: 'row',
       alignItems: 'center',
       width: '100%',
-      paddingVertical: tokens.spacing.sm,
+      paddingVertical: tokens.spacing.standard,
     },
     line: {
       flex: 1,
@@ -42,13 +42,13 @@ export const SpacerDivider: FC<SpacerDividerProps> = ({ item, lang, heroOverlapS
       backgroundColor: tokens.interactive.border,
     },
     text: {
-      marginHorizontal: tokens.spacing.sm,
+      ...tokens.typography.text,
+      marginHorizontal: tokens.spacing.standard,
       textAlign: 'center' as const,
       flexShrink: 1,
       minWidth: 0,
       color: tokens.text.secondary,
-      fontSize: tokens.typography.fontSizeSm,
-      lineHeight: tokens.typography.lineHeightNormal,
+      fontSize: Math.round(tokens.typography.text.fontSize * 0.85),
     },
   });
 

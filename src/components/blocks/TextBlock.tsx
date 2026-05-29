@@ -47,7 +47,7 @@ export const TitleBlock: FC<LocalizedTextBlockProps> = (props) => {
   const styles = useMemo(
     () => ({
       title: {
-        ...tokens.typography.heading1,
+        ...tokens.typography.header,
         color: tokens.text.primary,
       },
     }),
@@ -65,7 +65,10 @@ export const EyebrowBlock: FC<LocalizedTextBlockProps> = (props) => {
   const styles = useMemo(
     () => ({
       eyebrow: {
-        ...tokens.typography.eyebrow,
+        ...tokens.typography.text,
+        fontWeight: '600',
+        fontSize: Math.round(tokens.typography.text.fontSize * 0.9),
+        fontFamily: 'sans-serif',
         color: tokens.interactive.accent,
         textTransform: 'uppercase' as const,
       },
@@ -84,7 +87,7 @@ export const SubtitleBlock: FC<LocalizedTextBlockProps> = (props) => {
   const styles = useMemo(
     () => ({
       subtitle: {
-        ...tokens.typography.heading3,
+        ...tokens.typography.subheading,
         color: tokens.text.secondary,
       },
     }),
@@ -102,7 +105,7 @@ export const TextContentBlock: FC<LocalizedTextBlockProps> = (props) => {
   const styles = useMemo(
     () => ({
       text: {
-        ...tokens.typography.bodyMedium,
+        ...tokens.typography.text,
         color: tokens.text.primary,
       },
     }),

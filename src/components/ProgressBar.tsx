@@ -14,11 +14,11 @@ export default function ProgressBar({ progress }: ProgressBarProps) {
     const progressBarHeight =
       typeof (specs as any)?.progressBar?.height === 'number'
         ? (specs as any).progressBar.height
-        : tokens.spacing.xs;
+        : tokens.spacing.standard;
     const borderRadius =
       typeof tokens.borders.radiusFull === 'number'
         ? tokens.borders.radiusFull
-        : tokens.borders.radiusMd;
+        : tokens.borders.radiusStandard;
 
     return StyleSheet.create({
       container: {

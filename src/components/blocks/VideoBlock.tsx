@@ -55,6 +55,7 @@ export const VideoBlock: FC<VideoBlockProps> = ({ item, lang, heroOverlapStyle }
         container: {
           height: specs.image.video.height,
           borderRadius: specs.image.video.borderRadius,
+          ...specs.image.video.shadow,
           overflow: 'hidden' as any,
           width: '100%',
           maxWidth: (specs.image.video as any).maxWidth || '100%',
@@ -71,11 +72,12 @@ export const VideoBlock: FC<VideoBlockProps> = ({ item, lang, heroOverlapStyle }
           flex: 1,
           alignItems: 'center',
           justifyContent: 'center',
-          padding: tokens.spacing.md,
+          padding: tokens.spacing.standard,
         },
         fallbackText: {
+          ...tokens.typography.text,
+          fontSize: Math.round(tokens.typography.text.fontSize * 0.875),
           color: tokens.text.primary,
-          fontSize: tokens.typography.fontSizeSm,
           textAlign: 'center',
         },
       }),
@@ -158,8 +160,8 @@ export const VideoBlock: FC<VideoBlockProps> = ({ item, lang, heroOverlapStyle }
   } catch (err) {
     const fallbackStyles = StyleSheet.create({
       container: { height: specs.image.video.height, borderRadius: specs.image.video.borderRadius, overflow: 'hidden' as any, width: '100%' },
-      fallbackContainer: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: tokens.spacing.lg, backgroundColor: tokens.surface.surfacePrimary },
-      fallbackText: { color: tokens.text.primary, fontSize: tokens.typography.fontSizeSm, textAlign: 'center' },
+      fallbackContainer: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: tokens.spacing.standard, backgroundColor: tokens.surface.surfacePrimary },
+      fallbackText: { ...tokens.typography.text, fontSize: Math.round(tokens.typography.text.fontSize * 0.85), color: tokens.text.primary, textAlign: 'center' },
     });
 
     console.error('VideoBlock error', err, { item, lang });

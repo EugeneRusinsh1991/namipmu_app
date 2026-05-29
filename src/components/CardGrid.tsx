@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import React, { useMemo } from 'react';
-import { StyleSheet, View, ViewStyle } from 'react-native';
+import { StyleSheet, useWindowDimensions, View, ViewStyle } from 'react-native';
 import { useDesignTokens } from '../hooks/useDesignTokens';
 import { getLocalized, getLocalizedAsset } from '../utils/i18n';
 import Card from './Card';
@@ -42,7 +42,7 @@ interface CardGridProps {
   /** Язык для локализации (по умолчанию 'ru') */
   lang?: string;
   
-  /** Промежуток между карточками в сетке (по умолчанию spacing.md) */
+  /** Промежуток между карточками в сетке (по умолчанию spacing.standard) */
   gap?: number;
   
   /** Дополнительные стили для контейнера (например, для overlap эффекта с hero image) */
@@ -85,7 +85,10 @@ export default function CardGrid({
   heroOverlapStyle = {} 
 }: CardGridProps): ReactNode {
   const { tokens } = useDesignTokens();
-  const effectiveGap = gap ?? tokens.spacing.md;
+  const { width: windowWidth } = useWindowDimensions();
+  const effectiveGap = gap ?? tokens.spacing.standard;
+  const desktopBreakpoint = tokens.layout.contentMaxWidth * 1.2;
+  const columns = items.length > 1 && windowWidth >= desktopBreakpoint ? 2 : 1;
 
   // Возвращаем null если нет элементов
   if (!items || items.length === 0) return null;
@@ -110,6 +113,8 @@ export default function CardGrid({
         const cardWrapperStyle: ViewStyle = {
           paddingHorizontal: Math.floor(effectiveGap / 2),
           marginBottom: effectiveGap,
+          flexBasis: columns === 2 ? '50%' : '100%',
+          maxWidth: columns === 2 ? '50%' : '100%',
         };
 
         return (
@@ -134,6 +139,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    alignItems: 'flex-start',
+    alignItems: 'stretch',
+    justifyContent: 'space-between',
   } as ViewStyle,
 });
